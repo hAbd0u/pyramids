@@ -43,3 +43,101 @@ Use these steps to clone from SourceTree, our client for using the repository co
 4. Open the directory you just created to see your repository’s files.
 
 Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+
+
+## Job-Description ##
+
+
+### Startup sucht einen Blockchain-Enthusiasten für die Programmierung ###
+
+Programmierst Du gerne? Bist Du ehrgeizig, willst aber nicht in irgend einer
+IT-Abteilung als "Kellerkind" versauern? Willst Du mitgestalten und mitdenken,
+anstatt nur umzusetzen? 
+
+**Dann bist Du bei uns genau richtig!**
+
+
+[Eternitas](http://www.eternitas.io) 
+sucht einen Programmierer als Einsteiger für die Erstellungen
+einer kleinen, funktionsfähigen Software-Anwendung im Bereich *legal tech*.
+
+Bei uns geht es darum, das Erbschaftsrecht für das 21.te Jahrhundert fit 
+zu machen. Wir registrieren z.B. Testamente mittels Blockchain-Technologie,
+und Du sollst uns dabei helfen, unsere Konzepte in die Tat umzusetzen.
+
+**Unsere Anforderungen sind gering, aber andererseits auch hoch!**
+
+Du solltest Programmiererfahrung in mindestens einer modernen Programmiersprache
+haben. *Es ist uns gleichgültig, wie lange Du schon dabei bist! Uns ist nur wichtig,
+dass Du dabei bleiben möchtest!* Konkret bedeutet dass: Wir erwarten Bereitschaft,
+sich in Neues einzuarbeiten. Wir wollen sicher sein, dass die Softwareentwicklung 
+dein Ding ist und auch dein Ding bleiben wird. Genau dann bist du bei uns richtig.
+
+Du fängst bei uns als Praktikant an und wächst mit den Aufgaben. Am Anfang gibt
+es wenig zu verdienen. Die Zukunft könnte golden sein.
+
+Bei Interesse, 
+[schreib uns einfach](mailto://milosz@eternitas.io)
+
+
+
+
+### Startup is looking for  a new developer interested in blockchain technology ###
+
+Programmierst Du gerne? Bist Du ehrgeizig, willst aber nicht in irgend einer
+IT-Abteilung als "Kellerkind" versauern? Willst Du mitgestalten und mitdenken,
+anstatt nur umzusetzen? 
+
+Do you like programming? Are you ambitious but not so eager to end up in the cubicle
+of a huge IT departement? Do you want to design, decide and create, and not only implement?
+
+**You are the right man or woman for the job!**
+
+[Eternitas](http://www.eternitas.io) 
+is looking for a programmer to start implementing a small, fully functional
+piece of software in *legal tech*.
+
+We aim to make legal applications fit for the 21'th century. We register
+last wills using blockchain technology. You can help us to realize these plans.
+
+**Our requirements seem quite low, but they are in fact pretty high!** 
+
+You should be experienced in at least one modern programming language.
+*The number of years of experience does not matter so much, but we
+want to be sure that you stick to what you began!* We expect you to be
+willing to learn a huge amount of new stuff. We want to be sure that
+software development is what you like most and not change your mind
+when things are getting a bit tricky. If so, you are the man/woman!
+
+Du fängst bei uns als Praktikant an und wächst mit den Aufgaben. Am Anfang gibt
+es wenig zu verdienen. Die Zukunft könnte golden sein.
+
+You will start as an intern, but you will grow up with your challenges. There is
+little to earn in the beginnings. But the future might shine golden.
+
+If you are interested, 
+[write a mail to us](mailto://milosz@eternitas.io).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### An Falk-Alexander Birner eine Job-Description schicken. ###
+
+
+
+
