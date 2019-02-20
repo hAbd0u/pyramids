@@ -71,10 +71,10 @@ use case:
 3. Death: The *Parish Register* pulls the death switch inside the smart contract, confirming
    the death of the *Testator*
 4. *Password manager* in action
-  - Pulls the information about the lethal in incident from the *smart contract* 
-  - Can verify any heir any time by their *blockchain addresses* registered to the
+    - Pulls the information about the lethal in incident from the *smart contract* 
+    - Can verify any heir any time by their *blockchain addresses* registered to the
     smart contract
-  - As for  each heir an individual inheritance document is registered inside the
+    - As for  each heir an individual inheritance document is registered inside the
     smart contract by its hash code, the *password manager* will send an encrypted
     document to each heir containing the inheritance information (may include passwords
     or any other sensitive data)
