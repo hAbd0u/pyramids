@@ -9,7 +9,7 @@ import scala.scalajs.js
 
 object LastWillStartup {
 
-  val bookName = "koblach"
+
 
   def main(args: Array[String]): Unit = {
     document.addEventListener(
