@@ -1,0 +1,8 @@
+.idea/
+.history
+node_modules
+package-lock.json
+target/
+project/project
+project/target
+README-frag.html
