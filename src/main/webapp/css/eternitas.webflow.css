@@ -16,7 +16,7 @@ p {
   overflow: hidden;
   min-height: 100vh;
   background-image: url('../images/ETER-header.jpg');
-  background-position: 50% 50%;
+  /* background-position: 50% 50%; */
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -1463,7 +1463,7 @@ p {
 
 @media (max-width: 991px) {
   .header {
-    background-position: 100% 50%;
+    /* background-position: 100% 50%;  */
   }
   .image-font-position.right-center {
     padding-left: 10vw;
@@ -1625,6 +1625,7 @@ p {
     background-repeat: no-repeat;
   }
 }
+
 
 @media (max-width: 767px) {
   .headline-container {
