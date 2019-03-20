@@ -29,19 +29,13 @@ object LastWillStartup {
   }
 
    def init()(implicit $:JQueryWrapper)={
+
      $("#drop_zone").
        onDrop(
-         (file:File)=> {
-           new FileReader().onHash(file,aHash=>println("Hash: " + aHash))
-           //println("Dropped:" + file.`name`)
-           }
+         (file:File)=> new FileReader().
+           onHash(file,aHash=>
+            $("#drop_zone").html(aHash))
        ).onDragOverNothing()
-
-     println("Eternitas is initialized: " +js.Dynamic.global.SparkMD5.ArrayBuffer)
-
-
-
-
    }
 
 
