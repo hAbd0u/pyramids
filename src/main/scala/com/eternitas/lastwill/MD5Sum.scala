@@ -10,8 +10,8 @@ import scala.scalajs.js
 object MD5Sum{
  implicit class PimpedFileReader(f:FileReader){
     def onRead(b:Blob, h:(Binary) => Unit) = {
-      val r = f.readAsArrayBuffer(b).asInstanceOf[Binary]
-      f.onloadend  = (e:ProgressEvent)=>h(r)
+       f.readAsArrayBuffer(b).asInstanceOf[Binary]
+      f.onloadend  = (e:ProgressEvent)=>h(f.result.asInstanceOf[Binary])
     }
 
 
