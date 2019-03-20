@@ -29,6 +29,18 @@
 }
 
 
+#drop_zone {
+    border: 2px dashed #bbb;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: left;
+    font: 20pt bold 'Vollkorn';
+    color: #bbb;
+    width: 300px;
+}
+
 @media (max-width: 479px) {
 
 
