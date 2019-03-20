@@ -1,9 +1,12 @@
 package com.eternitas.lastwill
 
 import org.querki.jquery.{JQuery, JQueryEventObject}
-import org.scalajs.dom.raw.{Blob, Element, File}
+import org.scalajs.dom.raw._
 
 object DropDragHandler {
+
+
+
 
   implicit class PimpedJQuery(jquery:JQuery){
 

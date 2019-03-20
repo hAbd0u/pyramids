@@ -3,8 +3,9 @@ package com.lyrx.eternitas.lastwill
 import com.eternitas.wizard.JQueryWrapper
 import org.querki.jquery.JQueryEventObject
 import org.scalajs.dom.document
-import org.scalajs.dom.raw.{Blob, Element, Event, File}
+import org.scalajs.dom.raw._
 import com.eternitas.lastwill.DropDragHandler._
+import com.eternitas.lastwill.MD5Sum._
 
 import scala.scalajs.js ;
 
@@ -23,16 +24,25 @@ object LastWillStartup {
 
   private def onStartup() = {
     implicit val $ = initJQuery()
-
     init()
-    println("Eternitas is initialized ")
 
   }
 
-   def init()(implicit $:JQueryWrapper)=$("#drop_zone").
+   def init()(implicit $:JQueryWrapper)={
+     $("#drop_zone").
        onDrop(
-         (file:File)=>
-           println("Dropped:" + file.`name`)).onDragOverNothing()
+         (file:File)=> {
+           new FileReader().onHash(file,aHash=>println("Hash: " + aHash))
+           //println("Dropped:" + file.`name`)
+           }
+       ).onDragOverNothing()
+
+     println("Eternitas is initialized: " +js.Dynamic.global.SparkMD5.ArrayBuffer)
+
+
+
+
+   }
 
 
   private def initJQuery():JQueryWrapper = {
