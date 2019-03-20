@@ -1,15 +1,12 @@
 package com.lyrx.eternitas.lastwill
 
-import java.security.CryptoPrimitive
+import com.eternitas.wizard.JQueryWrapper
+import org.querki.jquery.JQueryEventObject
+import org.scalajs.dom.document
+import org.scalajs.dom.raw.{Blob, Element, Event, File}
+import com.eternitas.lastwill.DropDragHandler._
 
-import com.eternitas.lastwill.DataTransferEvent
-import com.eternitas.wizard.{Bookmark, ContentSeqImpl, JQueryWrapper, WizardImpl}
-import org.querki.jquery.{JQueryEventObject, JQueryXHR}
-import org.scalajs.dom.{XMLHttpRequest, document}
-import org.scalajs.dom.raw.{Blob, Element, Event, FileReader}
-
-import scala.scalajs.js
-import scala.scalajs.js.UndefOr
+import scala.scalajs.js ;
 
 object LastWillStartup {
 
@@ -33,22 +30,9 @@ object LastWillStartup {
   }
 
    def init()(implicit $:JQueryWrapper)={
-     $("#drop_zone").on("drop",handler = (evt: JQueryEventObject) => {
-       evt.stopPropagation();
-       evt.preventDefault();
-
-       evt.
-         asInstanceOf[DataTransferEvent].
-         originalEvent.
-         map(_.dataTransfer.map(_.files)).
-         map(_.map(_.map(
-           _.headOption.
-             map((blob:Blob)=> println("Dropped:" + blob.`type`)))))
+     $("#drop_zone").onDrop((file:File)=> println("Dropped:" + file.`name`))
 
 
-
-
-     })
 
      $("#drop_zone").on("dragover",(e:Element, evt:JQueryEventObject, t2:Any, t3:Any)=>{
        evt.stopPropagation();
