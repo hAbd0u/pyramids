@@ -15,6 +15,7 @@ object LastWillStartup {
     document.addEventListener(
       "DOMContentLoaded",
       (e: Event) => {
+        println("Eternitas is initialized!")
       }
     )
   }
