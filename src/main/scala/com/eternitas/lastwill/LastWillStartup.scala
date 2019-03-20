@@ -6,9 +6,10 @@ import com.eternitas.lastwill.DataTransferEvent
 import com.eternitas.wizard.{Bookmark, ContentSeqImpl, JQueryWrapper, WizardImpl}
 import org.querki.jquery.{JQueryEventObject, JQueryXHR}
 import org.scalajs.dom.{XMLHttpRequest, document}
-import org.scalajs.dom.raw.{Element, Event, FileReader}
+import org.scalajs.dom.raw.{Blob, Element, Event, FileReader}
 
 import scala.scalajs.js
+import scala.scalajs.js.UndefOr
 
 object LastWillStartup {
 
@@ -32,17 +33,20 @@ object LastWillStartup {
   }
 
    def init()(implicit $:JQueryWrapper)={
-     $("#drop_zone").on("drop",(evt:JQueryEventObject)=>{
+     $("#drop_zone").on("drop",handler = (evt: JQueryEventObject) => {
        evt.stopPropagation();
        evt.preventDefault();
 
-       val files=evt.asInstanceOf[DataTransferEvent].originalEvent.dataTransfer.files
+       evt.
+         asInstanceOf[DataTransferEvent].
+         originalEvent.
+         map(_.dataTransfer.map(_.files)).
+         map(_.map(_.map(
+           _.headOption.
+             map((blob:Blob)=> println("Dropped:" + blob.`type`)))))
 
 
 
-
-
-       println("Dropped:" + files)
 
      })
 

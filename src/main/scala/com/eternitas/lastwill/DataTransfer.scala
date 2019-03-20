@@ -4,6 +4,7 @@ import org.querki.jquery.JQueryEventObject
 import org.scalajs.dom.raw.{Blob, EventTarget}
 
 import scala.scalajs.js
+import scala.scalajs.js.UndefOr
 
 @js.native
 trait DataTransferTarget extends EventTarget {
@@ -17,8 +18,8 @@ trait DataTransferTarget extends EventTarget {
 @js.native
 trait DataTransferEvent extends JQueryEventObject {
 
-   val dataTransfer:DataTransferTarget = js.native
+   val dataTransfer:UndefOr[DataTransferTarget] = js.native
 
-   val originalEvent:DataTransferEvent=js.native
+   val originalEvent:UndefOr[DataTransferEvent]=js.native
 
 }
