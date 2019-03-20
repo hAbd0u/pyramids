@@ -29,21 +29,11 @@ object LastWillStartup {
 
   }
 
-   def init()(implicit $:JQueryWrapper)={
-     $("#drop_zone").onDrop((file:File)=> println("Dropped:" + file.`name`))
+   def init()(implicit $:JQueryWrapper)=$("#drop_zone").
+       onDrop(
+         (file:File)=>
+           println("Dropped:" + file.`name`)).onDragOverNothing()
 
-
-
-     $("#drop_zone").on("dragover",(e:Element, evt:JQueryEventObject, t2:Any, t3:Any)=>{
-       evt.stopPropagation();
-       evt.preventDefault();
-
-      // println("Dragged!!")
-
-     })
-
-
-   }
 
   private def initJQuery():JQueryWrapper = {
     js.Dynamic.global.jQuery
