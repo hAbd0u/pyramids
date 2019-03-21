@@ -1,7 +1,7 @@
 .left-bound {
     margin-left:450px;
     height: 100%;
-    max-width: 400px;
+
 
 }
 
@@ -29,17 +29,27 @@
 }
 
 
-#drop_zone {
-    border: 2px dashed #bbb;
+.zone {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 20px;
+    padding: 10px;
     text-align: left;
-    font: 20pt bold 'Vollkorn';
+    font: 20pt bold;
     color: #bbb;
-    width: 300px;
+    max-width: 350px;
 }
+
+.drop {
+    border: 4px dashed #bbb;
+}
+
+.dropped {
+    border: 4px solid black;
+}
+
+
+
 
 @media (max-width: 479px) {
 
