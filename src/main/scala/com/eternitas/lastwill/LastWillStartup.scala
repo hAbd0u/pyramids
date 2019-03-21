@@ -35,12 +35,7 @@ object LastWillStartup {
      $("#drop_zone").
        onDrop(
          (file:File)=> new FileReader().
-           onHash(file,aHash=> {
-             $("#drop_zone").
-               removeClass("drop").
-               addClass("dropped").
-               html(aHash)
-           })
+           onHash(file,aHash=> $("#drop_zone").html(aHash))
        ).onDragOverNothing()
    }
 
