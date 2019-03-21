@@ -7,7 +7,7 @@ import scala.scalajs.js
 
 
 
-object MD5Sum{
+object HashSum{
  implicit class PimpedFileReader(f:FileReader){
     def onRead(b:Blob, h:(Binary) => Unit) = {
        f.readAsArrayBuffer(b).asInstanceOf[Binary]
@@ -23,8 +23,14 @@ object MD5Sum{
 
 
 
-  def hash(b:Binary) = js.Dynamic.global.
-    SparkMD5.ArrayBuffer.asInstanceOf[Md5ArrayBuffer].hash(b)
+  def hash(b:Binary) = {
+    //org.scalajs.dom.crypto.crypto.subtle.digest()
+    "Not implemented"
+    /*
+    js.Dynamic.global.
+      SparkMD5.ArrayBuffer.asInstanceOf[Md5ArrayBuffer].hash(b)
+      */
+  }
 }
 
 
@@ -36,7 +42,7 @@ trait Binary extends js.Object {
 }
 
 @js.native
-trait  Md5ArrayBuffer extends js.Object {
+trait  HashArrayBuffer extends js.Object {
 
 
   def hash(b:Binary):String = js.native

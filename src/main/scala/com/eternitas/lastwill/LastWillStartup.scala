@@ -5,7 +5,7 @@ import org.querki.jquery.JQueryEventObject
 import org.scalajs.dom.document
 import org.scalajs.dom.raw._
 import com.eternitas.lastwill.DropDragHandler._
-import com.eternitas.lastwill.MD5Sum._
+import com.eternitas.lastwill.HashSum._
 
 import scala.scalajs.js ;
 
@@ -29,6 +29,8 @@ object LastWillStartup {
   }
 
    def init()(implicit $:JQueryWrapper)={
+
+
 
      $("#drop_zone").
        onDrop(
