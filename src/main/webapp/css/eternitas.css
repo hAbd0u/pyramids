@@ -5,6 +5,10 @@
 
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .brand {
     background-image: url('../images/ETER-Logo.png');
     background-position: 50% 50%;
