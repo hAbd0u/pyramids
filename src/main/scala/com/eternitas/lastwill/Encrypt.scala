@@ -3,11 +3,11 @@ package com.eternitas.lastwill
 
 
 import org.scalajs.dom
-import dom.crypto.{CryptoKey, HashAlgorithm, KeyUsage, RsaHashedKeyAlgorithm, crypto}
+import dom.crypto.{CryptoKey, HashAlgorithm, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.Uint8Array
+import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
 
@@ -22,6 +22,13 @@ case class Eternitas(keysOpt:Option[CryptoKey] =None) {
 
   }
 
+
+  def exportKeyJWK()(implicit ctx:ExecutionContext) = keysOpt.map(
+    key=>crypto.subtle.
+      exportKey(KeyFormat.jwk,key).
+    toFuture.
+    map(_.asInstanceOf[ArrayBuffer])
+  )
 
 
 
