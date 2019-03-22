@@ -34,12 +34,15 @@ object Encrypt {
 
   def generateKeys()(implicit ctx:ExecutionContext):Future[CryptoKey]
   = crypto.subtle.generateKey(
-    RsaHashedKeyAlgorithm.
-      `RSA-OAEP`(4096,
-        new Uint8Array( js.Array(1,0,1)),
-        HashAlgorithm.`SHA-256`
-      ),true,
-    js.Array(KeyUsage.encrypt,KeyUsage.decrypt)).
+    algorithm = RsaHashedKeyAlgorithm.
+      `RSA-OAEP`(modulusLength = 4096,
+        publicExponent = new Uint8Array( js.Array(1,0,1)),
+        hash = HashAlgorithm.`SHA-256`
+      ),
+    extractable = true,
+    keyUsages = js.Array(
+      KeyUsage.encrypt,
+      KeyUsage.decrypt)).
     toFuture.map(_.asInstanceOf[CryptoKey])
 
 
