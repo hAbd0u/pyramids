@@ -7,9 +7,13 @@ import org.scalajs.dom.raw._
 import com.eternitas.lastwill.DropDragHandler._
 import com.eternitas.lastwill.Eternitas
 import com.eternitas.lastwill.HashSum._
+import org.scalajs.dom
+import org.scalajs.dom.crypto.JsonWebKey
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
+import js.typedarray.ArrayBuffer
+import scala.scalajs.js.JSON
 import scala.util.Try;
 
 
@@ -39,12 +43,13 @@ object LastWillStartup {
             map(f=>{
 
               f.onComplete(t=>{
+
                 if(t.isFailure){
                   println("Export failed:" + t.toString)
                 }
 
-                t.map(arrayBuffer=>{
-                  println("Have export: " + arrayBuffer.toString)
+                t.map((jsonWebKey:JsonWebKey)=>{
+                  println("Have export: " + JSON.stringify(jsonWebKey))
                 })
               })
             })}

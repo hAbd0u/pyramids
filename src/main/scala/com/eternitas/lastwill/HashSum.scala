@@ -8,6 +8,7 @@ import org.scalajs.dom.crypto._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import scala.util.Try
 
 object HashSum{
  implicit class PimpedFileReader(f:FileReader){
@@ -16,11 +17,6 @@ object HashSum{
       f.onloadend  = (e:ProgressEvent)=>h(f.result.asInstanceOf[BufferSource])
     }
 
-   implicit class PimpedArrayBuffer(b:ArrayBuffer){
-
-     def toHexString() = new Uint8Array(b).
-       map(c=>c.toHexString).foldLeft("")((a:String,b:String)=>a + b)
-   }
 
 
 
@@ -29,13 +25,23 @@ object HashSum{
       onRead(blob,bufferSource=>{
         hash(bufferSource).
           toFuture.
-          onComplete(_.map(aAny=>h(aAny.asInstanceOf[ArrayBuffer].toHexString())))
+          onComplete((aTry:Try[Any])=>{
+            aTry.map(aAny=>h(aAny.asInstanceOf[ArrayBuffer].toHexString()))
+          })
       })
     }
 
 
   }
 
+  implicit class PimpedArrayBuffer(b:ArrayBuffer){
+
+    def toHexString() = new Uint8Array(b).
+      map(c=>c.toHexString).foldLeft("")((a:String,b:String)=>a + b)
+
+    def toNormalString()=new Uint8Array(b).
+      map((c:Short)=>c.toChar).foldLeft(s"-${b.byteLength}":String)((a:String,b:Char)=>a + b)
+  }
 
 
 

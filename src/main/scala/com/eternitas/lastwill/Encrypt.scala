@@ -3,15 +3,16 @@ package com.eternitas.lastwill
 
 
 import org.scalajs.dom
-import dom.crypto.{CryptoKey, HashAlgorithm, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
+import dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import scala.util.Try
 
 
 
-case class Eternitas(keysOpt:Option[CryptoKey] =None) {
+case class Eternitas(keysOpt:Option[CryptoKeyPair] =None) {
 
 
 
@@ -24,10 +25,11 @@ case class Eternitas(keysOpt:Option[CryptoKey] =None) {
 
 
   def exportKeyJWK()(implicit ctx:ExecutionContext) = keysOpt.map(
-    key=>crypto.subtle.
-      exportKey(KeyFormat.jwk,key).
-    toFuture.
-    map(_.asInstanceOf[ArrayBuffer])
+    key=>{
+      crypto.subtle.
+        exportKey(KeyFormat.jwk,key.publicKey).
+        toFuture.map((a:Any)=>a.asInstanceOf[JsonWebKey])
+    }
   )
 
 
@@ -39,7 +41,7 @@ object Encrypt {
 
 
 
-  def generateKeys()(implicit ctx:ExecutionContext):Future[CryptoKey]
+  def generateKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
     algorithm = RsaHashedKeyAlgorithm.
       `RSA-OAEP`(modulusLength = 4096,
@@ -50,7 +52,7 @@ object Encrypt {
     keyUsages = js.Array(
       KeyUsage.encrypt,
       KeyUsage.decrypt)).
-    toFuture.map(_.asInstanceOf[CryptoKey])
+    toFuture.map(_.asInstanceOf[CryptoKeyPair])
 
 
 
