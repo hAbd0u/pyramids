@@ -45,17 +45,3 @@ object HashSum{
 
 
 
-
-@js.native
-trait Binary extends js.Object {
-
-}
-
-@js.native
-trait  HashArrayBuffer extends js.Object {
-
-
-  def hash(b:Binary):String = js.native
-
-
-}
