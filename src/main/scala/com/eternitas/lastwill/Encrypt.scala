@@ -12,32 +12,41 @@ import scala.util.Try
 
 
 
-case class Eternitas(keysOpt:Option[CryptoKeyPair] =None) {
+ class Eternitas(val keysOpt:Option[CryptoKeyPair] =None) {
 
 
 
   def withKeys()(implicit ctx:ExecutionContext) = {
-    if(keysOpt.isEmpty) Encrypt.generateKeys().map(key=>this.copy(keysOpt=Some(key)))
+    if(keysOpt.isEmpty) Encrypt.generateKeys().map(key=>new Eternitas(keysOpt=Some(key)))
     else
-      Future.successful(this.copy(keysOpt=Some(keysOpt.get)))
+      Future.successful(new Eternitas(keysOpt=Some(keysOpt.get)))
 
   }
 
 
-  def exportKeyJWK()(implicit ctx:ExecutionContext) = keysOpt.map(
-    key=>{
-      crypto.subtle.
-        exportKey(KeyFormat.jwk,key.publicKey).
-        toFuture.map((a:Any)=>a.asInstanceOf[JsonWebKey])
-    }
+  def exportKeyJWKPublic()(implicit ctx:ExecutionContext) = keysOpt.map(
+    key=>Encrypt.exportKeyJWK(key.publicKey)
   )
 
-
+  def exportKeys()(implicit ctx:ExecutionContext) = keysOpt.map(
+    key=>Encrypt
+      .exportKeyJWK(key.publicKey)
+      .map(publicJw=>
+        Encrypt.
+          exportKeyJWK(key.privateKey).
+          map(privateJw=>new EternitasExport(privateJw,publicJw))).flatten
+  )
 
 }
 
 
 object Encrypt {
+
+  def exportKeyJWK(key: CryptoKey)
+                  (implicit ctx:ExecutionContext) = crypto.subtle.
+        exportKey(KeyFormat.jwk,key).
+        toFuture.map((a:Any)=>a.asInstanceOf[JsonWebKey])
+
 
 
 

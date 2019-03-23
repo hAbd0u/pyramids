@@ -39,7 +39,7 @@ object LastWillStartup {
       new Eternitas().
         withKeys().
         onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>{
-          eternitas.exportKeyJWK().
+          eternitas.exportKeyJWKPublic().
             map(f=>{
 
               f.onComplete(t=>{
