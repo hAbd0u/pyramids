@@ -28,14 +28,16 @@ import scala.util.Try
     key=>Encrypt.exportKeyJWK(key.publicKey)
   )
 
-  def exportKeys()(implicit ctx:ExecutionContext) = keysOpt.map(
+  def export()(implicit ctx:ExecutionContext) = keysOpt.map(
     key=>Encrypt
       .exportKeyJWK(key.publicKey)
       .map(publicJw=>
         Encrypt.
           exportKeyJWK(key.privateKey).
           map(privateJw=>new EternitasExport(privateJw,publicJw))).flatten
-  )
+  ).
+    getOrElse(Future{new EternitasExport(null,null)}).
+    map(ee=>js.JSON.stringify(ee))
 
 }
 
