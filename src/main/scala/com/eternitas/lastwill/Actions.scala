@@ -67,18 +67,11 @@ object Actions {
           eternitas.export().
             onComplete(t=>if(t.isFailure) println("Export failed for keypar!" )
             else t.map((s:String)=>{
-
-
-              println("Url: "+
-                mywindow.URL.createObjectURL(new Blob(js.Array(s),BlobPropertyBag("octet/stream"))))
-
-
-
-              //dom.window.location.assign()
-            //  dom.document.URL.
-
-
-              //println("Have export: " + s)
+              val blob:Blob =
+                new Blob(js.Array(s),BlobPropertyBag("octet/stream"))
+              val url:String = mywindow.URL.createObjectURL(blob)
+              dom.window.location.assign(url)
+              //jq.attr("href",url)
             })))))
 
 
