@@ -20,16 +20,14 @@ object HashSum{
 
 
 
-    def onHash(blob:Blob,h:(String)=>Unit) ={
-      implicit  val executionContext= ExecutionContext.global
-      onRead(blob,bufferSource=>{
+    def onHash(blob:Blob,h:(String)=>Unit)(implicit ctx:ExecutionContext) =onRead(blob,bufferSource=>{
         hash(bufferSource).
           toFuture.
           onComplete((aTry:Try[Any])=>{
             aTry.map(aAny=>h(aAny.asInstanceOf[ArrayBuffer].toHexString()))
           })
       })
-    }
+
 
 
   }

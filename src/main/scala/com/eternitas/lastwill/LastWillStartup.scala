@@ -19,8 +19,10 @@ object LastWillStartup {
       "DOMContentLoaded",
       (e: Event) => {
         implicit val $ = initJQuery()
-        $("#logo").handleExport(new Eternitas())
-        $("#drop_zone").handleDrop()
+        $("#logo").
+          export(new Eternitas()).
+          iimport()
+        $("#drop_zone").upLoad()
       }
     )
 

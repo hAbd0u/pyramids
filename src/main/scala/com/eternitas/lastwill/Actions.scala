@@ -47,9 +47,7 @@ object Actions {
           map(_.dataTransfer.map(_.files)).
           map(_.map(_.map(
             _.headOption.
-              map((blob)=> h(blob.asInstanceOf[File])))))
-
-      })
+              map((blob)=> h(blob.asInstanceOf[File])))))})
 
 
     def onDragOverNothing():JQuery={
@@ -60,7 +58,7 @@ object Actions {
     }
 
 
-    def handleExport(eternitas: Eternitas)(implicit ctx:ExecutionContext)=
+    def export(eternitas: Eternitas)(implicit ctx:ExecutionContext)=
       jq.click((e: Event) => eternitas.
         withKeys().
         onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
@@ -76,7 +74,7 @@ object Actions {
 
 
 
-    def handleDrop()=onDrop(
+    def upLoad()(implicit ctx:ExecutionContext)=onDrop(
         (file: File) =>
           new FileReader().onHash(file, aHash => {
             jq.removeClass("drop").
@@ -85,6 +83,15 @@ object Actions {
           })
       ).onDragOverNothing()
 
+
+
+    def iimport()(implicit ctx:ExecutionContext)=onDrop(
+      (file: File) =>
+        new FileReader().onRead(file, bufferSource => {
+          println("Have import: " + bufferSource)
+          //js.JSON.parse(bufferSource.toString)
+        })
+    ).onDragOverNothing()
 
 
 
