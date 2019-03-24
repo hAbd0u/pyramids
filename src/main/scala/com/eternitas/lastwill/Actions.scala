@@ -16,7 +16,7 @@ import scala.scalajs.js.annotation.JSGlobal
 @js.native
 @JSGlobal
 class MyWindow extends dom.Window {
-  val URL:js.Dynamic = js.native
+  val URL:URL = js.native
 
 }
 
@@ -67,9 +67,14 @@ object Actions {
           eternitas.export().
             onComplete(t=>if(t.isFailure) println("Export failed for keypar!" )
             else t.map((s:String)=>{
-              println("My window:" + mywindow.URL)
 
-              new Blob(js.Array(s),BlobPropertyBag("octet/stream"))
+
+              println("Url: "+
+                mywindow.URL.createObjectURL(new Blob(js.Array(s),BlobPropertyBag("octet/stream"))))
+
+
+
+              //dom.window.location.assign()
             //  dom.document.URL.
 
 
