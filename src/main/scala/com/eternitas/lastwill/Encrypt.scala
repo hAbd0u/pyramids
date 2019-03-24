@@ -59,7 +59,10 @@ object Encrypt {
 
 
 
-  def importJSON(json:js.Dynamic)(implicit executionContext: ExecutionContext)=crypto.subtle.importKey(
+  def importJSON(eternitas: Eternitas,
+                 json:js.Dynamic,
+                 cb:(Eternitas)=>Unit)(
+    implicit executionContext: ExecutionContext)=crypto.subtle.importKey(
        aKeyFormat,
        json.`public`.asInstanceOf[JsonWebKey],
        aAlgorithm,
@@ -75,11 +78,11 @@ object Encrypt {
            usageDecrypt
          ).toFuture.onComplete(_.map(aAny2=>{
            val privateKey = aAny2.asInstanceOf[CryptoKey]
-           js.Dictionary(
+           cb(new Eternitas(
+           Some(js.Dictionary(
              "publicKey"->publicKey,
              "privateKey" -> privateKey
-           ).asInstanceOf[CryptoKeyPair]
-           println("Got both")
+           ).asInstanceOf[CryptoKeyPair])))
          }))})
 
      )

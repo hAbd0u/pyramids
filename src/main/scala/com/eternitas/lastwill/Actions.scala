@@ -13,6 +13,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.ArrayBuffer
 import Buffers._
+import org.scalajs.dom.crypto.CryptoKeyPair
 
 @js.native
 @JSGlobal
@@ -73,7 +74,7 @@ object Actions {
 
 
 
-    def upLoad()(implicit ctx:ExecutionContext)=onDrop(
+    def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext)=onDrop(
         (file: File) =>
           new FileReader().onHash(file, aHash => {
             jq.removeClass("drop").
@@ -83,12 +84,12 @@ object Actions {
 
 
 
-    def iimport()(implicit ctx:ExecutionContext)=onDrop(
+    def iimport(oldEternitas: Eternitas)(implicit ctx:ExecutionContext)=onDrop(
       (file: File) =>
         new FileReader().onRead(file, bufferSource => {
-          Encrypt.importJSON(
-            js.JSON.parse(bufferSource.toNormalString())
-          )
+          Encrypt.importJSON(oldEternitas,
+            js.JSON.parse(bufferSource.toNormalString()),
+            (et:Eternitas)=>{})
         })
     ).onDragOverNothing()
 
