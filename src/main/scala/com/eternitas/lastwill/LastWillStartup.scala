@@ -38,24 +38,11 @@ object LastWillStartup {
     $("#logo").click((e: Event) =>
       new Eternitas().
         withKeys().
-        onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>{
-          eternitas.exportKeyJWKPublic().
-            map(f=>{
-
-              f.onComplete(t=>{
-
-                if(t.isFailure){
+        onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
+          eternitas.export().
+            onComplete(t=>if(t.isFailure)
                   println("Export failed:" + t.toString)
-                }
-
-                t.map((jsonWebKey:JsonWebKey)=>{
-                  println("Have export: " + JSON.stringify(jsonWebKey))
-                })
-              })
-            })}
-
-
-        )))
+              else t.map((s)=>println("Have export: " + s))))))
 
 
 

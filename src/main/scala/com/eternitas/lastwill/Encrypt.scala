@@ -7,6 +7,7 @@ import dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyForma
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
+import scala.scalajs.js.JSON
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 import scala.util.Try
 
@@ -34,9 +35,11 @@ import scala.util.Try
       .map(publicJw=>
         Encrypt.
           exportKeyJWK(key.privateKey).
-          map(privateJw=>new EternitasExport(privateJw,publicJw))).flatten
+          map(privateJw=>js.Dynamic.literal(
+            "private" ->privateJw)//new EternitasExport(privateJw,publicJw)
+          )).flatten
   ).
-    getOrElse(Future{new EternitasExport(null,null)}).
+    getOrElse(Future{js.Dynamic.literal("empty" -> true)}).
     map(ee=>js.JSON.stringify(ee))
 
 }

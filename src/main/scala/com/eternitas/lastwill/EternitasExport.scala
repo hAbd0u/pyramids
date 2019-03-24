@@ -3,10 +3,10 @@ package com.eternitas.lastwill
 import org.scalajs.dom.crypto.JsonWebKey
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSGlobal
+import scala.scalajs.js.annotation.{JSGlobal, ScalaJSDefined}
 
-@js.native
-@JSGlobal
+
+@ScalaJSDefined
 class EternitasExport(
                        privateKey:js.UndefOr[JsonWebKey],
                        publicKey:js.UndefOr[JsonWebKey]
