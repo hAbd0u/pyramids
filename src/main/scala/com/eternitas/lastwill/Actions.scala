@@ -1,7 +1,8 @@
 package com.eternitas.lastwill
 
 import org.querki.jquery.{JQuery, JQueryEventObject}
-import org.scalajs.dom.raw.{Element, Event, File, FileReader}
+import org.scalajs.dom
+import dom.raw.{Element, Event, File, FileReader}
 
 import scala.concurrent.ExecutionContext
 import scala.util.Try
@@ -42,9 +43,13 @@ object Actions {
         withKeys().
         onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
           eternitas.export().
-            onComplete(t=>if(t.isFailure)
-              println("Export failed:" + t.toString)
-            else t.map((s)=>println("Have export: " + s))))))
+            onComplete(t=>if(t.isFailure) println("Export failed for keypar!" )
+            else t.map((s:String)=>{
+              dom.window.
+
+
+              //println("Have export: " + s)
+            })))))
 
 
 

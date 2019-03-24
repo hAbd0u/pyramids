@@ -36,7 +36,8 @@ import scala.util.Try
         Encrypt.
           exportKeyJWK(key.privateKey).
           map(privateJw=>js.Dynamic.literal(
-            "private" ->privateJw)//new EternitasExport(privateJw,publicJw)
+            "private" ->privateJw,
+            "public" -> publicJw)
           )).flatten
   ).
     getOrElse(Future{js.Dynamic.literal("empty" -> true)}).
