@@ -2,14 +2,36 @@ package com.eternitas.lastwill
 
 import org.querki.jquery.{JQuery, JQueryEventObject}
 import org.scalajs.dom
-import dom.raw.{Element, Event, File, FileReader}
+import dom.raw._
 
 import scala.concurrent.ExecutionContext
 import scala.util.Try
 import com.eternitas.lastwill.HashSum._
+import org.scalajs.dom.Window
 
+import scala.scalajs.js
+import scala.scalajs.js.annotation.JSGlobal
+
+
+@js.native
+@JSGlobal
+class MyWindow extends dom.Window {
+  val URL:js.Dynamic = js.native
+
+}
+
+
+@js.native
+trait URL extends js.Any{
+
+  def createObjectURL(blob:Blob):String = js.native
+
+
+}
 
 object Actions {
+  val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
+
 
   implicit class PimpedJQuery(jq:JQuery){
 
@@ -45,7 +67,10 @@ object Actions {
           eternitas.export().
             onComplete(t=>if(t.isFailure) println("Export failed for keypar!" )
             else t.map((s:String)=>{
-              dom.window.
+              println("My window:" + mywindow.URL)
+
+              new Blob(js.Array(s),BlobPropertyBag("octet/stream"))
+            //  dom.document.URL.
 
 
               //println("Have export: " + s)
