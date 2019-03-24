@@ -89,7 +89,9 @@ object Actions {
         new FileReader().onRead(file, bufferSource => {
           Encrypt.importJSON(oldEternitas,
             js.JSON.parse(bufferSource.toNormalString()),
-            (et:Eternitas)=>{})
+            (et:Eternitas)=>{
+
+            })
         })
     ).onDragOverNothing()
 
