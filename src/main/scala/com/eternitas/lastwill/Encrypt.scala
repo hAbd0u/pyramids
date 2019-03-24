@@ -48,6 +48,13 @@ import scala.util.Try
 
 object Encrypt {
 
+  def importJSON(json:Dynamic)={
+    println("Start import")
+
+    //val p = js.JSON.parse(json)
+
+  }
+
   def exportKeyJWK(key: CryptoKey)
                   (implicit ctx:ExecutionContext) = crypto.subtle.
         exportKey(KeyFormat.jwk,key).

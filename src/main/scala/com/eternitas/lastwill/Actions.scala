@@ -11,7 +11,8 @@ import org.scalajs.dom.Window
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
-
+import scala.scalajs.js.typedarray.ArrayBuffer
+import Buffers._
 
 @js.native
 @JSGlobal
@@ -88,8 +89,7 @@ object Actions {
     def iimport()(implicit ctx:ExecutionContext)=onDrop(
       (file: File) =>
         new FileReader().onRead(file, bufferSource => {
-          println("Have import: " + bufferSource)
-          //js.JSON.parse(bufferSource.toString)
+          Encrypt.importJSON(js.JSON.parse(bufferSource.toNormalString()))
         })
     ).onDragOverNothing()
 

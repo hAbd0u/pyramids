@@ -14,9 +14,9 @@ import Buffers._
 
 object HashSum{
  implicit class PimpedFileReader(f:FileReader){
-    def onRead(b:Blob, h:(BufferSource) => Unit) = {
+    def onRead(b:Blob, h:(ArrayBuffer) => Unit) = {
        f.readAsArrayBuffer(b)
-      f.onloadend  = (e:ProgressEvent)=>h(f.result.asInstanceOf[BufferSource])
+      f.onloadend  = (e:ProgressEvent)=>h(f.result.asInstanceOf[ArrayBuffer])
     }
 
 
