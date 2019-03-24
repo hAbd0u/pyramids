@@ -40,7 +40,7 @@ import scala.util.Try
           )).flatten
   ).
     getOrElse(Future{js.Dynamic.literal("empty" -> true)}).
-    map(ee=>js.JSON.stringify(ee))
+    map(ee=>js.JSON.stringify(ee:js.Any,null:js.Array[js.Any],1:js.Any))
 
 }
 
