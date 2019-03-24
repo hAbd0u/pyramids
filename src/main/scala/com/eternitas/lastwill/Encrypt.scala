@@ -59,25 +59,32 @@ object Encrypt {
 
 
 
-  def importJSON(json:js.Dynamic)(implicit executionContext: ExecutionContext)={
-
-    val publicKey:JsonWebKey = json.`public`.asInstanceOf[JsonWebKey]
-    val privateKey:JsonWebKey =  json.`private`.asInstanceOf[JsonWebKey]
-
-
-    //println("Public:" + publicKey.alg)
-
-
-
-     crypto.subtle.importKey(
+  def importJSON(json:js.Dynamic)(implicit executionContext: ExecutionContext)=crypto.subtle.importKey(
        aKeyFormat,
-       publicKey,
+       json.`public`.asInstanceOf[JsonWebKey],
        aAlgorithm,
        true,
        usageEncrypt
-     ).toFuture.onComplete(t=>println(t))
+     ).toFuture.onComplete(_.map(aAny=>{
+         val publicKey = aAny.asInstanceOf[CryptoKey]
+         crypto.subtle.importKey(
+           aKeyFormat,
+           json.`private`.asInstanceOf[JsonWebKey],
+           aAlgorithm,
+           true,
+           usageDecrypt
+         ).toFuture.onComplete(_.map(aAny2=>{
+           val privateKey = aAny2.asInstanceOf[CryptoKey]
+           js.Dictionary(
+             "publicKey"->publicKey,
+             "privateKey" -> privateKey
+           ).asInstanceOf[CryptoKeyPair]
+           println("Got both")
+         }))})
 
-  }
+     )
+
+
 
   def eexportKey(key: CryptoKey)
                 (implicit ctx:ExecutionContext) = crypto.subtle.

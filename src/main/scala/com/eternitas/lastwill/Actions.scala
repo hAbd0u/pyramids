@@ -69,9 +69,7 @@ object Actions {
               val blob:Blob =
                 new Blob(js.Array(s),BlobPropertyBag("octet/stream"))
               val url:String = mywindow.URL.createObjectURL(blob)
-              dom.window.location.assign(url)
-              //jq.attr("href",url)
-            })))))
+              dom.window.location.assign(url)})))))
 
 
 
@@ -81,8 +79,7 @@ object Actions {
             jq.removeClass("drop").
               addClass("dropped").
               html(aHash)
-          })
-      ).onDragOverNothing()
+          })).onDragOverNothing()
 
 
 
