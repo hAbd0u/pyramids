@@ -49,7 +49,9 @@ import scala.util.Try
 object Encrypt {
 
   def importJSON(json:Dynamic)={
-    println("Start import")
+
+    val pKey:JsonWebKey = json("public")
+    println("pKey: " + JSON.stringify(pKey))
 
     //val p = js.JSON.parse(json)
 
