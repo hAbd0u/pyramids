@@ -89,7 +89,9 @@ object Actions {
     def iimport()(implicit ctx:ExecutionContext)=onDrop(
       (file: File) =>
         new FileReader().onRead(file, bufferSource => {
-          Encrypt.importJSON(js.JSON.parse(bufferSource.toNormalString()))
+          Encrypt.importJSON(
+            js.JSON.parse(bufferSource.toNormalString())
+          )
         })
     ).onDragOverNothing()
 

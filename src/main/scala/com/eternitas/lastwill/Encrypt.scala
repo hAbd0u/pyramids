@@ -7,9 +7,7 @@ import dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyForma
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.JSON
-import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
-import scala.util.Try
+import scala.scalajs.js.typedarray.Uint8Array
 
 
 
@@ -26,15 +24,15 @@ import scala.util.Try
 
 
   def exportKeyJWKPublic()(implicit ctx:ExecutionContext) = keysOpt.map(
-    key=>Encrypt.exportKeyJWK(key.publicKey)
+    key=>Encrypt.eexportKey(key.publicKey)
   )
 
   def export()(implicit ctx:ExecutionContext) = keysOpt.map(
     key=>Encrypt
-      .exportKeyJWK(key.publicKey)
+      .eexportKey(key.publicKey)
       .map(publicJw=>
         Encrypt.
-          exportKeyJWK(key.privateKey).
+          eexportKey(key.privateKey).
           map(privateJw=>js.Dynamic.literal(
             "private" ->privateJw,
             "public" -> publicJw)
@@ -47,19 +45,43 @@ import scala.util.Try
 
 
 object Encrypt {
+  val aKeyFormat =  KeyFormat.jwk
+  val aAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
+    publicExponent = new Uint8Array( js.Array(1,0,1)),
+    hash = HashAlgorithm.`SHA-256`)
+    val usages = js.Array(
+      KeyUsage.encrypt,
+      KeyUsage.decrypt)
+  val usageDecrypt = js.Array(
+    KeyUsage.decrypt)
+  val usageEncrypt = js.Array(
+    KeyUsage.encrypt)
 
-  def importJSON(json:Dynamic)={
 
-    val pKey:JsonWebKey = json("public")
-    println("pKey: " + JSON.stringify(pKey))
 
-    //val p = js.JSON.parse(json)
+  def importJSON(json:js.Dynamic)(implicit executionContext: ExecutionContext)={
+
+    val publicKey:JsonWebKey = json.`public`.asInstanceOf[JsonWebKey]
+    val privateKey:JsonWebKey =  json.`private`.asInstanceOf[JsonWebKey]
+
+
+    //println("Public:" + publicKey.alg)
+
+
+
+     crypto.subtle.importKey(
+       aKeyFormat,
+       publicKey,
+       aAlgorithm,
+       true,
+       usageEncrypt
+     ).toFuture.onComplete(t=>println(t))
 
   }
 
-  def exportKeyJWK(key: CryptoKey)
-                  (implicit ctx:ExecutionContext) = crypto.subtle.
-        exportKey(KeyFormat.jwk,key).
+  def eexportKey(key: CryptoKey)
+                (implicit ctx:ExecutionContext) = crypto.subtle.
+        exportKey(aKeyFormat,key).
         toFuture.map((a:Any)=>a.asInstanceOf[JsonWebKey])
 
 
@@ -67,15 +89,9 @@ object Encrypt {
 
   def generateKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
-    algorithm = RsaHashedKeyAlgorithm.
-      `RSA-OAEP`(modulusLength = 4096,
-        publicExponent = new Uint8Array( js.Array(1,0,1)),
-        hash = HashAlgorithm.`SHA-256`
-      ),
+    algorithm = aAlgorithm,
     extractable = true,
-    keyUsages = js.Array(
-      KeyUsage.encrypt,
-      KeyUsage.decrypt)).
+    keyUsages = usages).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
 
 
