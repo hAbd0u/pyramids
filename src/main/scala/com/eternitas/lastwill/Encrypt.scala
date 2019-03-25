@@ -49,7 +49,8 @@ object Encrypt {
            Some(js.Dictionary(
              "publicKey"->publicKey,
              "privateKey" -> privateKey
-           ).asInstanceOf[CryptoKeyPair])))
+           ).asInstanceOf[CryptoKeyPair]),
+             pinnataOpt = eternitas.pinnataOpt))
          }))})
 
      )

@@ -8,16 +8,25 @@ import scala.scalajs.js
 
 
 
-case class Pinnata(api:String,secretApi:String)
+case class PinnataAuth(api:String,secretApi:String)
 
-class Eternitas(val keysOpt:Option[CryptoKeyPair] =None) {
+class Eternitas(
+                 val keysOpt:Option[CryptoKeyPair],
+                 val pinnataOpt:Option[PinnataAuth]
+
+               ) {
 
 
 
-  def withKeys()(implicit ctx:ExecutionContext) = {
-    if(keysOpt.isEmpty) Encrypt.generateKeys().map(key=>new Eternitas(keysOpt=Some(key)))
+  def withNewKeys()(implicit ctx:ExecutionContext) = {
+    if(keysOpt.isEmpty) Encrypt.generateKeys().map(key=>new Eternitas(
+      keysOpt=Some(key),
+      pinnataOpt = this.pinnataOpt))
     else
-      Future.successful(new Eternitas(keysOpt=Some(keysOpt.get)))
+      Future.successful(new Eternitas(
+        keysOpt=Some(keysOpt.get),
+        pinnataOpt=this.pinnataOpt
+      ))
 
   }
 

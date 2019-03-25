@@ -15,7 +15,11 @@ object LastWillStartup {
 
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded",
-                              (e: Event) => init(new Eternitas())(initJQuery()))
+                              (e: Event) => init(
+                                new Eternitas(
+                                  keysOpt = None,
+                                  pinnataOpt = None
+                                ))(initJQuery()))
 
   def init(et: Eternitas)(implicit $ : JQueryWrapper): Unit = {
     implicit val feedBack:UserFeedback = new UserFeedback {

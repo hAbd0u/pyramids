@@ -73,7 +73,7 @@ object Actions {
     def export(eternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper,
                                      feedback: UserFeedback)=
       jq.click((e: Event) => eternitas.
-        withKeys().
+        withNewKeys().
         onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
           eternitas.export().
             onComplete(t=>if(t.isFailure) feedback.error("Export failed for keypair: " + t )
