@@ -13,6 +13,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.ArrayBuffer
 import Buffers._
+import com.eternitas.wizard.JQueryWrapper
 import org.scalajs.dom.crypto.CryptoKeyPair
 
 @js.native
@@ -35,7 +36,11 @@ object Actions {
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
 
+  def message(s:String)(implicit $:JQueryWrapper) = $("#message").html(s)
+
   implicit class PimpedJQuery(jq:JQuery){
+
+
 
 
     def onDrop(h:(File=>Unit)):JQuery=jq.
@@ -84,12 +89,13 @@ object Actions {
 
 
 
-    def iimport(oldEternitas: Eternitas)(implicit ctx:ExecutionContext)=onDrop(
+    def iimport(oldEternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper)=onDrop(
       (file: File) =>
         new FileReader().onRead(file, bufferSource => {
           Encrypt.importJSON(oldEternitas,
             js.JSON.parse(bufferSource.toNormalString()),
             (et:Eternitas)=>{
+              message("You have loaded the wallet!")
 
             })
         })
