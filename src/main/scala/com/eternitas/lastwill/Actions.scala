@@ -37,22 +37,13 @@ object Actions {
 
 
 
-  def msgField()(implicit $:JQueryWrapper)=$("#message")
 
-  def message(s:String)(implicit $:JQueryWrapper) = msgField().
-    removeClass("error-message").
-    html(s)
 
-  def error(s:String)(implicit $:JQueryWrapper) = {
-    msgField().
-      addClass("error-message")
-      .html(s);
-
-  }
 
 
 
   implicit class PimpedJQuery(jq:JQuery){
+
 
 
 
@@ -79,12 +70,13 @@ object Actions {
     }
 
 
-    def export(eternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper)=
+    def export(eternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper,
+                                     feedback: UserFeedback)=
       jq.click((e: Event) => eternitas.
         withKeys().
         onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
           eternitas.export().
-            onComplete(t=>if(t.isFailure) error("Export failed for keypair: " + t )
+            onComplete(t=>if(t.isFailure) feedback.error("Export failed for keypair: " + t )
             else t.map((s:String)=>{
               val blob:Blob =
                 new Blob(js.Array(s),BlobPropertyBag("octet/stream"))
@@ -103,13 +95,16 @@ object Actions {
 
 
 
-    def iimport(oldEternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper)=onDrop(
+    def iimport(oldEternitas: Eternitas)(
+      implicit ctx:ExecutionContext,
+      $:JQueryWrapper,
+      feedback: UserFeedback)=onDrop(
       (file: File) =>
         new FileReader().onRead(file, bufferSource => {
           Encrypt.importJSON(oldEternitas,
             js.JSON.parse(bufferSource.toNormalString()),
             (et:Eternitas)=>{
-              message("You have loaded the wallet!")
+              feedback.message("You have loaded the wallet!")
 
             })
         })
