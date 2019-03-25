@@ -37,14 +37,9 @@ object LastWillStartup {
 
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
-    initAxios()
   }
 
-  def initAxios()(implicit $ : JQueryWrapper,feedback: UserFeedback): Unit ={
 
-    //feedback.message("Axios: " + axios)
-
-  }
   def initJQuery(): JQueryWrapper =
     js.Dynamic.global.jQuery
       .noConflict()

@@ -14,6 +14,7 @@ import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.ArrayBuffer
 import Buffers._
 import com.eternitas.wizard.JQueryWrapper
+import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.scalajs.dom.crypto.CryptoKeyPair
 
 @js.native
@@ -106,7 +107,10 @@ object Actions {
             importData ,
             (et:Eternitas)=>{
               val et2 =Encrypt.importPinata(et,importData)
-              et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
+
+              et2.pinnataOpt.map(p=>new Pinata(p))
+              LastWillStartup.init(et2)
+              //et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
             })
         })
     ).onDragOverNothing()
