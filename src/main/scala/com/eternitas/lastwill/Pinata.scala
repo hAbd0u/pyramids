@@ -1,10 +1,9 @@
 package com.eternitas.lastwill
 
 import scala.scalajs.js
-
 import js.Dynamic.{literal => l}
-
 import com.eternitas.lastwill.axioss.axios
+import org.scalajs.dom.raw.FormData
 
 class Pinata(auth: PinataAuth) {
   val url = "https://api.pinata.cloud/data/testAuthentication";
@@ -20,5 +19,7 @@ class Pinata(auth: PinataAuth) {
       .`catch`(e => {})
 
 
+
+  new FormData()
 
 }
