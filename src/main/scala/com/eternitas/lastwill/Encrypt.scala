@@ -28,8 +28,7 @@ object Encrypt {
 
 
   def importPinata(eternitas: Eternitas,
-                   importData:js.Dynamic)(
-    implicit executionContext: ExecutionContext): Eternitas ={
+                   importData:js.Dynamic): Eternitas ={
     val pinata  = importData.pinata;
      if(js.isUndefined(pinata))
       eternitas else new Eternitas(eternitas.keysOpt,

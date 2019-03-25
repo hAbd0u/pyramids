@@ -105,10 +105,8 @@ object Actions {
           Encrypt.importKeyPair(oldEternitas,
             importData ,
             (et:Eternitas)=>{
-              val pinata  = importData.pinata;
-              val pinataOpt = if(js.isUndefined(pinata))None else
-                Some(PinataAuth(pinata.api.toString(),pinata.apisecret.toString()))
-              feedback.message("You have loaded the wallet:" + pinataOpt)
+              val et2 =Encrypt.importPinata(et,importData)
+              et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
             })
         })
     ).onDragOverNothing()
