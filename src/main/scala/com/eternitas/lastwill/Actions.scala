@@ -65,12 +65,12 @@ object Actions {
     }
 
 
-    def export(eternitas: Eternitas)(implicit ctx:ExecutionContext)=
+    def export(eternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper)=
       jq.click((e: Event) => eternitas.
         withKeys().
         onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
           eternitas.export().
-            onComplete(t=>if(t.isFailure) println("Export failed for keypar!" )
+            onComplete(t=>if(t.isFailure) message("Export failed for keypair: " + t )
             else t.map((s:String)=>{
               val blob:Blob =
                 new Blob(js.Array(s),BlobPropertyBag("octet/stream"))
