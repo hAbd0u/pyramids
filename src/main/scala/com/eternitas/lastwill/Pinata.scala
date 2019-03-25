@@ -16,7 +16,7 @@ class Pinata(auth: PinataAuth) {
                "pinata_api_key" -> auth.api,
                "pinata_secret_api_key" -> auth.secretApi
              )))
-      .`then`(r => {})
+      .`then`(a => {})
       .`catch`(e => {})
 
 
