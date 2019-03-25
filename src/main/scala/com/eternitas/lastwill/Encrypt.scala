@@ -7,7 +7,9 @@ import dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyForma
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.Uint8Array
+import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import scala.scalajs.js.JSConverters._
+import scala.util.Try
 
 
 
@@ -25,6 +27,33 @@ object Encrypt {
     KeyUsage.encrypt)
 
 
+  def importPinata(eternitas: Eternitas,
+                   importData:js.Dynamic)(
+    implicit executionContext: ExecutionContext): Eternitas ={
+    val pinata  = importData.pinata;
+     if(js.isUndefined(pinata))
+      eternitas else new Eternitas(eternitas.keysOpt,
+         Some(
+           PinataAuth(pinata.api.toString(),
+             pinata.apisecret.toString())))
+
+      //TODO: encrypt the secret key!
+       /*
+      eternitas.keysOpt.map(
+        keys=>{
+          crypto.subtle.
+            encrypt(aAlgorithm,
+              keys.publicKey,
+              new Uint8Array(secretKey.getBytes().toJSArray)
+            ).toFuture.
+            map(aAny=>aAny.asInstanceOf[ArrayBuffer]).
+            onComplete((t:Try[ArrayBuffer])=>{})
+
+        }
+
+        */
+
+}
 
   def importKeyPair(eternitas: Eternitas,
                     json:js.Dynamic,
