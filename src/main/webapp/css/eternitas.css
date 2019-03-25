@@ -1,8 +1,20 @@
 .left-bound {
-    margin-left:450px;
+    margin-left:420px;
     height: 100%;
 
 
+}
+
+.display-area {
+    max-width: 250px;
+    padding-top: 320px;
+}
+
+.message-area{
+    min-height: 0pt;
+    margin-top: 50px;
+    text-align:left;
+    margin-bottom: 20px;
 }
 
 .clickable {
