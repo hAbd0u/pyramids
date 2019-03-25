@@ -16,18 +16,17 @@ object LastWillStartup {
   implicit val ec = ExecutionContext.global;
 
   def main(args: Array[String]): Unit = document.addEventListener(
-      "DOMContentLoaded",
-      (e: Event) => {
-        implicit val $ = initJQuery()
-        val et = new Eternitas()
-        $("#logo").
-          export(et).
-          iimport(et)
-        $("#drop_zone").upLoad(et)
-      }
-    )
+      "DOMContentLoaded", (e: Event) => init(new Eternitas())(initJQuery()))
 
-  private def initJQuery(): JQueryWrapper = js.Dynamic.global.jQuery
+
+
+def init(et:Eternitas)(implicit $:JQueryWrapper): Unit = {
+  $("#logo").
+    export(et).
+    iimport(et)
+  $("#drop_zone").upLoad(et)
+}
+   def initJQuery(): JQueryWrapper = js.Dynamic.global.jQuery
       .noConflict()
       .asInstanceOf[JQueryWrapper]
 
