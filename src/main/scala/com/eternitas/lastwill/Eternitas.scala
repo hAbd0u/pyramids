@@ -8,11 +8,11 @@ import scala.scalajs.js
 
 
 
-case class PinnataAuth(api:String,secretApi:String)
+case class PinataAuth(api:String,secretApi:String)
 
 class Eternitas(
                  val keysOpt:Option[CryptoKeyPair],
-                 val pinnataOpt:Option[PinnataAuth]
+                 val pinnataOpt:Option[PinataAuth]
 
                ) {
 

@@ -101,11 +101,14 @@ object Actions {
       feedback: UserFeedback)=onDrop(
       (file: File) =>
         new FileReader().onRead(file, bufferSource => {
-          Encrypt.importJSON(oldEternitas,
-            js.JSON.parse(bufferSource.toNormalString()),
+          val importData:js.Dynamic = js.JSON.parse(bufferSource.toNormalString())
+          Encrypt.importKeyPair(oldEternitas,
+            importData ,
             (et:Eternitas)=>{
-              feedback.message("You have loaded the wallet!")
-
+              val pinata  = importData.pinata;
+              val pinataOpt = if(js.isUndefined(pinata))None else
+                Some(PinataAuth(pinata.api.toString(),pinata.apisecret.toString()))
+              feedback.message("You have loaded the wallet:" + pinataOpt)
             })
         })
     ).onDragOverNothing()

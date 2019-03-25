@@ -26,9 +26,9 @@ object Encrypt {
 
 
 
-  def importJSON(eternitas: Eternitas,
-                 json:js.Dynamic,
-                 cb:(Eternitas)=>Unit)(
+  def importKeyPair(eternitas: Eternitas,
+                    json:js.Dynamic,
+                    cb:(Eternitas)=>Unit)(
     implicit executionContext: ExecutionContext)=crypto.subtle.importKey(
        aKeyFormat,
        json.`public`.asInstanceOf[JsonWebKey],
