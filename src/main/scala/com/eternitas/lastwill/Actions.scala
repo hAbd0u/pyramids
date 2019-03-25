@@ -36,7 +36,21 @@ object Actions {
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
 
-  def message(s:String)(implicit $:JQueryWrapper) = $("#message").html(s)
+
+  def msgField()(implicit $:JQueryWrapper)=$("#message")
+
+  def message(s:String)(implicit $:JQueryWrapper) = msgField().
+    removeClass("error-message").
+    html(s)
+
+  def error(s:String)(implicit $:JQueryWrapper) = {
+    msgField().
+      addClass("error-message")
+      .html(s);
+
+  }
+
+
 
   implicit class PimpedJQuery(jq:JQuery){
 

@@ -9,6 +9,9 @@
     max-width: 250px;
     padding-top: 320px;
 }
+.error-message{
+    color: red;
+}
 
 .message-area{
     min-height: 0pt;
