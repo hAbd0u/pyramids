@@ -107,8 +107,10 @@ object Actions {
             importData ,
             (et:Eternitas)=>{
               val et2 =Encrypt.importPinata(et,importData)
-
-              et2.pinnataOpt.map(p=>new Pinata(p))
+              et2.pinnataOpt.map(p=>new Pinata(p).authenticate(
+                p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
+                e=>feedback.error(s"Pinnata error ${e}")
+              ))
               LastWillStartup.init(et2)
               //et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
             })
