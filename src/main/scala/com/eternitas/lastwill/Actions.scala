@@ -72,7 +72,7 @@ object Actions {
     def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext,
                                      feedback: UserFeedback)=onDrop(
         (file: File) =>
-          new FileReader().onRead(file, (arrayBuffer:ArrayBuffer) => {
+          new FileReader().onReadArrayBuffer(file, (arrayBuffer:ArrayBuffer) => {
             jq.removeClass("drop").
               addClass("dropped").
               html("Encrypting, please wait ..")
@@ -92,7 +92,7 @@ object Actions {
       $:JQueryWrapper,
       feedback: UserFeedback)=onDrop(
       (file: File) =>
-        new FileReader().onRead(file, bufferSource => {
+        new FileReader().onReadArrayBuffer(file, bufferSource => {
           if(file.`type` == "application/json"){
             val importData:js.Dynamic = js.JSON.parse(bufferSource.toNormalString())
             Encrypt.importKeyPair(oldEternitas,

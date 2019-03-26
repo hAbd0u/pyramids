@@ -14,15 +14,21 @@ import Buffers._
 
 object HashSum{
  implicit class PimpedFileReader(f:FileReader){
-    def onRead(b:Blob, h:(ArrayBuffer) => Unit) = {
+    def onReadArrayBuffer(b:Blob, h:(ArrayBuffer) => Unit) = {
        f.readAsArrayBuffer(b)
       f.onloadend  = (e:ProgressEvent)=>h(f.result.asInstanceOf[ArrayBuffer])
     }
 
 
+   def onReadUInt8Array(b:Blob, h:(ArrayBuffer) => Unit) = {
+
+     f.onloadend  = (e:ProgressEvent)=>h(f.result.asInstanceOf[ArrayBuffer])
+   }
 
 
-    def onHash(blob:Blob,h:(String)=>Unit)(implicit ctx:ExecutionContext) =onRead(blob,bufferSource=>{
+
+
+    def onHash(blob:Blob,h:(String)=>Unit)(implicit ctx:ExecutionContext) =onReadArrayBuffer(blob, bufferSource=>{
         hash(bufferSource).
           toFuture.
           onComplete((aTry:Try[Any])=>{

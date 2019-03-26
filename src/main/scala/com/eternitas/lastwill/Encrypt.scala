@@ -44,6 +44,7 @@ object Encrypt {
       encrypt(aHashAlgorithm,
         keys.publicKey,
         new Uint8Array(data)
+       // new Uint8Array(js.Array(3,4,5,6))
       ).toFuture.
       map(aAny=>aAny.asInstanceOf[ArrayBuffer])
   }
