@@ -10,7 +10,12 @@
     padding-top: 320px;
 }
 .error-message{
+    letter-spacing: 2px;
     color: red;
+}
+.normal-message{
+    letter-spacing: 2px;
+    color: white;
 }
 
 .message-area{
@@ -43,8 +48,7 @@
 }
 
 .bold-text-2 {
-    letter-spacing: 2px;
-    color: white;
+
 }
 
 

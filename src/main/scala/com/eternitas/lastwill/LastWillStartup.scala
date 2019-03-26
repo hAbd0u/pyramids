@@ -25,11 +25,13 @@ object LastWillStartup {
     implicit val feedBack:UserFeedback = new UserFeedback {
       override def message(s: String): Unit = {
         msgField().removeClass("error-message").
+          addClass("normal-message").
           html(s)
       }
 
       override def error(s: String): Unit = {
         msgField().
+          removeClass("normal-message").
           addClass("error-message")
           .html(s);
       }

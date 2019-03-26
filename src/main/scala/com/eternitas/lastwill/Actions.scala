@@ -87,18 +87,23 @@ object Actions {
       feedback: UserFeedback)=onDrop(
       (file: File) =>
         new FileReader().onRead(file, bufferSource => {
-          val importData:js.Dynamic = js.JSON.parse(bufferSource.toNormalString())
-          Encrypt.importKeyPair(oldEternitas,
-            importData ,
-            (et:Eternitas)=>{
-              val et2 =Encrypt.importPinata(et,importData)
-              et2.pinnataOpt.map(p=>new Pinata(p).authenticate(
-                p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
-                e=>feedback.error(s"Pinnata error ${e}")
-              ))
-              LastWillStartup.init(et2)
-              //et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
-            })
+          if(file.`type` == "application/json"){
+            val importData:js.Dynamic = js.JSON.parse(bufferSource.toNormalString())
+            Encrypt.importKeyPair(oldEternitas,
+              importData ,
+              (et:Eternitas)=>{
+                val et2 =Encrypt.importPinata(et,importData)
+                et2.pinnataOpt.map(p=>new Pinata(p).authenticate(
+                  p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
+                  e=>feedback.error(s"Pinnata error ${e}")
+                ))
+                LastWillStartup.init(et2)
+                //et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
+              })
+          }
+          else{
+            feedback.error("Unsupported data type: " + file.`type`)
+          }
         })
     ).onDragOverNothing()
 
