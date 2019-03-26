@@ -54,8 +54,7 @@ class Eternitas(
           "pinata" -> new Pinata(p).export()
 
       )).getOrElse(l())}
-    ).
-    map(ee=>js.JSON.stringify(ee:js.Any,null:js.Array[js.Any],1:js.Any))
+    ).map((aDynamic:js.Dynamic)=>js.JSON.stringify(aDynamic:js.Any,null:js.Array[js.Any],1:js.Any))
 
 
 
