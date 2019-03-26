@@ -8,6 +8,11 @@ import org.scalajs.dom.raw.FormData
 class Pinata(auth: PinataAuth) {
   val url = "https://api.pinata.cloud/data/testAuthentication";
 
+
+  def export():js.Dynamic={
+  l( "api" -> auth.api, "apisecret" -> auth.secretApi)
+  }
+
   def authenticate(c:(AxiosImpl) => Unit,ec:(AxiosError)=>Unit) = axios
       .get(url,
            l(

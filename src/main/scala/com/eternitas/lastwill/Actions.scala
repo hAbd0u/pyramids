@@ -1,21 +1,17 @@
 package com.eternitas.lastwill
 
-import org.querki.jquery.{JQuery, JQueryEventObject}
-import org.scalajs.dom
-import dom.raw._
-
-import scala.concurrent.ExecutionContext
-import scala.util.Try
+import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.HashSum._
-import org.scalajs.dom.Window
-
-import scala.scalajs.js
-import scala.scalajs.js.annotation.JSGlobal
-import scala.scalajs.js.typedarray.ArrayBuffer
-import Buffers._
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
-import org.scalajs.dom.crypto.CryptoKeyPair
+import org.querki.jquery.{JQuery, JQueryEventObject}
+import org.scalajs.dom
+import org.scalajs.dom.raw._
+
+import scala.concurrent.ExecutionContext
+import scala.scalajs.js
+import scala.scalajs.js.annotation.JSGlobal
+import scala.util.Try
 
 @js.native
 @JSGlobal
@@ -36,18 +32,7 @@ trait URL extends js.Any{
 object Actions {
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
-
-
-
-
-
-
-
   implicit class PimpedJQuery(jq:JQuery){
-
-
-
-
 
     def onDrop(h:(File=>Unit)):JQuery=jq.
       on("drop",(evt: JQueryEventObject) => {
@@ -74,7 +59,7 @@ object Actions {
     def export(eternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper,
                                      feedback: UserFeedback)=
       jq.click((e: Event) => eternitas.
-        withNewKeys().
+        withKeys().
         onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
           eternitas.export().
             onComplete(t=>if(t.isFailure) feedback.error("Export failed for keypair: " + t )

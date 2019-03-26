@@ -4,7 +4,7 @@ import org.scalajs.dom.crypto.CryptoKeyPair
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-
+import js.Dynamic.{literal => l}
 
 
 
@@ -18,15 +18,12 @@ class Eternitas(
 
 
 
-  def withNewKeys()(implicit ctx:ExecutionContext) = {
+  def withKeys()(implicit ctx:ExecutionContext) = {
     if(keysOpt.isEmpty) Encrypt.generateKeys().map(key=>new Eternitas(
       keysOpt=Some(key),
       pinnataOpt = this.pinnataOpt))
     else
-      Future.successful(new Eternitas(
-        keysOpt=Some(keysOpt.get),
-        pinnataOpt=this.pinnataOpt
-      ))
+      Future.successful(this)
 
   }
 
@@ -38,16 +35,29 @@ class Eternitas(
   def export()(implicit ctx:ExecutionContext) = keysOpt.map(
     key=>Encrypt
       .eexportKey(key.publicKey)
-      .map(publicJw=>
-        Encrypt.
+      .map(publicJw=> Encrypt.
           eexportKey(key.privateKey).
-          map(privateJw=>js.Dynamic.literal(
-            "private" ->privateJw,
-            "public" -> publicJw)
-          )).flatten
+          map(privateJw=>{
+            pinnataOpt.map(p=> l(
+                "pinata" -> new Pinata(p).export(),
+                "private" ->privateJw,
+                "public" -> publicJw)
+
+            ).getOrElse(l(
+              "private" ->privateJw,
+              "public" -> publicJw))
+          }
+          )
+      ).flatten
   ).
-    getOrElse(Future{js.Dynamic.literal("empty" -> true)}).
+    getOrElse( Future{pinnataOpt.map(p=> l(
+          "pinata" -> new Pinata(p).export()
+
+      )).getOrElse(l())}
+    ).
     map(ee=>js.JSON.stringify(ee:js.Any,null:js.Array[js.Any],1:js.Any))
+
+
 
 }
 
