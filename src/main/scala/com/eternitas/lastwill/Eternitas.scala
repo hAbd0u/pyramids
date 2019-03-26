@@ -44,6 +44,7 @@ class Eternitas(
                 "public" -> publicJw)
 
             ).getOrElse(l(
+              "pinata" -> l(),
               "private" ->privateJw,
               "public" -> publicJw))
           }
