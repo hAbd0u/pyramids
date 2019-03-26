@@ -11,6 +11,7 @@ import org.scalajs.dom.raw._
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
+import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.util.Try
 
 @js.native
@@ -73,10 +74,12 @@ object Actions {
 
     def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext)=onDrop(
         (file: File) =>
-          new FileReader().onHash(file, aHash => {
+          new FileReader().onRead(file, (arrayBuffer:ArrayBuffer) => {
             jq.removeClass("drop").
               addClass("dropped").
-              html(aHash)
+              html("Encrypting, please wait ..")
+
+
           })).onDragOverNothing()
 
 
