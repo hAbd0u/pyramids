@@ -1,7 +1,6 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
-import com.eternitas.lastwill.HashSum._
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.{JQuery, JQueryEventObject}

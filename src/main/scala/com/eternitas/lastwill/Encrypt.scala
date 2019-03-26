@@ -2,14 +2,11 @@ package com.eternitas.lastwill
 
 
 
-import org.scalajs.dom
-import org.scalajs.dom.crypto.{Algorithm, CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, RsaKeyGenParams, crypto}
-import sun.text.resources.ga.FormatData_ga
+import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
-import scala.util.Try
 
 
 
@@ -43,8 +40,8 @@ object Encrypt {
       subtle.
       encrypt(aHashAlgorithm,
         keys.publicKey,
-        new Uint8Array(data)
-       // new Uint8Array(js.Array(3,4,5,6))
+        data
+        //new Uint8Array(js.Array(3,4,5,6))
       ).toFuture.
       map(aAny=>aAny.asInstanceOf[ArrayBuffer])
   }
