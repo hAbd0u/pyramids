@@ -59,28 +59,31 @@ object Actions {
 
     def export(eternitas: Eternitas)(implicit ctx:ExecutionContext,$:JQueryWrapper,
                                      feedback: UserFeedback)=
-      jq.click((e: Event) => eternitas.
-        withKeys().
-        onComplete((f2:Try[Eternitas])=>f2.map((eternitas:Eternitas)=>
-          eternitas.export().
+      jq.click((e: Event) =>  eternitas.export().
             onComplete(t=>if(t.isFailure) feedback.error("Export failed for keypair: " + t )
             else t.map((s:String)=>{
               val blob:Blob =
                 new Blob(js.Array(s),BlobPropertyBag("octet/stream"))
               val url:String = mywindow.URL.createObjectURL(blob)
-              dom.window.location.assign(url)})))))
+              dom.window.location.assign(url)})))
 
 
 
-    def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext)=onDrop(
+    def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext,
+                                     feedback: UserFeedback)=onDrop(
         (file: File) =>
           new FileReader().onRead(file, (arrayBuffer:ArrayBuffer) => {
             jq.removeClass("drop").
               addClass("dropped").
               html("Encrypting, please wait ..")
-
-
-          })).onDragOverNothing()
+              Encrypt.
+                encrypt(eternitas.keysOpt.get,arrayBuffer).onComplete(
+                (t:Try[ArrayBuffer])=>{
+                  t.failed.map(thr=>
+                    feedback.error("Encryption failed: " +thr)
+                  )
+                  t.map(r=>feedback.message("File encrypted: " + file.name))
+                })})).onDragOverNothing()
 
 
 

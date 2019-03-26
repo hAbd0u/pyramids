@@ -15,28 +15,32 @@ object LastWillStartup {
 
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded",
-                              (e: Event) => init(
-                                new Eternitas(
+                              (e: Event) => new Eternitas(
                                   keysOpt = None,
                                   pinnataOpt = None
-                                ))(initJQuery()))
+                                ).withKeys().onComplete(t=>{
+                                implicit val $ = initJQuery()
+                                implicit val feedBack:UserFeedback = new UserFeedback {
+                                  override def message(s: String): Unit = {
+                                    msgField().removeClass("error-message").
+                                      addClass("normal-message").
+                                      html(s)
+                                  }
 
-  def init(et: Eternitas)(implicit $ : JQueryWrapper): Unit = {
-    implicit val feedBack:UserFeedback = new UserFeedback {
-      override def message(s: String): Unit = {
-        msgField().removeClass("error-message").
-          addClass("normal-message").
-          html(s)
-      }
+                                  override def error(s: String): Unit = {
+                                    msgField().
+                                      removeClass("normal-message").
+                                      addClass("error-message")
+                                      .html(s);
+                                  }
+                                }
+                                t.map(eternitas=>init(eternitas))
+                                t.failed.map(thr=>feedBack.error(thr.getMessage))
+                              }
+                                )
+                              )
 
-      override def error(s: String): Unit = {
-        msgField().
-          removeClass("normal-message").
-          addClass("error-message")
-          .html(s);
-      }
-    }
-
+  def init(et: Eternitas)(implicit $ : JQueryWrapper,userFeedback: UserFeedback): Unit = {
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
   }

@@ -3,7 +3,7 @@ package com.eternitas.lastwill
 
 
 import org.scalajs.dom
-import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
+import org.scalajs.dom.crypto.{Algorithm, CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, RsaKeyGenParams, crypto}
 import sun.text.resources.ga.FormatData_ga
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -16,10 +16,17 @@ import scala.util.Try
 
 object Encrypt {
   val aKeyFormat =  KeyFormat.jwk
-  val aAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
+  val aHashAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
     publicExponent = new Uint8Array( js.Array(1,0,1)),
     hash = HashAlgorithm.`SHA-256`)
-    val usages = js.Array(
+
+  val aAlgorithm:KeyAlgorithmIdentifier = js.Dynamic.
+    literal("name" -> "RSA-OAEP").
+    asInstanceOf[KeyAlgorithmIdentifier]
+
+
+
+  val usages = js.Array(
       KeyUsage.encrypt,
       KeyUsage.decrypt)
   val usageDecrypt = js.Array(
@@ -30,13 +37,16 @@ object Encrypt {
 
 
   def encrypt(keys:CryptoKeyPair,data:ArrayBuffer)
-             (implicit executionContext: ExecutionContext)= crypto.
-    subtle.
-            encrypt(aAlgorithm,
-              keys.publicKey,
-              data
-            ).toFuture.
-            map(aAny=>aAny.asInstanceOf[ArrayBuffer])
+             (implicit executionContext: ExecutionContext)= {
+
+    crypto.
+      subtle.
+      encrypt(aHashAlgorithm,
+        keys.publicKey,
+        new Uint8Array(data)
+      ).toFuture.
+      map(aAny=>aAny.asInstanceOf[ArrayBuffer])
+  }
 
 
 
@@ -97,7 +107,7 @@ object Encrypt {
 
   def generateKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
-    algorithm = aAlgorithm,
+    algorithm = aHashAlgorithm,
     extractable = true,
     keyUsages = usages).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
