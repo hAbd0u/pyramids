@@ -4,10 +4,12 @@ package com.eternitas.lastwill
 
 import org.scalajs.dom
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
+import sun.text.resources.ga.FormatData_ga
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.Uint8Array
+import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import scala.util.Try
 
 
 
@@ -26,6 +28,20 @@ object Encrypt {
     KeyUsage.encrypt)
 
 
+
+  def encrypt(keys:CryptoKeyPair,data:ArrayBuffer)
+             (implicit executionContext: ExecutionContext)= crypto.
+    subtle.
+            encrypt(aAlgorithm,
+              keys.publicKey,
+              data
+            ).toFuture.
+            map(aAny=>aAny.asInstanceOf[ArrayBuffer])
+
+
+
+
+
   def importPinata(eternitas: Eternitas,
                    importData:js.Dynamic): Eternitas ={
     val pinata  = importData.pinata;
@@ -36,20 +52,7 @@ object Encrypt {
              pinata.apisecret.toString())))
 
       //TODO: encrypt the secret key!
-       /*
-      eternitas.keysOpt.map(
-        keys=>{
-          crypto.subtle.
-            encrypt(aAlgorithm,
-              keys.publicKey,
-              new Uint8Array(secretKey.getBytes().toJSArray)
-            ).toFuture.
-            map(aAny=>aAny.asInstanceOf[ArrayBuffer]).
-            onComplete((t:Try[ArrayBuffer])=>{})
 
-        }
-
-        */
 
 }
 
