@@ -1,6 +1,6 @@
 package com.eternitas.lastwill
 
-import com.eternitas.lastwill.HashSum.hash
+import com.eternitas.lastwill.cryptoo.HashSum.hash
 import org.scalajs.dom.raw.{Blob, FileReader, ProgressEvent}
 
 import scala.concurrent.ExecutionContext

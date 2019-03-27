@@ -1,5 +1,6 @@
 package com.eternitas.lastwill
 
+import com.eternitas.lastwill.cryptoo.AsymCrypto
 import org.scalajs.dom.crypto.CryptoKeyPair
 
 import scala.concurrent.{ExecutionContext, Future}

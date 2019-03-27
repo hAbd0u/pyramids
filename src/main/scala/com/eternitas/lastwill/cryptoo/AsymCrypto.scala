@@ -1,15 +1,11 @@
-package com.eternitas.lastwill
+package com.eternitas.lastwill.cryptoo
 
-
-
+import com.eternitas.lastwill.{Eternitas, PinataAuth}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
-
-
-
 
 object AsymCrypto {
   val aKeyFormat =  KeyFormat.jwk
