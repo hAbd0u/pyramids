@@ -79,7 +79,7 @@ object Actions {
                 encrypt(eternitas.keysOpt.get,arrayBuffer).onComplete(
                 (t:Try[ArrayBuffer])=>{
                   t.failed.map(thr=>
-                    feedback.error("Encryption failed: " +thr)
+                    feedback.error(s"Encryption failed: ${arrayBuffer.byteLength}" +thr.getMessage())
                   )
                   t.map(r=>feedback.message("File encrypted: " + file.name))
                 })})).onDragOverNothing()
