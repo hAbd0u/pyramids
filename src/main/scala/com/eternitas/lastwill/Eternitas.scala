@@ -40,13 +40,11 @@ class Eternitas(
           map(privateJw=>{
             pinnataOpt.map(p=> l(
                 "pinata" -> new Pinata(p).export(),
-                "private" ->privateJw,
-                "public" -> publicJw)
-
-            ).getOrElse(l(
+                "asym" -> l("private" -> privateJw , "public" -> publicJw)
+            )).getOrElse(l(
               "pinata" -> l(),
-              "private" ->privateJw,
-              "public" -> publicJw))
+              "asym" -> l("private" -> privateJw , "public" -> publicJw)
+            ))
           }
           )
       ).flatten

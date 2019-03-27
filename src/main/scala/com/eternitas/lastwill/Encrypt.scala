@@ -69,27 +69,33 @@ object Encrypt {
                     cb:(Eternitas)=>Unit)(
     implicit executionContext: ExecutionContext)=crypto.subtle.importKey(
        aKeyFormat,
-       json.`public`.asInstanceOf[JsonWebKey],
-       aAlgorithm,
+       json.asym.`public`.asInstanceOf[JsonWebKey],
+       aHashAlgorithm,
        true,
        usageEncrypt
-     ).toFuture.onComplete(_.map(aAny=>{
-         val publicKey = aAny.asInstanceOf[CryptoKey]
-         crypto.subtle.importKey(
-           aKeyFormat,
-           json.`private`.asInstanceOf[JsonWebKey],
-           aAlgorithm,
-           true,
-           usageDecrypt
-         ).toFuture.onComplete(_.map(aAny2=>{
-           val privateKey = aAny2.asInstanceOf[CryptoKey]
-           cb(new Eternitas(
-           Some(js.Dictionary(
-             "publicKey"->publicKey,
-             "privateKey" -> privateKey
-           ).asInstanceOf[CryptoKeyPair]),
-             pinnataOpt = eternitas.pinnataOpt))
-         }))})
+     ).toFuture.onComplete(t=>{
+    t.failed.map(e=>println("Error importing public key: " + e.getMessage))
+    t.map(aAny=>{
+      val publicKey = aAny.asInstanceOf[CryptoKey]
+      crypto.subtle.importKey(
+        aKeyFormat,
+        json.asym.`private`.asInstanceOf[JsonWebKey],
+        aHashAlgorithm,
+        true,
+        usageDecrypt
+      ).toFuture.onComplete(t2=>{
+        t2.failed.map(e=>println("Error importing private key: " + e.getMessage))
+        t2.map(aAny2=>{
+          val privateKey = aAny2.asInstanceOf[CryptoKey]
+          cb(new Eternitas(
+            Some(js.Dictionary(
+              "publicKey"->publicKey,
+              "privateKey" -> privateKey
+            ).asInstanceOf[CryptoKeyPair]),
+            pinnataOpt = eternitas.pinnataOpt))
+        })
+      })})
+  }
 
      )
 

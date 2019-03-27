@@ -9,6 +9,7 @@ import org.scalajs.dom.raw._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
+import scala.scalajs.js.Date
 import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.util.Try
@@ -71,18 +72,14 @@ object Actions {
     def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext,
                                      feedback: UserFeedback)=onDrop(
         (file: File) =>
-          new FileReader().onReadArrayBuffer(file, (arrayBuffer:ArrayBuffer) => {
-            jq.removeClass("drop").
-              addClass("dropped").
-              html("Encrypting, please wait ..")
-              Encrypt.
+          new FileReader().onReadArrayBuffer(file, (arrayBuffer:ArrayBuffer) => Encrypt.
                 encrypt(eternitas.keysOpt.get,arrayBuffer).onComplete(
                 (t:Try[ArrayBuffer])=>{
                   t.failed.map(thr=>
-                    feedback.error(s"Encryption failed: ${arrayBuffer.byteLength}" +thr.getMessage())
+                    feedback.error(s"${new Date()}: encryption failed: ${arrayBuffer.byteLength}" +thr.getMessage())
                   )
-                  t.map(r=>feedback.message("File encrypted: " + file.name))
-                })})).onDragOverNothing()
+                  t.map(r=>feedback.message(s"${new Date()}: Encrypted: ${file.name}" ))
+                }))).onDragOverNothing()
 
 
 
@@ -102,7 +99,12 @@ object Actions {
                   p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
                   e=>feedback.error(s"Pinnata error ${e}")
                 ))
-                LastWillStartup.init(et2)
+                et2.keysOpt.map(keys=>{
+                  LastWillStartup.init(et2)
+                  feedback.message("Loaded asym key pair")
+                })
+                if(et2.keysOpt.isEmpty) feedback.error("No asym key pair")
+
                 //et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
               })
           }
