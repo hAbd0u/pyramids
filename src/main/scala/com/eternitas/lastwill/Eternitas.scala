@@ -31,25 +31,40 @@ class Eternitas(
 
   }
 
-  def exportKeyPair()(implicit ctx: ExecutionContext) = keyPairOpt.map(
-    key => AsymCrypto.eexportKey(key.publicKey)
-  )
 
-  def export2()()(implicit ctx: ExecutionContext) = {
-    type FutureKeyExport = (Future[JsonWebKey],String)
 
-    val fs:Seq[Option[FutureKeyExport]]
-    = Seq(
-      keyPairOpt.map(keyPair =>(AsymCrypto.eexportKey(keyPair.privateKey),"private")),
-      keyPairOpt.map(keyPair =>  (AsymCrypto.eexportKey(keyPair.publicKey),"public")),
-      keyOpt.map(key =>  (SymCrypto.eexportKey(key),"sym"))
-    )
+  def exportKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = keyPairOpt
+      .map(
+        keyPair =>
+          AsymCrypto
+            .eexportKey(keyPair.publicKey)
+            .map(publicJw =>
+              AsymCrypto
+                .eexportKey(keyPair.privateKey)
+                .map(privateJw => l("private" -> privateJw, "public" -> publicJw))
+                )
+            .flatten
+      ).getOrElse(Future{l()})
 
-    Future {
-      l()
-    }.map((aDynamic: js.Dynamic) =>
-      js.JSON.stringify(aDynamic: js.Any, null: js.Array[js.Any], 1: js.Any))
+
+  def exportKey()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = keyOpt
+    .map(
+      key =>
+        SymCrypto.eexportKey(key).map(_.asInstanceOf[js.Dynamic]))
+    .getOrElse(Future{l()})
+
+  def exportPinata()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {pinnataOpt.
+    map(p => new Pinata(p).export()).getOrElse(l())}
+
+
+
+  def export2()(implicit ctx: ExecutionContext) ={
+    Future.sequence(Seq(exportKeyPair(),exportKey(),exportPinata())).
+      map(s => l("asym" -> s(0)))
   }
+
+
+
 
   def export()(implicit ctx: ExecutionContext) =
     keyPairOpt
