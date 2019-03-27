@@ -72,13 +72,11 @@ object Actions {
     def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext,
                                      feedback: UserFeedback)=onDrop(
         (file: File) =>
-          new FileReader().onReadArrayBuffer(file, (arrayBuffer:ArrayBuffer) => Encrypt.
+          new FileReader().onReadArrayBuffer(file, (arrayBuffer:ArrayBuffer) => AsymCrypto.
                 encrypt(eternitas.keysOpt.get,arrayBuffer).onComplete(
                 (t:Try[ArrayBuffer])=>{
-                  t.failed.map(thr=>
-                    feedback.error(s"${new Date()}: encryption failed: ${arrayBuffer.byteLength}" +thr.getMessage())
-                  )
-                  t.map(r=>feedback.message(s"${new Date()}: Encrypted: ${file.name}" ))
+                  t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
+                  t.map(r=>feedback.message(s"Encrypted: ${file.name}"))
                 }))).onDragOverNothing()
 
 
@@ -91,10 +89,10 @@ object Actions {
         new FileReader().onReadArrayBuffer(file, bufferSource => {
           if(file.`type` == "application/json"){
             val importData:js.Dynamic = js.JSON.parse(bufferSource.toNormalString())
-            Encrypt.importKeyPair(oldEternitas,
+            AsymCrypto.importKeyPair(oldEternitas,
               importData ,
               (et:Eternitas)=>{
-                val et2 =Encrypt.importPinata(et,importData)
+                val et2 =AsymCrypto.importPinata(et,importData)
                 et2.pinnataOpt.map(p=>new Pinata(p).authenticate(
                   p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
                   e=>feedback.error(s"Pinnata error ${e}")

@@ -19,7 +19,7 @@ class Eternitas(
 
 
   def withKeys()(implicit ctx:ExecutionContext) = {
-    if(keysOpt.isEmpty) Encrypt.generateKeys().map(key=>new Eternitas(
+    if(keysOpt.isEmpty) AsymCrypto.generateKeys().map(key=>new Eternitas(
       keysOpt=Some(key),
       pinnataOpt = this.pinnataOpt))
     else
@@ -29,13 +29,13 @@ class Eternitas(
 
 
   def exportKeyJWKPublic()(implicit ctx:ExecutionContext) = keysOpt.map(
-    key=>Encrypt.eexportKey(key.publicKey)
+    key=>AsymCrypto.eexportKey(key.publicKey)
   )
 
   def export()(implicit ctx:ExecutionContext) = keysOpt.map(
-    key=>Encrypt
+    key=>AsymCrypto
       .eexportKey(key.publicKey)
-      .map(publicJw=> Encrypt.
+      .map(publicJw=> AsymCrypto.
           eexportKey(key.privateKey).
           map(privateJw=>{
             pinnataOpt.map(p=> l(

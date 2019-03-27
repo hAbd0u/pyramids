@@ -11,7 +11,7 @@ import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
 
-object Encrypt {
+object AsymCrypto {
   val aKeyFormat =  KeyFormat.jwk
   val aHashAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
     publicExponent = new Uint8Array( js.Array(1,0,1)),

@@ -20,11 +20,15 @@ object LastWillStartup {
                                   pinnataOpt = None
                                 ).withKeys().onComplete(t=>{
                                 implicit val $ = initJQuery()
+                                def showTime(): Unit = $("#time").html(new js.Date().toLocaleString())
+
+                                showTime()
                                 implicit val feedBack:UserFeedback = new UserFeedback {
                                   override def message(s: String): Unit = {
                                     msgField().removeClass("error-message").
                                       addClass("normal-message").
                                       html(s)
+                                    showTime();
                                   }
 
                                   override def error(s: String): Unit = {
@@ -32,6 +36,7 @@ object LastWillStartup {
                                       removeClass("normal-message").
                                       addClass("error-message")
                                       .html(s);
+                                    showTime();
                                   }
                                 }
                                 t.map(eternitas=>init(eternitas))

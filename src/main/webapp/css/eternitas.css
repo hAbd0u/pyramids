@@ -17,6 +17,12 @@
     letter-spacing: 2px;
     color: white;
 }
+.time{
+    margin-left: 30px;
+    margin-top: 100px;
+    max-width: 300px;
+    padding: 5px;
+}
 
 .message-area{
     min-height: 0pt;
@@ -37,9 +43,16 @@
 }
 
 .logo {
-    width: 50px;
-    height: 50px;
+
+
+    width: 80px;
+    height: 80px;
+
+
+
     margin: 10px;
+    padding: 10px;
+
 }
 
 .front-page{
