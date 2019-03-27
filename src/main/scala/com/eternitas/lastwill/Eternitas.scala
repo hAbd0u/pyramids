@@ -15,7 +15,7 @@ class Eternitas(
     val keyOpt: Option[CryptoKey]
 ) {
 
-  def withKeys()(implicit ctx: ExecutionContext) = {
+  def withKeyPair()(implicit ctx: ExecutionContext) = {
     if (keyPairOpt.isEmpty)
       AsymCrypto
         .generateKeys()
@@ -28,8 +28,25 @@ class Eternitas(
           ))
     else
       Future.successful(this)
-
   }
+
+  def withSymKey()(implicit ctx: ExecutionContext) = {
+    if (keyOpt.isEmpty)
+      SymCrypto
+        .generateKey()
+        .map(
+          key =>
+            new Eternitas(
+              keyPairOpt =this.keyPairOpt,
+              pinnataOpt = this.pinnataOpt,
+              keyOpt = Some(key)
+            ))
+    else
+      Future.successful(this)
+  }
+
+  def withAllKeys()(implicit ctx: ExecutionContext) = withKeyPair().
+    map(e=>e.withSymKey()).flatten
 
 
 
