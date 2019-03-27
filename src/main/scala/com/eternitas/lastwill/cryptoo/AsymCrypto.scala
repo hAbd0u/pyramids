@@ -50,10 +50,14 @@ object AsymCrypto {
                    importData:js.Dynamic): Eternitas ={
     val pinata  = importData.pinata;
      if(js.isUndefined(pinata))
-      eternitas else new Eternitas(eternitas.keyPairOpt,
+      eternitas else new Eternitas(
+       eternitas.keyPairOpt,
          Some(
            PinataAuth(pinata.api.toString(),
-             pinata.apisecret.toString())))
+             pinata.apisecret.toString())
+         ),
+       eternitas.keyOpt
+     )
 
       //TODO: encrypt the secret key!
 
@@ -88,7 +92,9 @@ object AsymCrypto {
               "publicKey"->publicKey,
               "privateKey" -> privateKey
             ).asInstanceOf[CryptoKeyPair]),
-            pinnataOpt = eternitas.pinnataOpt))
+            pinnataOpt = eternitas.pinnataOpt,
+            keyOpt= eternitas.keyOpt
+          ))
         })
       })})
   }

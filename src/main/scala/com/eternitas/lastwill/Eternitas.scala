@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.cryptoo.AsymCrypto
-import org.scalajs.dom.crypto.CryptoKeyPair
+import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -13,7 +13,8 @@ case class PinataAuth(api:String,secretApi:String)
 
 class Eternitas(
                  val keyPairOpt:Option[CryptoKeyPair],
-                 val pinnataOpt:Option[PinataAuth]
+                 val pinnataOpt:Option[PinataAuth],
+                 val keyOpt:Option[CryptoKey]
 
                ) {
 
@@ -22,7 +23,10 @@ class Eternitas(
   def withKeys()(implicit ctx:ExecutionContext) = {
     if(keyPairOpt.isEmpty) AsymCrypto.generateKeys().map(key=>new Eternitas(
       keyPairOpt=Some(key),
-      pinnataOpt = this.pinnataOpt))
+      pinnataOpt = this.pinnataOpt,
+      keyOpt = this.keyOpt
+    )
+    )
     else
       Future.successful(this)
 

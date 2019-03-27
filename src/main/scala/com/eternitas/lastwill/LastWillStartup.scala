@@ -17,7 +17,8 @@ object LastWillStartup {
     document.addEventListener("DOMContentLoaded",
                               (e: Event) => new Eternitas(
                                   keyPairOpt = None,
-                                  pinnataOpt = None
+                                  pinnataOpt = None,
+                                keyOpt = None
                                 ).withKeys().onComplete(t=>{
                                 implicit val $ = initJQuery()
                                 def showTime(): Unit = $("#time").html(new js.Date().toLocaleString())
