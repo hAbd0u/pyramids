@@ -60,8 +60,9 @@ class Eternitas(
 
   def export2()(implicit ctx: ExecutionContext) ={
     Future.sequence(Seq(exportKeyPair(),exportKey(),exportPinata())).
-      map(s => l("asym" -> s(0)))
-  }
+      map(s => l("asym" -> s(0),"sym" -> s(1),"pinata" -> s(2)))
+  }.map((aDynamic: js.Dynamic) =>
+    js.JSON.stringify(aDynamic: js.Any, null: js.Array[js.Any], 1: js.Any))
 
 
 
