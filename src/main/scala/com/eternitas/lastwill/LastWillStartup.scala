@@ -19,7 +19,7 @@ object LastWillStartup {
                                   keyPairOpt = None,
                                   pinnataOpt = None,
                                 keyOpt = None
-                                ).withKeys().onComplete(t=>{
+                                ).withKeyPair().onComplete(t=>{
                                 implicit val $ = initJQuery()
                                 def showTime(): Unit = $("#time").html(new js.Date().toLocaleString())
 
