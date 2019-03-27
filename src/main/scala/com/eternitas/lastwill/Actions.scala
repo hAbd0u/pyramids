@@ -74,7 +74,7 @@ object Actions {
                                      feedback: UserFeedback)=onDrop(
         (file: File) =>
           new FileReader().onReadArrayBuffer(file, (arrayBuffer:ArrayBuffer) => AsymCrypto.
-                encrypt(eternitas.keysOpt.get,arrayBuffer).onComplete(
+                encrypt(eternitas.keyPairOpt.get,arrayBuffer).onComplete(
                 (t:Try[ArrayBuffer])=>{
                   t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
                   t.map(r=>feedback.message(s"Encrypted: ${file.name}"))
@@ -98,11 +98,11 @@ object Actions {
                   p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
                   e=>feedback.error(s"Pinnata error ${e}")
                 ))
-                et2.keysOpt.map(keys=>{
+                et2.keyPairOpt.map(keys=>{
                   LastWillStartup.init(et2)
                   feedback.message("Loaded asym key pair")
                 })
-                if(et2.keysOpt.isEmpty) feedback.error("No asym key pair")
+                if(et2.keyPairOpt.isEmpty) feedback.error("No asym key pair")
 
                 //et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
               })

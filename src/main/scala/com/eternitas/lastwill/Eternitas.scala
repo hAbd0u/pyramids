@@ -12,7 +12,7 @@ import js.Dynamic.{literal => l}
 case class PinataAuth(api:String,secretApi:String)
 
 class Eternitas(
-                 val keysOpt:Option[CryptoKeyPair],
+                 val keyPairOpt:Option[CryptoKeyPair],
                  val pinnataOpt:Option[PinataAuth]
 
                ) {
@@ -20,8 +20,8 @@ class Eternitas(
 
 
   def withKeys()(implicit ctx:ExecutionContext) = {
-    if(keysOpt.isEmpty) AsymCrypto.generateKeys().map(key=>new Eternitas(
-      keysOpt=Some(key),
+    if(keyPairOpt.isEmpty) AsymCrypto.generateKeys().map(key=>new Eternitas(
+      keyPairOpt=Some(key),
       pinnataOpt = this.pinnataOpt))
     else
       Future.successful(this)
@@ -29,11 +29,11 @@ class Eternitas(
   }
 
 
-  def exportKeyJWKPublic()(implicit ctx:ExecutionContext) = keysOpt.map(
+  def exportKeyPair()(implicit ctx:ExecutionContext) = keyPairOpt.map(
     key=>AsymCrypto.eexportKey(key.publicKey)
   )
 
-  def export()(implicit ctx:ExecutionContext) = keysOpt.map(
+  def export()(implicit ctx:ExecutionContext) = keyPairOpt.map(
     key=>AsymCrypto
       .eexportKey(key.publicKey)
       .map(publicJw=> AsymCrypto.

@@ -16,7 +16,7 @@ object LastWillStartup {
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded",
                               (e: Event) => new Eternitas(
-                                  keysOpt = None,
+                                  keyPairOpt = None,
                                   pinnataOpt = None
                                 ).withKeys().onComplete(t=>{
                                 implicit val $ = initJQuery()

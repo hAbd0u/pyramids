@@ -50,7 +50,7 @@ object AsymCrypto {
                    importData:js.Dynamic): Eternitas ={
     val pinata  = importData.pinata;
      if(js.isUndefined(pinata))
-      eternitas else new Eternitas(eternitas.keysOpt,
+      eternitas else new Eternitas(eternitas.keyPairOpt,
          Some(
            PinataAuth(pinata.api.toString(),
              pinata.apisecret.toString())))
