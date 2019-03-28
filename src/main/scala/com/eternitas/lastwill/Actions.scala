@@ -10,7 +10,6 @@ import org.scalajs.dom.raw._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
-import scala.scalajs.js.Date
 import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.util.Try
