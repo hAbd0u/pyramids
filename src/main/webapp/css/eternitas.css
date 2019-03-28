@@ -2,7 +2,7 @@
     margin-left:420px;
     height: 100%;
     position: absolute;
-    margin-top: 320px;
+    top: 420px;
 }
 
 .display-area {
@@ -20,7 +20,7 @@
 }
 .time{
     margin-left: 30px;
-    margin-top: 580px;
+    top: 680px;
     max-width: 300px;
     padding: 5px;
     position: absolute;
