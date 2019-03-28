@@ -42,17 +42,14 @@ trait SymCryptoTrait {
 
 
   def encrypt(key:CryptoKey,data:ArrayBuffer)
-             (implicit executionContext: ExecutionContext)= {
-    import scala.scalajs.js.typedarray.Uint8Array
-
-    crypto.
+             (implicit executionContext: ExecutionContext)= crypto.
       subtle.
       encrypt(algorithmIdentifier(),
       key,
         data
       ).toFuture.
       map(aAny=>aAny.asInstanceOf[ArrayBuffer])
-  }
+
 
 
 
