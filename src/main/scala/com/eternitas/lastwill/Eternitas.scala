@@ -31,16 +31,21 @@ class Eternitas(
   }
 
   def withSymKey()(implicit ctx: ExecutionContext) = {
-    if (keyOpt.isEmpty)
-      SymCrypto
+    if (keyOpt.isEmpty){
+      val kf = SymCrypto
         .generateKey()
-        .map(
+      kf.onComplete(t => {
+       // t.failed.map(e=>println("Error generating symmetric key: " +e.getMessage))
+       // t.map(key => println("Generated: " + key))
+      })
+
+        kf.map(
           key =>
             new Eternitas(
               keyPairOpt =this.keyPairOpt,
               pinnataOpt = this.pinnataOpt,
               keyOpt = Some(key)
-            ))
+            ))}
     else
       Future.successful(this)
   }
@@ -75,7 +80,7 @@ class Eternitas(
 
 
 
-  def export2()(implicit ctx: ExecutionContext) ={
+  def export()(implicit ctx: ExecutionContext) ={
     Future.sequence(Seq(exportKeyPair(),exportKey(),exportPinata())).
       map(s => l("asym" -> s(0),"sym" -> s(1),"pinata" -> s(2)))
   }.map((aDynamic: js.Dynamic) =>
@@ -84,7 +89,7 @@ class Eternitas(
 
 
 
-  def export()(implicit ctx: ExecutionContext) =
+  def expor_oldt()(implicit ctx: ExecutionContext) =
     keyPairOpt
       .map(
         key =>
