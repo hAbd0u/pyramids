@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
-import com.eternitas.lastwill.axioss.{Pinata, PinataMetaData, PinataPinResponse}
+import com.eternitas.lastwill.axioss.{AxiosResponse, Pinata, PinataMetaData, PinataPinResponse}
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, SymEncryptionResult}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
@@ -85,15 +85,12 @@ object Actions {
                 eternitas.pinnataOpt.map(p=> {
                   feedback.message("Start pinning, please be very patient!")
                 new Pinata(p).
-                  pinFileToIPFS(symEncryptionResult.result).
+                  pinFileToIPFS(symEncryptionResult.result,PinataMetaData(file)).
                   `then`((axiosResponse) => {
-                    PinataMetaData(Some(file.name),Some(file.size),Some(file.`type`))
-                    new Pinata(p).pinFileToIPFS(symEncryptionResult.iv.buffer).
-                    `then`((axiosResponse2)=>{
-                      val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
-                      val ivHash  = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
-                      feedback.message(s"Your data is encrypted and stored!" )
-                    }).
+                    new Pinata(p).pinFileToIPFS(
+                      symEncryptionResult.iv.buffer,
+                      PinataMetaData(axiosResponse.asInstanceOf[PinataPinResponse].data)).
+                    `then`((axiosResponse2)=> handlePinResult(feedback,  axiosResponse,axiosResponse2)).
                       `catch`((error) => feedback.message(s"Error pinning iv: ${error}"))
                   }
                   ).
@@ -119,6 +116,7 @@ object Actions {
             AsymCrypto.importKeyPair(oldEternitas,
               importData ,
               (et:Eternitas)=>{
+                PinataMetaData(Some(file.name), Some(file.size), Some(file.`type`))
                 val et2 =AsymCrypto.importPinata(et,importData)
                 et2.pinnataOpt.map(p=>new Pinata(p).authenticate(
                   p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
@@ -142,8 +140,13 @@ object Actions {
   }
 
 
+  private def handlePinResult(feedback: UserFeedback,
+                              axiosResponse: AxiosResponse,
+                              axiosResponse2: AxiosResponse) = {
 
+    val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
+    val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
+    feedback.message(s"Your data is encrypted and stored!")
 
-
-
+  }
 }

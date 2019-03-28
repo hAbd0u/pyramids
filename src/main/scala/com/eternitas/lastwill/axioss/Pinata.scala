@@ -1,7 +1,7 @@
 package com.eternitas.lastwill.axioss
 
 import com.eternitas.lastwill.PinataAuth
-import org.scalajs.dom.raw.{Blob, FormData, HTMLFormElement}
+import org.scalajs.dom.raw.{Blob, File, FormData, HTMLFormElement}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => l}
@@ -22,6 +22,17 @@ trait PinataPinResponse extends AxiosResponse {
   override val data:PinataData = js.native
 
 }
+
+
+//type; application/octet-stream'
+object PinataMetaData{
+
+  def apply(f:File):PinataMetaData = PinataMetaData(Some(f.name),Some(f.size),Some("application/octet-stream"))
+
+  def apply(p:PinataData):PinataMetaData = PinataMetaData(Some(p.IpfsHash),None,Some("application/octet-stream"))
+
+}
+
 
 case class PinataMetaData(name:Option[String],size:Option[Double],`type`:Option[String])
 
@@ -46,15 +57,16 @@ class Pinata(auth: PinataAuth) {
       .`then`(a => c(a))
       .`catch`(e => ec(e))
 
-  def pinFileToIPFS(arrayBuffer: ArrayBuffer) = {
+  def pinFileToIPFS(arrayBuffer: ArrayBuffer,pn:PinataMetaData) = {
     println("pinFileToIPFS")
     val data = new FormData()
     data.append("file", new Blob(js.Array[js.Any](arrayBuffer)))
     data.append("pinataMetadata",
                 js.JSON.stringify(
-                  l("name" -> "testname",
+                  l("name" -> pn.name.getOrElse("NOT SPECIFIED").toString(),
                     "keyvalues" -> l(
-                      "exampleKey" -> "exampleValue"
+                      "size" -> pn.size.getOrElse("???").toString(),
+                      "type" -> pn.`type`.getOrElse("NONE").toString()
                     ))))
     axios.post(
       url +"/pinning/pinFileToIPFS",
