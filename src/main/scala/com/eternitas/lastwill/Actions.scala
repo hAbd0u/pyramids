@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
-import com.eternitas.lastwill.cryptoo.AsymCrypto
+import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.{JQuery, JQueryEventObject}
@@ -71,13 +71,19 @@ object Actions {
 
     def upLoad(eternitas: Eternitas)(implicit ctx:ExecutionContext,
                                      feedback: UserFeedback)=onDrop(
-        (file: File) =>
-          new FileReader().onReadArrayBuffer(file, (arrayBuffer:ArrayBuffer) => AsymCrypto.
-                encrypt(eternitas.keyPairOpt.get,arrayBuffer).onComplete(
-                (t:Try[ArrayBuffer])=>{
-                  t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
-                  t.map(r=>feedback.message(s"Encrypted: ${file.name}"))
-                }))).onDragOverNothing()
+        (file: File) => eternitas.keyOpt.map(key => new FileReader().
+          onReadArrayBuffer(file,
+            (arrayBuffer:ArrayBuffer) => SymCrypto.
+            encrypt(key,arrayBuffer).onComplete(
+            (t:Try[ArrayBuffer])=>{
+              t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
+              t.map(r=>feedback.message(s"Encrypted: ${file.name}"))
+            })))
+    ).onDragOverNothing()
+
+
+
+
 
 
 
@@ -102,8 +108,6 @@ object Actions {
                   feedback.message("Loaded asym key pair")
                 })
                 if(et2.keyPairOpt.isEmpty) feedback.error("No asym key pair")
-
-                //et2.pinnataOpt.map(p=>feedback.message("Pinnata: " + p.api))
               })
           }
           else{
