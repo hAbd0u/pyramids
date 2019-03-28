@@ -20,6 +20,12 @@ class Eternitas(
     val pins:Seq[EncryptedPin]
 ) {
 
+  def withPin(encryptedPin: EncryptedPin) = new Eternitas(this.keyPairOpt,
+    this.pinnataOpt,
+    this.keyOpt,
+    this.pins :+ encryptedPin )
+
+
   def withKeyPair()(implicit ctx: ExecutionContext) = {
     if (keyPairOpt.isEmpty)
       AsymCrypto
