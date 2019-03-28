@@ -1,11 +1,12 @@
 package com.eternitas.lastwill.cryptoo
 
 
-import org.scalajs.dom.crypto.{AesGcmParams, Algorithm, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
+import org.scalajs.dom.crypto.{AesGcmParams, Algorithm, AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
 import scala.concurrent.ExecutionContext
+import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
 
 object SymCrypto extends SymCryptoTrait {
 
@@ -28,12 +29,31 @@ trait SymCryptoTrait {
     KeyUsage.decrypt)
 
   val keyAlgorithmIdentifier:KeyAlgorithmIdentifier
+  def algorithmIdentifier():AlgorithmIdentifier={
+    val iv = crypto.getRandomValues(new Uint8Array(12))
+    l( "name" -> "AES-GCM",  "iv" -> iv ).asInstanceOf[AlgorithmIdentifier]
+  }
 
   def generateKey()(implicit ctx:ExecutionContext)= crypto.
     subtle.
     generateKey(keyAlgorithmIdentifier,true, encryptDecrypt).
     toFuture.
     map(_.asInstanceOf[CryptoKey])
+
+
+  def encrypt(key:CryptoKey,data:ArrayBuffer)
+             (implicit executionContext: ExecutionContext)= {
+    import scala.scalajs.js.typedarray.Uint8Array
+
+    crypto.
+      subtle.
+      encrypt(algorithmIdentifier(),
+      key,
+        data
+      ).toFuture.
+      map(aAny=>aAny.asInstanceOf[ArrayBuffer])
+  }
+
 
 
 
