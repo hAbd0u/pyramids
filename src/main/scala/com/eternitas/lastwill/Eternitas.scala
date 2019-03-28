@@ -10,6 +10,9 @@ import js.Dynamic.{literal => l}
 
 case class PinataAuth(api: String, secretApi: String)
 
+
+case class EncryptedPin(dataHash:String,ivHash:String)
+
 class Eternitas(
     val keyPairOpt: Option[CryptoKeyPair],
     val pinnataOpt: Option[PinataAuth],

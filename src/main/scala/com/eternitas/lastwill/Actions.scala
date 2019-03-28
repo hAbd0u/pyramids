@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
-import com.eternitas.lastwill.axioss.{Pinata, PinataPinResponse}
+import com.eternitas.lastwill.axioss.{Pinata, PinataMetaData, PinataPinResponse}
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, SymEncryptionResult}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
@@ -87,6 +87,7 @@ object Actions {
                 new Pinata(p).
                   pinFileToIPFS(symEncryptionResult.result).
                   `then`((axiosResponse) => {
+                    PinataMetaData(Some(file.name),Some(file.size),Some(file.`type`))
                     new Pinata(p).pinFileToIPFS(symEncryptionResult.iv.buffer).
                     `then`((axiosResponse2)=>{
                       val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash

@@ -23,15 +23,10 @@ trait PinataPinResponse extends AxiosResponse {
 
 }
 
+case class PinataMetaData(name:Option[String],size:Option[Double],`type`:Option[String])
 
 
 
-@js.native
-@JSGlobal
-class PimpedFormData(form: HTMLFormElement = js.native) extends FormData(form) {
-
-  val `_boundary`: String = js.native
-}
 
 class Pinata(auth: PinataAuth) {
   val url = "https://api.pinata.cloud";
@@ -54,7 +49,6 @@ class Pinata(auth: PinataAuth) {
   def pinFileToIPFS(arrayBuffer: ArrayBuffer) = {
     println("pinFileToIPFS")
     val data = new FormData()
-    println("Have form data")
     data.append("file", new Blob(js.Array[js.Any](arrayBuffer)))
     data.append("pinataMetadata",
                 js.JSON.stringify(
@@ -62,9 +56,6 @@ class Pinata(auth: PinataAuth) {
                     "keyvalues" -> l(
                       "exampleKey" -> "exampleValue"
                     ))))
-
-
-    println("Posting data")
     axios.post(
       url +"/pinning/pinFileToIPFS",
       data,
