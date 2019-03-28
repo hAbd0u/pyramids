@@ -80,16 +80,23 @@ object Actions {
             encrypt(key,arrayBuffer).onComplete(
             (t:Try[SymEncryptionResult])=>{
               t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
-              t.map((r:SymEncryptionResult)=> {
+              t.map((symEncryptionResult:SymEncryptionResult)=> {
                 feedback.message(s"Encrypted: ${file.name}")
                 eternitas.pinnataOpt.map(p=> {
                   feedback.message("Start pinning, please be very patient!")
                 new Pinata(p).
-                  pinFileToIPFS(r.result).
-                  `then`((result) => feedback.message("Pinned: " +
-                      result.asInstanceOf[PinataPinResponse]
-                        .data.IpfsHash)).
-                `catch`((error) => feedback.message(s"Error pinning: ${error}"))
+                  pinFileToIPFS(symEncryptionResult.result).
+                  `then`((axiosResponse) => {
+                    new Pinata(p).pinFileToIPFS(symEncryptionResult.iv.buffer).
+                    `then`((axiosResponse2)=>{
+                      val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
+                      val ivHash  = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
+                      feedback.message(s"Pinned: (${dataHash},${ivHash})" )
+                    }).
+                      `catch`((error) => feedback.message(s"Error pinning iv: ${error}"))
+                  }
+                  ).
+                `catch`((error) => feedback.message(s"Error pinning hash: ${error}"))
               })})
             })))
     ).onDragOverNothing()
