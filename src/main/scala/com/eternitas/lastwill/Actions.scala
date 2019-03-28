@@ -1,6 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
+import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
@@ -77,7 +78,9 @@ object Actions {
             encrypt(key,arrayBuffer).onComplete(
             (t:Try[ArrayBuffer])=>{
               t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
-              t.map(r=>feedback.message(s"Encrypted: ${file.name}"))
+              t.map((r:ArrayBuffer)=>{
+                feedback.message(s"Encrypted: ${file.name}")
+              })
             })))
     ).onDragOverNothing()
 

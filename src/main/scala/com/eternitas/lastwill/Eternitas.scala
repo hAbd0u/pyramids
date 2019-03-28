@@ -1,5 +1,6 @@
 package com.eternitas.lastwill
 
+import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey}
 
