@@ -1,13 +1,14 @@
 .left-bound {
     margin-left:420px;
     height: 100%;
-
-
+    position: absolute;
+    margin-top: 320px;
 }
 
 .display-area {
-    max-width: 250px;
-    padding-top: 320px;
+    padding-top: 10px;
+    padding-left: 10px;
+
 }
 .error-message{
     letter-spacing: 2px;
@@ -19,9 +20,10 @@
 }
 .time{
     margin-left: 30px;
-    margin-top: 100px;
+    margin-top: 580px;
     max-width: 300px;
     padding: 5px;
+    position: absolute;
 }
 
 .message-area{
