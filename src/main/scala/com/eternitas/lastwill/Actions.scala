@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
-import com.eternitas.lastwill.axioss.Pinata
+import com.eternitas.lastwill.axioss.{Pinata, PinataPinResponse}
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
@@ -84,7 +84,9 @@ object Actions {
                   feedback.message("Start pinning, please be very patient!")
                 new Pinata(p).
                   pinFileToIPFS(r).
-                  `then`((result) => feedback.message("Pinned: " + result)).
+                  `then`((result) => feedback.message("Pinned: " +
+                      result.asInstanceOf[PinataPinResponse]
+                        .data.IpfsHash)).
                 `catch`((error) => feedback.message(s"Error pinning: ${error}"))
               })})
             })))

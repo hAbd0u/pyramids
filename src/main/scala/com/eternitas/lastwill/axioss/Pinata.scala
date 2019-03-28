@@ -7,6 +7,25 @@ import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => l}
 import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.ArrayBuffer
+
+@js.native
+trait PinataData extends AxiosData {
+  val IpfsHash:String = js.native
+  val PinSize:String =js.native
+  val Timestamp:String = js.native
+
+}
+
+
+@js.native
+trait PinataPinResponse extends AxiosResponse {
+  override val data:PinataData = js.native
+
+}
+
+
+
+
 @js.native
 @JSGlobal
 class PimpedFormData(form: HTMLFormElement = js.native) extends FormData(form) {
@@ -21,7 +40,7 @@ class Pinata(auth: PinataAuth) {
     l("api" -> auth.api, "apisecret" -> auth.secretApi)
   }
 
-  def authenticate(c: (AxiosImpl) => Unit, ec: (AxiosError) => Unit) =
+  def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) =
     axios
       .get(url+"/data/testAuthentication",
            l(
@@ -33,7 +52,6 @@ class Pinata(auth: PinataAuth) {
       .`catch`(e => ec(e))
 
   def pinFileToIPFS(arrayBuffer: ArrayBuffer) = {
-
     println("pinFileToIPFS")
     val data = new FormData()
     println("Have form data")
