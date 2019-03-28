@@ -12,8 +12,10 @@ import org.scalajs.dom.raw._
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
-import scala.scalajs.js.typedarray.ArrayBuffer
+import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView}
 import scala.util.Try
+
+import cryptoo.SymCryptoTypes._;
 
 @js.native
 @JSGlobal
@@ -76,14 +78,14 @@ object Actions {
           onReadArrayBuffer(file,
             (arrayBuffer:ArrayBuffer) => SymCrypto.
             encrypt(key,arrayBuffer).onComplete(
-            (t:Try[ArrayBuffer])=>{
+            (t:Try[EncryptionResult])=>{
               t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
-              t.map((r:ArrayBuffer)=> {
+              t.map((r:EncryptionResult)=> {
                 feedback.message(s"Encrypted: ${file.name}")
                 eternitas.pinnataOpt.map(p=> {
                   feedback.message("Start pinning, please be very patient!")
                 new Pinata(p).
-                  pinFileToIPFS(r).
+                  pinFileToIPFS(r._1).
                   `then`((result) => feedback.message("Pinned: " +
                       result.asInstanceOf[PinataPinResponse]
                         .data.IpfsHash)).
