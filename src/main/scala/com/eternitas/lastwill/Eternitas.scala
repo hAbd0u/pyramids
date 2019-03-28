@@ -80,7 +80,7 @@ class Eternitas(
     .getOrElse(Future{l()})
 
   def exportPinata()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {pinnataOpt.
-    map(p => new Pinata(p).export()).getOrElse(l())}
+    map(p => new Pinata(p).export()).getOrElse(l("api" ->"","apisecret" ->""))}
 
 
 
