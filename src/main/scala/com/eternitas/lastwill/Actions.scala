@@ -78,9 +78,15 @@ object Actions {
             encrypt(key,arrayBuffer).onComplete(
             (t:Try[ArrayBuffer])=>{
               t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
-              t.map((r:ArrayBuffer)=>{
+              t.map((r:ArrayBuffer)=> {
                 feedback.message(s"Encrypted: ${file.name}")
-              })
+                eternitas.pinnataOpt.map(p=> {
+                  feedback.message("Start pinning, please be very patient!")
+                new Pinata(p).
+                  pinFileToIPFS(r).
+                  `then`((result) => feedback.message("Pinned: " + result)).
+                `catch`((error) => feedback.message(s"Error pinning: ${error}"))
+              })})
             })))
     ).onDragOverNothing()
 
