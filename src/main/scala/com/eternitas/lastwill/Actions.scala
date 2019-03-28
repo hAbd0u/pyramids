@@ -149,6 +149,5 @@ object Actions {
     val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
     LastWillStartup.init(eternitas.withPin(new EncryptedPin(dataHash,ivHash)))
     feedback.message(s"Your data is encrypted and stored!")
-
   }
 }
