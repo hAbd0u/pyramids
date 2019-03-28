@@ -2,7 +2,7 @@ package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.axioss.{Pinata, PinataPinResponse}
-import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto}
+import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, SymEncryptionResult}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.{JQuery, JQueryEventObject}
@@ -15,7 +15,7 @@ import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView}
 import scala.util.Try
 
-import cryptoo.SymCryptoTypes._;
+
 
 @js.native
 @JSGlobal
@@ -78,14 +78,14 @@ object Actions {
           onReadArrayBuffer(file,
             (arrayBuffer:ArrayBuffer) => SymCrypto.
             encrypt(key,arrayBuffer).onComplete(
-            (t:Try[EncryptionResult])=>{
+            (t:Try[SymEncryptionResult])=>{
               t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
-              t.map((r:EncryptionResult)=> {
+              t.map((r:SymEncryptionResult)=> {
                 feedback.message(s"Encrypted: ${file.name}")
                 eternitas.pinnataOpt.map(p=> {
                   feedback.message("Start pinning, please be very patient!")
                 new Pinata(p).
-                  pinFileToIPFS(r._1).
+                  pinFileToIPFS(r.result).
                   `then`((result) => feedback.message("Pinned: " +
                       result.asInstanceOf[PinataPinResponse]
                         .data.IpfsHash)).

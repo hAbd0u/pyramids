@@ -19,13 +19,13 @@ object SymCrypto extends SymCryptoTrait {
 
 }
 
-object SymCryptoTypes{
-  type EncryptionResult = (ArrayBuffer,ArrayBufferView)
-}
+
+case class SymEncryptionResult(result:ArrayBuffer,iv: ArrayBufferView)
+
 
 
 trait SymCryptoTrait {
-  import SymCryptoTypes._
+
 
   val aKeyFormat:KeyFormat
   val encryptDecrypt= js.Array(
@@ -47,7 +47,7 @@ trait SymCryptoTrait {
 
 
   def encrypt(key:CryptoKey,data:ArrayBuffer)
-             (implicit executionContext: ExecutionContext):Future[EncryptionResult]= {
+             (implicit executionContext: ExecutionContext):Future[SymEncryptionResult]= {
     val iv:ArrayBufferView = crypto.getRandomValues(new Uint8Array(12))
     crypto.
       subtle.
@@ -55,7 +55,7 @@ trait SymCryptoTrait {
         key,
         data
       ).toFuture.
-      map(aAny=>(aAny.asInstanceOf[ArrayBuffer],iv))
+      map(aAny=>SymEncryptionResult(aAny.asInstanceOf[ArrayBuffer],iv))
   }
 
 
