@@ -91,7 +91,7 @@ object Actions {
                     `then`((axiosResponse2)=>{
                       val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
                       val ivHash  = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
-                      feedback.message(s"Pinned: (${dataHash},${ivHash})" )
+                      feedback.message(s"Your data is encrypted and stored!" )
                     }).
                       `catch`((error) => feedback.message(s"Error pinning iv: ${error}"))
                   }
