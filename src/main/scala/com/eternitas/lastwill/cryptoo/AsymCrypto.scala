@@ -57,7 +57,7 @@ object AsymCrypto {
              pinata.apisecret.toString())
          ),
        eternitas.keyOpt,
-       eternitas.pins
+       eternitas.pinDataOpt
      )
 
       //TODO: encrypt the secret key!
@@ -95,7 +95,7 @@ object AsymCrypto {
             ).asInstanceOf[CryptoKeyPair]),
             pinnataOpt = eternitas.pinnataOpt,
             keyOpt= eternitas.keyOpt,
-            pins=eternitas.pins
+            pinDataOpt=eternitas.pinDataOpt
           ))
         })
       })})

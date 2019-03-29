@@ -17,13 +17,13 @@ class Eternitas(
     val keyPairOpt: Option[CryptoKeyPair],
     val pinnataOpt: Option[PinataAuth],
     val keyOpt: Option[CryptoKey],
-    val pins:Seq[EncryptedPin]
+    val pinDataOpt:Option[String]
 ) {
 
-  def withPin(encryptedPin: EncryptedPin) = new Eternitas(this.keyPairOpt,
+  def withPinData(pinDataHash: String) = new Eternitas(this.keyPairOpt,
     this.pinnataOpt,
     this.keyOpt,
-    this.pins :+ encryptedPin )
+    Some(pinDataHash) )
 
 
   def withKeyPair()(implicit ctx: ExecutionContext) = {
@@ -36,7 +36,7 @@ class Eternitas(
               keyPairOpt = Some(key),
               pinnataOpt = this.pinnataOpt,
               keyOpt = this.keyOpt,
-              pins=this.pins))
+              pinDataOpt=this.pinDataOpt))
     else
       Future.successful(this)
   }
@@ -56,7 +56,7 @@ class Eternitas(
               keyPairOpt =this.keyPairOpt,
               pinnataOpt = this.pinnataOpt,
               keyOpt = Some(key),
-              pins=this.pins
+              pinDataOpt=this.pinDataOpt
             ))}
     else
       Future.successful(this)
