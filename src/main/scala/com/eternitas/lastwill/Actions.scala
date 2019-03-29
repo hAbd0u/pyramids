@@ -114,8 +114,10 @@ object Actions {
       feedback: UserFeedback) = {
       val el = $(s"<a href='#' class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
       $("#data-display").append(el)
-      el.click((event:Event)=>{
-        pinned.`hash`.map(aHash=> loadHash(aHash,(d)=>println("Have data!!!")))})
+      el.click((event:Event)=>
+        pinned.`hash`.map(aHash=> loadHash(aHash,(encryptedData)=>
+          pinned.vc.map(avchash=>loadHash(avchash,(vc)=>println(s"Have vc!!!")))
+        )))
     }
 
     def dataDisplay(eternitas: Eternitas)(
