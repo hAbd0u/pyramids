@@ -122,7 +122,7 @@ object Actions {
                 PinataMetaData(Some(file.name), Some(file.size), Some(file.`type`))
                 val et2 =AsymCrypto.importPinata(et,importData)
                 et2.pinnataOpt.map(p=>new Pinata(p).authenticate(
-                  p2=>feedback.message(s"Pinnata: ${p.api}"),
+                  p2=>$("#pinata").html(s"Pinnata: ${p.api}"),
                   e=>feedback.error(s"Pinnata error ${e}")
                 ))
                 et2.keyPairOpt.map(keys=>{
