@@ -91,10 +91,13 @@ class Eternitas(
     map(p => new Pinata(p).export()).getOrElse(l("api" ->"","apisecret" ->""))}
 
 
+  def exportPinFolder()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future{
+    l("hash" -> pinDataOpt.getOrElse("").toString)
+  }
 
   def export()(implicit ctx: ExecutionContext) ={
-    Future.sequence(Seq(exportKeyPair(),exportKey(),exportPinata())).
-      map(s => l("asym" -> s(0),"sym" -> s(1),"pinata" -> s(2)))
+    Future.sequence(Seq(exportKeyPair(),exportKey(),exportPinata(),exportPinFolder())).
+      map(s => l("asym" -> s(0),"sym" -> s(1),"pinata" -> s(2),"pinfolder" -> s(3)))
   }.map((aDynamic: js.Dynamic) =>
     js.JSON.stringify(aDynamic: js.Any, null: js.Array[js.Any], 1: js.Any))
 

@@ -109,13 +109,20 @@ object Actions {
         new FileReader().onReadArrayBuffer(file, bufferSource => {
           if(file.`type` == "application/json"){
             val importData:js.Dynamic = js.JSON.parse(bufferSource.toNormalString())
-            AsymCrypto.importKeyPair(oldEternitas,
+            val withPinFolder  = if(importData.pinfolder.hash.toString()=="")
+              oldEternitas
+            else
+              oldEternitas.withPinData(importData.pinfolder.hash.toString)
+
+            withPinFolder.pinDataOpt.map(pd=>$("#pinfolder").html(s"DATA: ${pd}"))
+
+            AsymCrypto.importKeyPair(withPinFolder,
               importData ,
               (et:Eternitas)=>{
                 PinataMetaData(Some(file.name), Some(file.size), Some(file.`type`))
                 val et2 =AsymCrypto.importPinata(et,importData)
                 et2.pinnataOpt.map(p=>new Pinata(p).authenticate(
-                  p2=>feedback.message(s"Authenticated to pinnata: ${p.api}"),
+                  p2=>feedback.message(s"Pinnata: ${p.api}"),
                   e=>feedback.error(s"Pinnata error ${e}")
                 ))
                 et2.keyPairOpt.map(keys=>{
