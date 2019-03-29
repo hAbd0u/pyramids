@@ -3,7 +3,10 @@
     "data" : [
         {
             "hash": "QmeDZdx5EeBJFSyRkkFJo5EE5ArgispT8xomajqu69NswU",
-            "vc": "Qmc4wc8epehfJufafFLzX4qqQjdwFMBKppjdC6xu6bS7fd"
+            "vc": "Qmc4wc8epehfJufafFLzX4qqQjdwFMBKppjdC6xu6bS7fd",
+            "name" : "Testdaten",
+            "type" : "application/octet-stream"
+
         }
 
         

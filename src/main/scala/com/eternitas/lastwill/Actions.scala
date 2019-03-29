@@ -101,6 +101,19 @@ object Actions {
     ).onDragOverNothing()
 
 
+    def showPinned(pinned: PinData.Pinned)(
+      implicit ctx:ExecutionContext,
+      $:JQueryWrapper,
+      feedback: UserFeedback) = {
+      val el = $(s"<a href='#' class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
+      $("#data-display").append(el)
+      el.click((event:Event)=>{
+        pinned.`hash`.map(aHash=>$.get(s"/ipfs/${aHash}","",(data,status,xhr)=>{
+          println("Have data!!!")
+        }))
+      })
+
+    }
 
     def dataDisplay(eternitas: Eternitas)(
       implicit ctx:ExecutionContext,
@@ -109,7 +122,7 @@ object Actions {
       map(aHash=>{
         $.get(s"/ipfs/${aHash}","",(data,status,xhr)=> js.
           JSON.parse(data.toString).asInstanceOf[PinningData].data.
-            foreach(pinned=>println(s"Pinned: ${pinned.`hash`}"))
+            foreach(pinned=>showPinned(pinned))
         )
       })
 
