@@ -1,6 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
+import com.eternitas.lastwill.PinData.PinningData
 import com.eternitas.lastwill.axioss.{AxiosResponse, Pinata, PinataMetaData, PinataPinResponse}
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, SymEncryptionResult}
 import com.eternitas.wizard.JQueryWrapper
@@ -104,9 +105,13 @@ object Actions {
     def dataDisplay(eternitas: Eternitas)(
       implicit ctx:ExecutionContext,
       $:JQueryWrapper,
-      feedback: UserFeedback) = {
-
-    }
+      feedback: UserFeedback) = eternitas.pinDataOpt.
+      map(aHash=>{
+        $.get(s"/ipfs/${aHash}","",(data,status,xhr)=> js.
+          JSON.parse(data.toString).asInstanceOf[PinningData].data.
+            foreach(pinned=>println(s"Pinned: ${pinned.`hash`}"))
+        )
+      })
 
     def iimport(oldEternitas: Eternitas)(
       implicit ctx:ExecutionContext,
