@@ -50,6 +50,7 @@ object LastWillStartup {
   def init(et: Eternitas)(implicit $ : JQueryWrapper,userFeedback: UserFeedback): Unit = {
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
+    $("#data-display").dataDisplay(et)
   }
 
 

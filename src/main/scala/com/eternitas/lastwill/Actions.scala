@@ -101,6 +101,13 @@ object Actions {
 
 
 
+    def dataDisplay(eternitas: Eternitas)(
+      implicit ctx:ExecutionContext,
+      $:JQueryWrapper,
+      feedback: UserFeedback) = {
+
+    }
+
     def iimport(oldEternitas: Eternitas)(
       implicit ctx:ExecutionContext,
       $:JQueryWrapper,
@@ -146,7 +153,13 @@ object Actions {
   def pinData(dataHash: String,
               ivHash: String,
               eternitas:Eternitas,
-              cb: (Eternitas)=>js.Any) = {
+              cb: (Eternitas)=>js.Any)(implicit $: JQueryWrapper,userFeedback: UserFeedback) = {
+
+    /*
+    eternitas.pinDataOpt.map(pd=>{
+      $.get(s"/ipfs/${pd}","",(data,status,xhr)=>{})
+    }).getOrElse("")
+    */
 
     cb(eternitas)
   }
@@ -157,10 +170,10 @@ object Actions {
 
     val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
     val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
-    eternitas.pinDataOpt.map(p=>pinData(dataHash,ivHash,eternitas,e=>{
+    pinData(dataHash,ivHash,eternitas,e=>{
       LastWillStartup.init(eternitas)
       userFeedback.message(s"Your data is encrypted and stored!")
-    })).getOrElse("").toString
+    })
 
   }
 }
