@@ -90,7 +90,7 @@ object Actions {
                     new Pinata(p).pinFileToIPFS(
                       symEncryptionResult.iv.buffer,
                       PinataMetaData(axiosResponse.asInstanceOf[PinataPinResponse].data)).
-                    `then`((axiosResponse2)=> handlePinResult(eternitas,feedback,  axiosResponse,axiosResponse2)).
+                    `then`((axiosResponse2)=> handlePinResult(eternitas, axiosResponse,axiosResponse2)).
                       `catch`((error) => feedback.message(s"Error pinning iv: ${error}"))
                   }
                   ).
@@ -143,14 +143,23 @@ object Actions {
   }
 
 
+  def pinData(dataHash: String,
+              ivHash: String,
+              eternitas:Eternitas,
+              cb: (Eternitas)=>js.Any) = {
+    cb(eternitas)
+  }
+
   private def handlePinResult(eternitas: Eternitas,
-                              feedback: UserFeedback,
                               axiosResponse: AxiosResponse,
                               axiosResponse2: AxiosResponse)(implicit $: JQueryWrapper,userFeedback: UserFeedback) = {
 
     val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
     val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
-    LastWillStartup.init(eternitas)
-    feedback.message(s"Your data is encrypted and stored!")
+    eternitas.pinDataOpt.map(p=>pinData(dataHash,ivHash,eternitas,e=>{
+      LastWillStartup.init(eternitas)
+      userFeedback.message(s"Your data is encrypted and stored!")
+    })).getOrElse("").toString
+
   }
 }
