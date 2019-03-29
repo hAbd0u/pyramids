@@ -101,6 +101,13 @@ object Actions {
     ).onDragOverNothing()
 
 
+
+    def loadHash(aHash:String,cb:(js.Any)=>Unit)(implicit
+      $:JQueryWrapper) = $.get(s"/ipfs/${aHash}",
+      "",
+      (data,status,xhr)=>cb(data))
+
+
     def showPinned(pinned: PinData.Pinned)(
       implicit ctx:ExecutionContext,
       $:JQueryWrapper,
@@ -108,23 +115,17 @@ object Actions {
       val el = $(s"<a href='#' class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
       $("#data-display").append(el)
       el.click((event:Event)=>{
-        pinned.`hash`.map(aHash=>$.get(s"/ipfs/${aHash}","",(data,status,xhr)=>{
-          println("Have data!!!")
-        }))
-      })
-
+        pinned.`hash`.map(aHash=> loadHash(aHash,(d)=>println("Have data!!!")))})
     }
 
     def dataDisplay(eternitas: Eternitas)(
       implicit ctx:ExecutionContext,
       $:JQueryWrapper,
       feedback: UserFeedback) = eternitas.pinDataOpt.
-      map(aHash=>{
-        $.get(s"/ipfs/${aHash}","",(data,status,xhr)=> js.
-          JSON.parse(data.toString).asInstanceOf[PinningData].data.
-            foreach(pinned=>showPinned(pinned))
-        )
-      })
+      map(aHash=> loadHash(aHash,(data:js.Any)=>
+        js.JSON.parse(data.toString).asInstanceOf[PinningData].data.
+            foreach(pinned=>showPinned(pinned)))
+      )
 
     def iimport(oldEternitas: Eternitas)(
       implicit ctx:ExecutionContext,
