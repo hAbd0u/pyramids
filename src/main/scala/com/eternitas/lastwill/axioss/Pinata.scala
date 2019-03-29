@@ -58,7 +58,6 @@ class Pinata(auth: PinataAuth) {
       .`catch`(e => ec(e))
 
   def pinFileToIPFS(arrayBuffer: ArrayBuffer,pn:PinataMetaData) = {
-    println("pinFileToIPFS")
     val data = new FormData()
     data.append("file", new Blob(js.Array[js.Any](arrayBuffer)))
     data.append("pinataMetadata",

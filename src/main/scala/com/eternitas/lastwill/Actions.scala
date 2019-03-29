@@ -147,6 +147,7 @@ object Actions {
               ivHash: String,
               eternitas:Eternitas,
               cb: (Eternitas)=>js.Any) = {
+
     cb(eternitas)
   }
 
