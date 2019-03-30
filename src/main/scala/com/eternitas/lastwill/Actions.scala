@@ -84,14 +84,14 @@ object Actions {
               t.map((symEncryptionResult:SymEncryptionResult)=> {
                 feedback.message(s"Encrypted: ${file.name}")
                 feedback.log("Data encrypted",symEncryptionResult.result)
-                feedback.log("VC",symEncryptionResult.iv.buffer)
+                feedback.log("VC",symEncryptionResult.iv)
                 eternitas.pinnataOpt.map(p=> {
                   feedback.message("Start pinning, please be very patient!")
                 new Pinata(p).
                   pinFileToIPFS(symEncryptionResult.result,PinataMetaData(file)).
                   `then`((axiosResponse) => {
                     new Pinata(p).pinFileToIPFS(
-                      symEncryptionResult.iv.buffer,
+                      symEncryptionResult.iv,
                       PinataMetaData(axiosResponse.asInstanceOf[PinataPinResponse].data)).
                     `then`((axiosResponse2)=> handlePinResult(eternitas, axiosResponse,axiosResponse2)).
                       `catch`((error) => feedback.message(s"Error pinning iv: ${error}"))

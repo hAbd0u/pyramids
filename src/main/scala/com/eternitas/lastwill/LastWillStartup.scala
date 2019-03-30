@@ -1,7 +1,7 @@
 package com.lyrx.eternitas.lastwill
 
 import com.eternitas.lastwill.Actions._
-import com.eternitas.lastwill.cryptoo.HashSum
+import com.eternitas.lastwill.cryptoo.{HashSum, SymCrypto}
 import com.eternitas.lastwill.{Buffers, Eternitas, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
 import org.scalajs.dom.document
@@ -46,9 +46,10 @@ object LastWillStartup {
                                   override def log(msg:String, b: ArrayBuffer)(implicit exc:ExecutionContext): Unit =
                                     HashSum.hash(b).onComplete(t=>t.map(b=>{
                                       import Buffers._
-                                      println( s"${msg}: ${b.toHexString()}")
-
+                                      logString( s"${msg}: ${b.toHexString()}")
                                     }))
+
+                                  override def logString(msg: String): Unit = println(msg)
                                 }
                                 t.map(eternitas=>init(eternitas))
                                 t.failed.map(thr=>feedBack.error(thr.getMessage))
@@ -57,6 +58,7 @@ object LastWillStartup {
                               )
 
   def init(et: Eternitas)(implicit $ : JQueryWrapper,userFeedback: UserFeedback): Unit = {
+    //SymCrypto.test(et.keyOpt.get,"123456789")
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
     $("#data-display").dataDisplay(et)
