@@ -135,8 +135,8 @@ object Actions {
                     val f = SymCrypto.decrypt(symKey,
                       encryptedData,
                       new Uint8Array(vc))
-                    f.map( (t:ArrayBuffer)=> feedback.message("Encryption successfull"))
-                    f.failed.map (e=>feedback.error(s"Encyption failed: ${e.getLocalizedMessage}"))
+                    f.map( (t:ArrayBuffer)=> feedback.message("Decryption successfull"))
+                    f.failed.map (e=>feedback.error(s"Decryption failed: ${e.getLocalizedMessage}"))
                   })
             )))))
     }
