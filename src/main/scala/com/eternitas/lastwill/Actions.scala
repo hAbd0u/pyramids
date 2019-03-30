@@ -83,6 +83,8 @@ object Actions {
               t.failed.map(thr=> feedback.error(s"Encryption failed: ${thr.getMessage()}"))
               t.map((symEncryptionResult:SymEncryptionResult)=> {
                 feedback.message(s"Encrypted: ${file.name}")
+                feedback.log("Data encrypted",symEncryptionResult.result)
+                feedback.log("VC",symEncryptionResult.iv.buffer)
                 eternitas.pinnataOpt.map(p=> {
                   feedback.message("Start pinning, please be very patient!")
                 new Pinata(p).
@@ -132,9 +134,11 @@ object Actions {
         pinned.`hash`.map(aHash=> loadHashAsArrayBuffer(aHash,(encryptedData:ArrayBuffer)=>
           pinned.vc.map(avchash=>loadHashAsArrayBuffer(avchash,(vc:ArrayBuffer)=> eternitas.keyOpt.map(symKey =>
                     {
+                      feedback.log("Data to decrypt",encryptedData)
+                      feedback.log("VC for decrypt",vc)
                     val f = SymCrypto.decrypt(symKey,
                       encryptedData,
-                      new Uint8Array(vc))
+                      vc)
                     f.map( (t:ArrayBuffer)=> feedback.message("Decryption successfull"))
                     f.failed.map (e=>feedback.error(s"Decryption failed: ${e.getLocalizedMessage}"))
                   })

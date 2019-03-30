@@ -59,11 +59,11 @@ trait SymCryptoTrait {
       map(aAny=>SymEncryptionResult(aAny.asInstanceOf[ArrayBuffer],iv))
   }
 
-  def decrypt(key:CryptoKey,data:ArrayBuffer,iv:Uint8Array)
+  def decrypt(key:CryptoKey,data:ArrayBuffer,iv:ArrayBuffer)
              (implicit executionContext: ExecutionContext):Future[ArrayBuffer]= {
     crypto.
       subtle.
-      decrypt(algorithmIdentifier(iv),
+      decrypt(algorithmIdentifier(new Uint8Array(iv,0,12)),
         key,
         data
       ).toFuture.

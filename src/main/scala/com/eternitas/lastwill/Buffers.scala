@@ -29,9 +29,8 @@ object Buffers {
 
     def onHash(blob:Blob,h:(String)=>Unit)(implicit ctx:ExecutionContext) =onReadArrayBuffer(blob, bufferSource=>{
       hash(bufferSource).
-        toFuture.
-        onComplete((aTry:Try[Any])=>{
-          aTry.map(aAny=>h(aAny.asInstanceOf[ArrayBuffer].toHexString()))
+        onComplete((aTry:Try[ArrayBuffer])=>{
+          aTry.map(ab=>h(ab.toHexString()))
         })
     })
 

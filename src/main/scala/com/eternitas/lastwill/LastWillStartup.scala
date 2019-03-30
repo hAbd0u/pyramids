@@ -1,13 +1,15 @@
 package com.lyrx.eternitas.lastwill
 
 import com.eternitas.lastwill.Actions._
-import com.eternitas.lastwill.{Eternitas, UserFeedback}
+import com.eternitas.lastwill.cryptoo.HashSum
+import com.eternitas.lastwill.{Buffers, Eternitas, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
 import org.scalajs.dom.document
 import org.scalajs.dom.raw._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
+import scala.scalajs.js.typedarray.ArrayBuffer
 
 object LastWillStartup {
   implicit val ec = ExecutionContext.global;
@@ -40,6 +42,13 @@ object LastWillStartup {
                                       .html(s);
                                     showTime();
                                   }
+
+                                  override def log(msg:String, b: ArrayBuffer)(implicit exc:ExecutionContext): Unit =
+                                    HashSum.hash(b).onComplete(t=>t.map(b=>{
+                                      import Buffers._
+                                      println( s"${msg}: ${b.toHexString()}")
+
+                                    }))
                                 }
                                 t.map(eternitas=>init(eternitas))
                                 t.failed.map(thr=>feedBack.error(thr.getMessage))
