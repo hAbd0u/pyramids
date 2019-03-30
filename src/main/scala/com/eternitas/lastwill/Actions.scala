@@ -13,7 +13,7 @@ import org.scalajs.dom.raw._
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
-import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView}
+import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
 import scala.util.Try
 
 
@@ -102,31 +102,52 @@ object Actions {
 
 
 
-    def loadHash(aHash:String,cb:(js.Any)=>Unit)(implicit
-      $:JQueryWrapper) = $.get(s"/ipfs/${aHash}",
-      "",
-      (data,status,xhr)=>cb(data))
+    def loadHashAsArrayBuffer(aHash:String,cb:(ArrayBuffer)=>Unit)(implicit
+      $:JQueryWrapper) = {
+      val r = new XMLHttpRequest()
+      r.open("GET", s"/ipfs/${aHash}", true);
+      r.responseType="arraybuffer"
+      r.onload = (oEvent:Event) => cb(r.response.asInstanceOf[ArrayBuffer]);
+      r.send()
+    }
+    def loadHashAsText(aHash:String,cb:(String)=>Unit)(implicit
+                                                                                       $:JQueryWrapper) = {
+      val r = new XMLHttpRequest()
+      r.open("GET", s"/ipfs/${aHash}", true);
+      r.responseType="text"
+      r.onload = (oEvent:Event) => cb(r.response.toString());
+      r.send()
+    }
 
 
-    def showPinned(pinned: PinData.Pinned)(
+
+
+    def showPinned(pinned: PinData.Pinned,eternitas: Eternitas)(
       implicit ctx:ExecutionContext,
       $:JQueryWrapper,
       feedback: UserFeedback) = {
       val el = $(s"<a href='#' class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
       $("#data-display").append(el)
       el.click((event:Event)=>
-        pinned.`hash`.map(aHash=> loadHash(aHash,(encryptedData)=>
-          pinned.vc.map(avchash=>loadHash(avchash,(vc)=>println(s"Have vc!!!")))
-        )))
+        pinned.`hash`.map(aHash=> loadHashAsArrayBuffer(aHash,(encryptedData:ArrayBuffer)=>
+          pinned.vc.map(avchash=>loadHashAsArrayBuffer(avchash,(vc:ArrayBuffer)=> eternitas.keyOpt.map(symKey =>
+                    {
+                    val f = SymCrypto.decrypt(symKey,
+                      encryptedData,
+                      vc)
+                    f.map( (t:ArrayBuffer)=> feedback.message("Encryption successfull"))
+                    f.failed.map (e=>feedback.error(s"Encyption failed: ${e.getLocalizedMessage}"))
+                  })
+            )))))
     }
 
     def dataDisplay(eternitas: Eternitas)(
       implicit ctx:ExecutionContext,
       $:JQueryWrapper,
       feedback: UserFeedback) = eternitas.pinDataOpt.
-      map(aHash=> loadHash(aHash,(data:js.Any)=>
+      map(aHash=> loadHashAsText(aHash,(data:String)=>
         js.JSON.parse(data.toString).asInstanceOf[PinningData].data.
-            foreach(pinned=>showPinned(pinned)))
+            foreach(pinned=>showPinned(pinned,eternitas)))
       )
 
     def iimport(oldEternitas: Eternitas)(
@@ -175,6 +196,7 @@ object Actions {
               ivHash: String,
               eternitas:Eternitas,
               cb: (Eternitas)=>js.Any)(implicit $: JQueryWrapper,userFeedback: UserFeedback) = {
+
 
     /*
     eternitas.pinDataOpt.map(pd=>{

@@ -24,6 +24,7 @@ case class SymEncryptionResult(result:ArrayBuffer,iv: ArrayBufferView)
 
 
 
+
 trait SymCryptoTrait {
 
 
@@ -56,6 +57,17 @@ trait SymCryptoTrait {
         data
       ).toFuture.
       map(aAny=>SymEncryptionResult(aAny.asInstanceOf[ArrayBuffer],iv))
+  }
+
+  def decrypt(key:CryptoKey,data:ArrayBuffer,iv:ArrayBuffer)
+             (implicit executionContext: ExecutionContext):Future[ArrayBuffer]= {
+    crypto.
+      subtle.
+      decrypt(algorithmIdentifier(new Uint8Array(iv)),
+        key,
+        data
+      ).toFuture.
+      map(aAny=>aAny.asInstanceOf[ArrayBuffer])
   }
 
 
