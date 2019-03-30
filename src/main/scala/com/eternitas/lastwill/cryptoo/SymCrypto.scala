@@ -1,7 +1,7 @@
 package com.eternitas.lastwill.cryptoo
 
 
-import com.eternitas.lastwill.UserFeedback
+import com.eternitas.lastwill.{Eternitas, UserFeedback}
 import org.scalajs.dom.crypto.{AesGcmParams, Algorithm, AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 
 import scala.scalajs.js
@@ -28,6 +28,7 @@ case class SymEncryptionResult(result:ArrayBuffer,iv: ArrayBuffer)
 
 trait SymCryptoTrait {
 
+  val ALG = "AES-GCM"
 
   val aKeyFormat:KeyFormat
   val encryptDecrypt= js.Array(
@@ -37,9 +38,15 @@ trait SymCryptoTrait {
   val keyAlgorithmIdentifier:KeyAlgorithmIdentifier
   def algorithmIdentifier(iv:ArrayBufferView):AlgorithmIdentifier={
 
-    l( "name" -> "AES-GCM",
+    l( "name" -> ALG,
       "iv" -> iv ).asInstanceOf[AlgorithmIdentifier]
   }
+  def createKeyAlgorithmIdentifier():KeyAlgorithmIdentifier={
+
+    l( "name" -> ALG).asInstanceOf[KeyAlgorithmIdentifier]
+  }
+
+
 
   def generateKey()(implicit ctx:ExecutionContext)= crypto.
     subtle.
@@ -92,6 +99,27 @@ trait SymCryptoTrait {
   }
 
 
+  def importKey(eternitas: Eternitas,
+                    json:js.Dynamic,
+                    cb:(Eternitas)=>Unit)(
+                     implicit executionContext: ExecutionContext,
+                     userFeedback: UserFeedback)={
+
+   val f = crypto.subtle.importKey(
+     aKeyFormat,
+     json.sym.asInstanceOf[JsonWebKey],
+     createKeyAlgorithmIdentifier(),
+     true,
+     encryptDecrypt).
+     toFuture.
+     map(_.asInstanceOf[CryptoKey])
+
+    f.onComplete(t=>t.map((cryptoKey:CryptoKey)=>cb(eternitas.addKey(cryptoKey))))
+    f.failed.map(e=>userFeedback.error(s"Import of sym key failed: "+e.getLocalizedMessage))
+
+
+     //onComplete(t=$)
+  }
 
 
 

@@ -26,6 +26,8 @@ class Eternitas(
     Some(pinDataHash) )
 
 
+  def addKey(key:CryptoKey) = new Eternitas(keyPairOpt,pinnataOpt,Some(key),pinDataOpt)
+
   def withKeyPair()(implicit ctx: ExecutionContext) = {
     if (keyPairOpt.isEmpty)
       AsymCrypto

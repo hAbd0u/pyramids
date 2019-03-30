@@ -179,9 +179,9 @@ object Actions {
                 ))
                 et2.keyPairOpt.map(keys=>{
                   LastWillStartup.init(et2)
-                  feedback.message("Loaded asym key pair")
+                  feedback.logString(" RSA-OAEP keys loaded")
                 })
-                if(et2.keyPairOpt.isEmpty) feedback.error("No asym key pair")
+                if(et2.keyPairOpt.isEmpty) feedback.error("No RSA-OAEP keys found")
               })
           }
           else{
