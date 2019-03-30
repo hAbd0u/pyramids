@@ -114,7 +114,11 @@ trait SymCryptoTrait {
      toFuture.
      map(_.asInstanceOf[CryptoKey])
 
-    f.onComplete(t=>t.map((cryptoKey:CryptoKey)=>cb(eternitas.addKey(cryptoKey))))
+    f.onComplete(t=>t.map((cryptoKey:CryptoKey)=>{
+      userFeedback.logString("Loaded sym key.")
+      cb(eternitas.addKey(cryptoKey))
+
+    }))
     f.failed.map(e=>userFeedback.error(s"Import of sym key failed: "+e.getLocalizedMessage))
 
 

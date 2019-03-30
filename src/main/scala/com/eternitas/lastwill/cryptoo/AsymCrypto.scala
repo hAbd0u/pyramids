@@ -1,6 +1,6 @@
 package com.eternitas.lastwill.cryptoo
 
-import com.eternitas.lastwill.{Eternitas, PinataAuth}
+import com.eternitas.lastwill.{Eternitas, PinataAuth, UserFeedback}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -64,7 +64,8 @@ object AsymCrypto {
   def importKeyPair(eternitas: Eternitas,
                     json:js.Dynamic,
                     cb:(Eternitas)=>Unit)(
-    implicit executionContext: ExecutionContext)=crypto.subtle.importKey(
+    implicit executionContext: ExecutionContext,
+    userFeedback: UserFeedback)=crypto.subtle.importKey(
        aKeyFormat,
        json.asym.`public`.asInstanceOf[JsonWebKey],
        aHashAlgorithm,
@@ -84,6 +85,7 @@ object AsymCrypto {
         t2.failed.map(e=>println("Error importing private key: " + e.getMessage))
         t2.map(aAny2=>{
           val privateKey = aAny2.asInstanceOf[CryptoKey]
+          userFeedback.logString("Loaded symmetric keys.")
           cb(new Eternitas(
             Some(js.Dictionary(
               "publicKey"->publicKey,
