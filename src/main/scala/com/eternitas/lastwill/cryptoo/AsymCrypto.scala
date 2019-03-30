@@ -59,10 +59,6 @@ object AsymCrypto {
        eternitas.keyOpt,
        eternitas.pinDataOpt
      )
-
-      //TODO: encrypt the secret key!
-
-
 }
 
   def importKeyPair(eternitas: Eternitas,

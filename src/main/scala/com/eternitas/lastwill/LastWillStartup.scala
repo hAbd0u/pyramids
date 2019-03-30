@@ -1,6 +1,7 @@
 package com.lyrx.eternitas.lastwill
 
 import com.eternitas.lastwill.Actions._
+import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{HashSum, SymCrypto}
 import com.eternitas.lastwill.{Buffers, Eternitas, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
@@ -57,11 +58,19 @@ object LastWillStartup {
                                 )
                               )
 
-  def init(et: Eternitas)(implicit $ : JQueryWrapper,userFeedback: UserFeedback): Unit = {
+  def init(et: Eternitas)(implicit $ : JQueryWrapper,feedback: UserFeedback): Unit = {
     //SymCrypto.test(et.keyOpt.get,"123456789")
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
     $("#data-display").dataDisplay(et)
+
+    et.pinnataOpt.map(
+      p => {
+        new Pinata(p).authenticate(
+          p2 => $("#pinata").html(s"Pinnata: ${p.api}"),
+          e => feedback.error(s"Pinnata error ${e}")
+        )
+      })
   }
 
 
