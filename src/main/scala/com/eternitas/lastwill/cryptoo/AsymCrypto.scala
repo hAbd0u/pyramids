@@ -86,20 +86,7 @@ object AsymCrypto {
         t2.map(aAny2=>{
           val privateKey = aAny2.asInstanceOf[CryptoKey]
           userFeedback.logString("Loaded symmetric keys.")
-          cb(new Eternitas(
-            Some(js.Dictionary(
-              "publicKey"->publicKey,
-              "privateKey" -> privateKey
-            ).asInstanceOf[CryptoKeyPair]),
-            pinnataOpt = eternitas.pinnataOpt,
-            keyOpt= eternitas.keyOpt,
-            pinDataOpt=eternitas.pinDataOpt
-          ))
-        })
-      })})
-  }
-
-     )
+          cb(eternitas.addKeyPair(privateKey,publicKey))})})})})
 
 
 

@@ -28,6 +28,17 @@ class Eternitas(
 
   def addKey(key:CryptoKey) = new Eternitas(keyPairOpt,pinnataOpt,Some(key),pinDataOpt)
 
+  def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
+    Some(js.Dictionary(
+      "publicKey"->publicKey,
+      "privateKey" -> privateKey
+    ).asInstanceOf[CryptoKeyPair]),
+    pinnataOpt = this.pinnataOpt,
+    keyOpt=this.keyOpt,
+    pinDataOpt=this.pinDataOpt
+  )
+
+
   def withKeyPair()(implicit ctx: ExecutionContext) = {
     if (keyPairOpt.isEmpty)
       AsymCrypto
@@ -106,41 +117,6 @@ class Eternitas(
 
 
 
-  def expor_oldt()(implicit ctx: ExecutionContext) =
-    keyPairOpt
-      .map(
-        key =>
-          AsymCrypto
-            .eexportKey(key.publicKey)
-            .map(publicJw =>
-              AsymCrypto
-                .eexportKey(key.privateKey)
-                .map(privateJw => {
-                  pinnataOpt
-                    .map(
-                      p =>
-                        l(
-                          "pinata" -> new Pinata(p).export(),
-                          "asym" -> l("private" -> privateJw,
-                                      "public" -> publicJw)
-                      ))
-                    .getOrElse(l(
-                      "pinata" -> l(),
-                      "asym" -> l("private" -> privateJw, "public" -> publicJw)
-                    ))
-                }))
-            .flatten
-      )
-      .getOrElse(Future {
-        pinnataOpt
-          .map(
-            p =>
-              l(
-                "pinata" -> new Pinata(p).export()
-            ))
-          .getOrElse(l())
-      })
-      .map((aDynamic: js.Dynamic) =>
-        js.JSON.stringify(aDynamic: js.Any, null: js.Array[js.Any], 1: js.Any))
+
 
 }

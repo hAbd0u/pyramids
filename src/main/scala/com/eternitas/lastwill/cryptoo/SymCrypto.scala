@@ -121,8 +121,6 @@ trait SymCryptoTrait {
     }))
     f.failed.map(e=>userFeedback.error(s"Import of sym key failed: "+e.getLocalizedMessage))
 
-
-     //onComplete(t=$)
   }
 
 
