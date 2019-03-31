@@ -20,11 +20,14 @@ class Eternitas(
     val pinDataOpt:Option[String]
 ) {
 
-  def withPinData(pinFolderOr:js.UndefOr[PinFolder] ) = {
-    pinFolderOr.map(f=>f.`hash`.map(pinDataHash=>new Eternitas(this.keyPairOpt,
+  def withPinData(pinFolderOr:js.UndefOr[PinFolder] )(implicit userFeedback: UserFeedback) = {
+    pinFolderOr.map(f=>f.`hash`.map(pinDataHash=>{
+      userFeedback.logString(s"Found user data: ${pinDataHash}")
+      new Eternitas(
+      this.keyPairOpt,
       this.pinnataOpt,
       this.keyOpt,
-      Some(pinDataHash)))).flatten.getOrElse(this)
+      Some(pinDataHash))})).flatten.getOrElse(this)
   }
 
 

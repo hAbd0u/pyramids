@@ -71,6 +71,9 @@ object LastWillStartup {
           e => feedback.error(s"Pinnata error ${e}")
         )
       })
+    et.pinDataOpt.map(pd =>
+      $("#pinfolder").html(s"DATA: ${pd}"))
+
   }
 
 

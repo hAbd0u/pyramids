@@ -28,6 +28,6 @@ trait PinataNative extends js.Object {
 trait WalletNative extends js.Object {
   val pinata:js.UndefOr[PinataNative] = js.native
   val asym:js.UndefOr[KeypairNative]  = js.native
-  val pinFolder:js.UndefOr[PinFolder] = js.native
+  val pinfolder:js.UndefOr[PinFolder] = js.native
   val sym:js.UndefOr[JsonWebKey] = js.native
 }

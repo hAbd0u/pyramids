@@ -205,11 +205,7 @@ object Actions {
     executionContext: ExecutionContext) = {
     val walletNative: WalletNative =
       js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
-    val et1 = oldEternitas.withPinData(walletNative.pinFolder)
-
-    et1.pinDataOpt.map(pd =>
-      $("#pinfolder").html(s"DATA: ${pd}"))
-
+    val et1 = oldEternitas.withPinData(walletNative.pinfolder)
     AsymCrypto.importKeyPair(
       et1,
       walletNative,
@@ -231,13 +227,6 @@ object Actions {
               eternitas: Eternitas,
               cb: (Eternitas) => js.Any)(implicit $ : JQueryWrapper,
                                          userFeedback: UserFeedback) = {
-
-    /*
-    eternitas.pinDataOpt.map(pd=>{
-      $.get(s"/ipfs/${pd}","",(data,status,xhr)=>{})
-    }).getOrElse("")
-     */
-
     cb(eternitas)
   }
 
