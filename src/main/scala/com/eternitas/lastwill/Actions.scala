@@ -297,7 +297,7 @@ object Actions {
     val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
     val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
     pinData(file,dataHash, ivHash, eternitas, e => {
-      LastWillStartup.init(eternitas)
+      LastWillStartup.init(e)
       userFeedback.message(s"Your data is encrypted and stored!")
     })
 
