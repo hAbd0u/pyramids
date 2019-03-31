@@ -257,12 +257,9 @@ object Actions {
               cb: (Eternitas) => js.Any)(implicit $ : JQueryWrapper,
                                          userFeedback: UserFeedback) = {
     import WalletNative._;
-
     val list:PinDataListNative = eternitas.pinDataOpt.map((aHash:String)=>loadHashAsText(aHash, (s:String)=>{
       js.JSON.parse(s)
     })).getOrElse(l("data" -> js.Array())).asInstanceOf[PinDataListNative]
-
-
     eternitas.pinnataOpt.map(auth=>{
       val pinString =Eternitas.stringify(
         list.withPinData(
@@ -271,7 +268,7 @@ object Actions {
             "name" -> file.name,
             "type" -> file.`type`
           ).asInstanceOf[PinDataNative]))
-      userFeedback.logString("Pinning: " + pinString)
+      //userFeedback.logString("Pinning: " + pinString)
       new Pinata(auth).pinFileToIPFS(
         pinString.toArrayBuffer()
         ,PinataMetaData(
@@ -289,21 +286,7 @@ object Actions {
         } ).
         `catch`((e:AxiosError)=>{
           userFeedback.error(s"Error pinning eternitas data list: ${e}" )
-          cb(eternitas)
-        })
-    }
-
-
-    )
-
-
-
-
-
-
-
-    cb(eternitas)
-  }
+          cb(eternitas)})})}
 
   private def handlePinResult(file:File,eternitas: Eternitas,
                               axiosResponse: AxiosResponse,

@@ -21,9 +21,9 @@ trait AxiosImpl extends js.Object {
 
   def get(address:String, data:js.Dynamic):AxiosImpl = js.native
 
-  def `then`(callback: js.Function1[AxiosResponse,js.Any]):AxiosImpl = js.native
+  def `then`(callback: js.Function1[AxiosResponse,Unit]):AxiosImpl = js.native
 
-  def `catch`(callback: js.Function1[AxiosError,js.Any]):AxiosImpl = js.native
+  def `catch`(callback: js.Function1[AxiosError,Unit]):AxiosImpl = js.native
 
   def post(address:String, data:FormData, headers:js.Dynamic):AxiosImpl = js.native
 
