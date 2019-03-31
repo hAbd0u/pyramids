@@ -2,7 +2,7 @@ package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.PinData.PinningData
-import com.eternitas.lastwill.axioss.{AxiosResponse, Pinata, PinataMetaData, PinataPinResponse}
+import com.eternitas.lastwill.axioss._
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, SymEncryptionResult, WalletNative}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
@@ -98,21 +98,7 @@ object Actions {
                           new Pinata(p)
                             .pinFileToIPFS(symEncryptionResult.result,
                                            PinataMetaData(file))
-                            .`then`((axiosResponse) => {
-                              new Pinata(p)
-                                .pinFileToIPFS(
-                                  symEncryptionResult.iv,
-                                  PinataMetaData(axiosResponse
-                                    .asInstanceOf[PinataPinResponse]
-                                    .data))
-                                .`then`((axiosResponse2) =>
-                                  handlePinResult(eternitas,
-                                                  axiosResponse,
-                                                  axiosResponse2))
-                                .`catch`((error) =>
-                                  feedback.message(
-                                    s"Error pinning iv: ${error}"))
-                            })
+                            .`then`((axiosResponse) => pinataUpload(eternitas, symEncryptionResult, p, axiosResponse))
                             .`catch`((error) =>
                               feedback.message(s"Error pinning hash: ${error}"))
                         })
@@ -120,6 +106,10 @@ object Actions {
                     })
             ))
       ).onDragOverNothing()
+
+
+
+
 
     def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
         implicit
@@ -196,6 +186,27 @@ object Actions {
                 feedback.error("Unsupported data type: " + file.`type`)
         )
       ).onDragOverNothing()
+
+  }
+
+  def pinataUpload(eternitas: Eternitas,
+                    symEncryptionResult: SymEncryptionResult,
+                    p: PinataAuth,
+                    axiosResponse: AxiosResponse)(implicit $:JQueryWrapper, feedback: UserFeedback): AxiosImpl = {
+
+    new Pinata(p)
+      .pinFileToIPFS(
+        symEncryptionResult.iv,
+        PinataMetaData(axiosResponse
+          .asInstanceOf[PinataPinResponse]
+          .data))
+      .`then`((axiosResponse2) =>
+        handlePinResult(eternitas,
+          axiosResponse,
+          axiosResponse2))
+      .`catch`((error) =>
+        feedback.message(
+          s"Error pinning iv: ${error}"))
 
   }
 
