@@ -3,7 +3,12 @@ package com.eternitas.lastwill
 import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.PinData.PinningData
 import com.eternitas.lastwill.axioss._
-import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, SymEncryptionResult, WalletNative}
+import com.eternitas.lastwill.cryptoo.{
+  AsymCrypto,
+  SymCrypto,
+  SymEncryptionResult,
+  WalletNative
+}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.{JQuery, JQueryEventObject}
@@ -85,31 +90,10 @@ object Actions {
                 (arrayBuffer: ArrayBuffer) =>
                   SymCrypto
                     .encrypt(key, arrayBuffer)
-                    .onComplete((t: Try[SymEncryptionResult]) => {
-                      t.failed.map(thr =>
-                        feedback.error(
-                          s"Encryption failed: ${thr.getMessage()}"))
-                      t.map((symEncryptionResult: SymEncryptionResult) => {
-                        feedback.log(s"Encrypted", symEncryptionResult.result)
-                        feedback.log(s"IV", symEncryptionResult.iv)
-                        eternitas.pinnataOpt.map(p => {
-                          feedback.message(
-                            "Start pinning, please be very patient!")
-                          new Pinata(p)
-                            .pinFileToIPFS(symEncryptionResult.result,
-                                           PinataMetaData(file))
-                            .`then`((axiosResponse) => pinataUpload(eternitas, symEncryptionResult, p, axiosResponse))
-                            .`catch`((error) =>
-                              feedback.message(s"Error pinning hash: ${error}"))
-                        })
-                      })
-                    })
+                    .onComplete((t: Try[SymEncryptionResult]) =>
+                      onEncryptionResult(t, eternitas, file))
             ))
       ).onDragOverNothing()
-
-
-
-
 
     def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
         implicit
@@ -176,44 +160,80 @@ object Actions {
 
     def iimport(oldEternitas: Eternitas)(implicit ctx: ExecutionContext,
                                          $ : JQueryWrapper,
-                                         feedback: UserFeedback) = onDrop(
+                                         feedback: UserFeedback) =
+      onDrop(
         (file: File) =>
           new FileReader().onReadArrayBuffer(
             file,
-            bufferSource => if (file.`type` == "application/json")
+            bufferSource =>
+              if (file.`type` == "application/json")
                 importFromData(oldEternitas, file, bufferSource)
-               else
+              else
                 feedback.error("Unsupported data type: " + file.`type`)
         )
       ).onDragOverNothing()
 
   }
 
-  def pinataUpload(eternitas: Eternitas,
-                    symEncryptionResult: SymEncryptionResult,
-                    p: PinataAuth,
-                    axiosResponse: AxiosResponse)(implicit $:JQueryWrapper, feedback: UserFeedback): AxiosImpl = {
+  private def onEncryptionResult(t: Try[SymEncryptionResult],
+                                 eternitas: Eternitas,
+                                 file: File)(
+      implicit feedback: UserFeedback,
+      $ : JQueryWrapper,
+      executionContext: ExecutionContext) = {
 
-    new Pinata(p)
-      .pinFileToIPFS(
-        symEncryptionResult.iv,
-        PinataMetaData(axiosResponse
-          .asInstanceOf[PinataPinResponse]
-          .data))
-      .`then`((axiosResponse2) =>
-        handlePinResult(eternitas,
-          axiosResponse,
-          axiosResponse2))
-      .`catch`((error) =>
-        feedback.message(
-          s"Error pinning iv: ${error}"))
+    t.failed.map(thr =>
+      feedback.error(s"Encryption failed: ${thr.getMessage()}"))
+    t.map((symEncryptionResult: SymEncryptionResult) => {
+      feedback.log(s"Encrypted", symEncryptionResult.result)
+      feedback.log(s"IV", symEncryptionResult.iv)
+      eternitas.pinnataOpt.map(p =>
+        withPinata(eternitas, file, symEncryptionResult, p))
+    })
 
   }
 
-  private def importFromData(oldEternitas: Eternitas, file: File, bufferSource: ArrayBuffer)(
-    implicit $ : JQueryWrapper,
-    feedback: UserFeedback,
-    executionContext: ExecutionContext) = {
+  def withPinata(eternitas: Eternitas,
+                 file: File,
+                 symEncryptionResult: SymEncryptionResult,
+                 p: PinataAuth)(implicit feedback: UserFeedback,
+                                executionContext: ExecutionContext,
+                                $ : JQueryWrapper): AxiosImpl = {
+
+    feedback.message("Start pinning, please be very patient!")
+    new Pinata(p)
+      .pinFileToIPFS(symEncryptionResult.result, PinataMetaData(file))
+      .`then`((axiosResponse) =>
+        pinataUpload(eternitas, symEncryptionResult, p, axiosResponse))
+      .`catch`((error) => feedback.message(s"Error pinning hash: ${error}"))
+
+  }
+
+  def pinataUpload(eternitas: Eternitas,
+                   symEncryptionResult: SymEncryptionResult,
+                   p: PinataAuth,
+                   axiosResponse: AxiosResponse)(
+      implicit $ : JQueryWrapper,
+      feedback: UserFeedback): AxiosImpl = {
+
+    new Pinata(p)
+      .pinFileToIPFS(symEncryptionResult.iv,
+                     PinataMetaData(
+                       axiosResponse
+                         .asInstanceOf[PinataPinResponse]
+                         .data))
+      .`then`((axiosResponse2) =>
+        handlePinResult(eternitas, axiosResponse, axiosResponse2))
+      .`catch`((error) => feedback.message(s"Error pinning iv: ${error}"))
+
+  }
+
+  private def importFromData(oldEternitas: Eternitas,
+                             file: File,
+                             bufferSource: ArrayBuffer)(
+      implicit $ : JQueryWrapper,
+      feedback: UserFeedback,
+      executionContext: ExecutionContext) = {
     val walletNative: WalletNative =
       js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
     val et1 = oldEternitas.withPinData(walletNative.pinfolder)
@@ -227,11 +247,10 @@ object Actions {
       implicit $ : JQueryWrapper,
       feedback: UserFeedback,
       executionContext: ExecutionContext): Unit = SymCrypto.importKey(
-      et2,
+    et2,
     walletNative,
-      (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
-    )
-
+    (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
+  )
 
   def pinData(dataHash: String,
               ivHash: String,
