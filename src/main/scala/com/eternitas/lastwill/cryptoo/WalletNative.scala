@@ -18,6 +18,22 @@ trait PinFolder extends js.Object {
 }
 
 @js.native
+trait PinDataListNative extends js.Object {
+  val data: js.UndefOr[js.Array[PinDataNative]] = js.native
+}
+
+@js.native
+trait PinDataNative extends js.Object {
+  val hash: js.UndefOr[String]  = js.native
+  val vc: js.UndefOr[String] = js.native
+  val name :js.UndefOr[String] = js.native
+  val `type` :js.UndefOr[String] = js.native
+
+}
+
+
+
+@js.native
 trait PinataNative extends js.Object {
   val api: js.UndefOr[String] = js.native
   val apisecret: js.UndefOr[String] = js.native
