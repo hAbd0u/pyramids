@@ -227,35 +227,35 @@ object Actions {
 
   }
 
-  private def importFromData(oldEternitas: Eternitas,
-                             file: File,
-                             bufferSource: ArrayBuffer)(
-      implicit $ : JQueryWrapper,
-      feedback: UserFeedback,
-      executionContext: ExecutionContext) = {
-    val walletNative: WalletNative =
-      js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
-    val et1 = oldEternitas.withPinData(walletNative.pinfolder)
-    AsymCrypto.importKeyPair(
-      et1,
-      walletNative,
-      (et2: Eternitas) => onImportKeyPair(file, walletNative, et2))
+
+  private def handlePinResult(file:File,eternitas: Eternitas,
+                              axiosResponse: AxiosResponse,
+                              axiosResponse2: AxiosResponse)(
+                               implicit $ : JQueryWrapper,
+                               userFeedback: UserFeedback) = {
+
+    val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
+    val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
+
+    userFeedback.logString(s"Data uploaded: ${dataHash}")
+    userFeedback.logString(s"IV uploaded: ${ivHash}")
+
+    pinDataList(file,dataHash, ivHash, eternitas, e => {
+      LastWillStartup.init(e)
+      userFeedback.message(s"Your data is encrypted and stored!")
+    })
+
+
+
   }
 
-  def onImportKeyPair(file: File, walletNative: WalletNative, et2: Eternitas)(
-      implicit $ : JQueryWrapper,
-      feedback: UserFeedback,
-      executionContext: ExecutionContext): Unit = SymCrypto.importKey(
-    et2,
-    walletNative,
-    (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
-  )
 
-  def pinData(file:File,
-              dataHash: String,
-              ivHash: String,
-              eternitas: Eternitas,
-              cb: (Eternitas) => js.Any)(implicit $ : JQueryWrapper,
+
+  def pinDataList(file:File,
+                  dataHash: String,
+                  ivHash: String,
+                  eternitas: Eternitas,
+                  cb: (Eternitas) => js.Any)(implicit $ : JQueryWrapper,
                                          userFeedback: UserFeedback) = {
     import WalletNative._;
     val list:PinDataListNative = eternitas.pinDataOpt.map((aHash:String)=>loadHashAsText(aHash, (s:String)=>{
@@ -289,18 +289,33 @@ object Actions {
           userFeedback.error(s"Error pinning eternitas data list: ${e}" )
           cb(eternitas)})})}
 
-  private def handlePinResult(file:File,eternitas: Eternitas,
-                              axiosResponse: AxiosResponse,
-                              axiosResponse2: AxiosResponse)(
+
+
+
+  private def importFromData(oldEternitas: Eternitas,
+                             file: File,
+                             bufferSource: ArrayBuffer)(
       implicit $ : JQueryWrapper,
-      userFeedback: UserFeedback) = {
-
-    val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
-    val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
-    pinData(file,dataHash, ivHash, eternitas, e => {
-      LastWillStartup.init(e)
-      userFeedback.message(s"Your data is encrypted and stored!")
-    })
-
+      feedback: UserFeedback,
+      executionContext: ExecutionContext) = {
+    val walletNative: WalletNative =
+      js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
+    val et1 = oldEternitas.withPinData(walletNative.pinfolder)
+    AsymCrypto.importKeyPair(
+      et1,
+      walletNative,
+      (et2: Eternitas) => onImportKeyPair(file, walletNative, et2))
   }
+
+  def onImportKeyPair(file: File, walletNative: WalletNative, et2: Eternitas)(
+      implicit $ : JQueryWrapper,
+      feedback: UserFeedback,
+      executionContext: ExecutionContext): Unit = SymCrypto.importKey(
+    et2,
+    walletNative,
+    (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
+  )
+
+
+
 }
