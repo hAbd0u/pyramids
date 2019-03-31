@@ -30,6 +30,12 @@ class Eternitas(
       Some(pinDataHash))})).flatten.getOrElse(this)
   }
 
+  def withPinDataHash(s:String) = new Eternitas(
+    this.keyPairOpt,
+    this.pinnataOpt,
+    this.keyOpt,
+    Some(s))
+
 
 
   def addKey(key:CryptoKey) = new Eternitas(keyPairOpt,pinnataOpt,Some(key),pinDataOpt)
@@ -118,11 +124,17 @@ class Eternitas(
     Future.sequence(Seq(exportKeyPair(),exportKey(),exportPinata(),exportPinFolder())).
       map(s => l("asym" -> s(0),"sym" -> s(1),"pinata" -> s(2),"pinfolder" -> s(3)))
   }.map((aDynamic: js.Dynamic) =>
-    js.JSON.stringify(aDynamic: js.Any, null: js.Array[js.Any], 1: js.Any))
-
+    Eternitas.stringify(aDynamic: js.Any))
 
 
 
 
 
 }
+
+object Eternitas{
+  def stringify(aAny:js.Any) = js.JSON.stringify(aAny: js.Any, null: js.Array[js.Any], 1: js.Any)
+
+}
+
+

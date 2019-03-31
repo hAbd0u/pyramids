@@ -3,20 +3,15 @@ package com.eternitas.lastwill
 import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.PinData.PinningData
 import com.eternitas.lastwill.axioss._
-import com.eternitas.lastwill.cryptoo.{
-  AsymCrypto,
-  SymCrypto,
-  SymEncryptionResult,
-  WalletNative
-}
+import com.eternitas.lastwill.cryptoo._
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.{JQuery, JQueryEventObject}
 import org.scalajs.dom
 import org.scalajs.dom.raw._
-
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
+import js.Dynamic.{literal=>l}
 import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
 import scala.util.Try
@@ -35,6 +30,26 @@ trait URL extends js.Any {
 
 object Actions {
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
+
+
+  def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
+    implicit
+    $ : JQueryWrapper) = {
+    val r = new XMLHttpRequest()
+    r.open("GET", s"/ipfs/${aHash}", true);
+    r.responseType = "arraybuffer"
+    r.onload = (oEvent: Event) => cb(r.response.asInstanceOf[ArrayBuffer]);
+    r.send()
+  }
+  def loadHashAsText(aHash: String, cb: (String) => Unit)(
+    implicit
+    $ : JQueryWrapper) = {
+    val r = new XMLHttpRequest()
+    r.open("GET", s"/ipfs/${aHash}", true);
+    r.responseType = "text"
+    r.onload = (oEvent: Event) => cb(r.response.toString());
+    r.send()
+  }
 
   implicit class PimpedJQuery(jq: JQuery) {
 
@@ -95,24 +110,7 @@ object Actions {
             ))
       ).onDragOverNothing()
 
-    def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
-        implicit
-        $ : JQueryWrapper) = {
-      val r = new XMLHttpRequest()
-      r.open("GET", s"/ipfs/${aHash}", true);
-      r.responseType = "arraybuffer"
-      r.onload = (oEvent: Event) => cb(r.response.asInstanceOf[ArrayBuffer]);
-      r.send()
-    }
-    def loadHashAsText(aHash: String, cb: (String) => Unit)(
-        implicit
-        $ : JQueryWrapper) = {
-      val r = new XMLHttpRequest()
-      r.open("GET", s"/ipfs/${aHash}", true);
-      r.responseType = "text"
-      r.onload = (oEvent: Event) => cb(r.response.toString());
-      r.send()
-    }
+
 
     def showPinned(pinned: PinData.Pinned, eternitas: Eternitas)(
         implicit ctx: ExecutionContext,
@@ -204,12 +202,12 @@ object Actions {
     new Pinata(p)
       .pinFileToIPFS(symEncryptionResult.result, PinataMetaData(file))
       .`then`((axiosResponse) =>
-        pinataUpload(eternitas, symEncryptionResult, p, axiosResponse))
+        pinataUpload(file,eternitas, symEncryptionResult, p, axiosResponse))
       .`catch`((error) => feedback.message(s"Error pinning hash: ${error}"))
 
   }
 
-  def pinataUpload(eternitas: Eternitas,
+  def pinataUpload(file:File,eternitas: Eternitas,
                    symEncryptionResult: SymEncryptionResult,
                    p: PinataAuth,
                    axiosResponse: AxiosResponse)(
@@ -223,7 +221,7 @@ object Actions {
                          .asInstanceOf[PinataPinResponse]
                          .data))
       .`then`((axiosResponse2) =>
-        handlePinResult(eternitas, axiosResponse, axiosResponse2))
+        handlePinResult(file,eternitas, axiosResponse, axiosResponse2))
       .`catch`((error) => feedback.message(s"Error pinning iv: ${error}"))
 
   }
@@ -252,15 +250,58 @@ object Actions {
     (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
   )
 
-  def pinData(dataHash: String,
+  def pinData(file:File,
+              dataHash: String,
               ivHash: String,
               eternitas: Eternitas,
               cb: (Eternitas) => js.Any)(implicit $ : JQueryWrapper,
                                          userFeedback: UserFeedback) = {
+    import WalletNative._;
+
+    val list:PinDataListNative = eternitas.pinDataOpt.map((aHash:String)=>loadHashAsText(aHash, (s:String)=>{
+      js.JSON.parse(s)
+    })).getOrElse(l("data" -> js.Array())).asInstanceOf[PinDataListNative]
+
+
+    eternitas.pinnataOpt.map(auth=>new Pinata(auth).pinFileToIPFS(
+      Eternitas.stringify(
+        list.withPinData(
+          l("hash"->dataHash,
+            "vc" ->ivHash,
+            "name" -> file.name,
+            "type" -> file.`type`
+          ).asInstanceOf[PinDataNative])).toArrayBuffer()
+      ,PinataMetaData(
+        name=Some("Eternitas-Data"),
+        size=None,
+        `type` = Some("application/json"))
+    ).
+      `then`((r:AxiosResponse)=>{
+        val eternitasHash = r.
+          asInstanceOf[PinataPinResponse].
+        data.
+          IpfsHash
+        userFeedback.logString(s"Pinned Eternitas-Data: ${eternitasHash}")
+        cb(eternitas.withPinDataHash(eternitasHash))
+      } ).
+      `catch`((e:AxiosError)=>{
+        userFeedback.error(s"Error pinning eternitas data list: ${e}" )
+        cb(eternitas)
+      })
+
+
+    )
+
+
+
+
+
+
+
     cb(eternitas)
   }
 
-  private def handlePinResult(eternitas: Eternitas,
+  private def handlePinResult(file:File,eternitas: Eternitas,
                               axiosResponse: AxiosResponse,
                               axiosResponse2: AxiosResponse)(
       implicit $ : JQueryWrapper,
@@ -268,7 +309,7 @@ object Actions {
 
     val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
     val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
-    pinData(dataHash, ivHash, eternitas, e => {
+    pinData(file,dataHash, ivHash, eternitas, e => {
       LastWillStartup.init(eternitas)
       userFeedback.message(s"Your data is encrypted and stored!")
     })

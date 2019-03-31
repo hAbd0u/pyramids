@@ -4,6 +4,7 @@ import com.eternitas.lastwill.axioss.PinataData
 import org.scalajs.dom.crypto.JsonWebKey
 
 import scala.scalajs.js
+import js.Dynamic.{literal => l}
 
 
 @js.native
@@ -31,6 +32,15 @@ trait PinDataNative extends js.Object {
 
 }
 
+object WalletNative{
+  implicit class PimpedPinDataListNative(p:PinDataListNative){
+
+    def withPinData(n:PinDataNative) = {
+           l("data" -> (p.toLocaleString() :+ n)).asInstanceOf[PinDataListNative]
+    }
+
+  }
+}
 
 
 @js.native
