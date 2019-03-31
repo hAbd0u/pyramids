@@ -36,7 +36,7 @@ object WalletNative{
   implicit class PimpedPinDataListNative(p:PinDataListNative){
 
     def withPinData(n:PinDataNative) = {
-           l("data" -> (p.toLocaleString() :+ n)).asInstanceOf[PinDataListNative]
+           l("data" -> (p.data.getOrElse(js.Array[PinDataNative]()) :+ n)).asInstanceOf[PinDataListNative]
     }
 
   }
