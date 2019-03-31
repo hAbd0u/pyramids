@@ -19,8 +19,8 @@ trait PinFolder extends js.Object {
 
 @js.native
 trait PinataNative extends js.Object {
-  val api: String = js.native
-  val apisecret: String = js.native
+  val api: js.UndefOr[String] = js.native
+  val apisecret: js.UndefOr[String] = js.native
 }
 
 

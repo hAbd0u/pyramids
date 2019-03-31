@@ -52,8 +52,8 @@ object AsymCrypto {
     walletNative.pinata.map(p=>new Eternitas(
         eternitas.keyPairOpt,
         Some(
-          PinataAuth(p.api,
-            p.apisecret)
+          PinataAuth(p.api.getOrElse(""),
+            p.apisecret.getOrElse(""))
         ),
         eternitas.keyOpt,
         eternitas.pinDataOpt)).getOrElse(eternitas)
