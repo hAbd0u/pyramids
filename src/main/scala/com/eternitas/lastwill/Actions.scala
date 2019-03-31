@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
-import com.eternitas.lastwill.PinData.PinningData
+
 import com.eternitas.lastwill.axioss._
 import com.eternitas.lastwill.cryptoo._
 import com.eternitas.wizard.JQueryWrapper
@@ -112,7 +112,7 @@ object Actions {
 
 
 
-    def showPinned(pinned: PinData.Pinned, eternitas: Eternitas)(
+    def showPinned(pinned: PinDataNative, eternitas: Eternitas)(
         implicit ctx: ExecutionContext,
         $ : JQueryWrapper,
         feedback: UserFeedback) = {
@@ -152,9 +152,10 @@ object Actions {
                          (data: String) =>
                            js.JSON
                              .parse(data.toString)
-                             .asInstanceOf[PinningData]
-                             .data
-                             .foreach(pinned => showPinned(pinned, eternitas))))
+                             .asInstanceOf[PinDataListNative]
+                             .data.map(realData=>
+                             realData.foreach(pinned => showPinned(pinned, eternitas)))
+                             ))
 
     def iimport(oldEternitas: Eternitas)(implicit ctx: ExecutionContext,
                                          $ : JQueryWrapper,
