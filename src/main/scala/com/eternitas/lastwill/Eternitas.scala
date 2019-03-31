@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.axioss.Pinata
-import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto}
+import com.eternitas.lastwill.cryptoo.{AsymCrypto, PinFolder, SymCrypto}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,10 +20,13 @@ class Eternitas(
     val pinDataOpt:Option[String]
 ) {
 
-  def withPinData(pinDataHash: String) = new Eternitas(this.keyPairOpt,
-    this.pinnataOpt,
-    this.keyOpt,
-    Some(pinDataHash) )
+  def withPinData(pinFolderOr:js.UndefOr[PinFolder] ) = {
+    pinFolderOr.map(f=>f.`hash`.map(pinDataHash=>new Eternitas(this.keyPairOpt,
+      this.pinnataOpt,
+      this.keyOpt,
+      Some(pinDataHash)))).flatten.getOrElse(this)
+  }
+
 
 
   def addKey(key:CryptoKey) = new Eternitas(keyPairOpt,pinnataOpt,Some(key),pinDataOpt)

@@ -47,27 +47,26 @@ object AsymCrypto {
 
 
   def importPinata(eternitas: Eternitas,
-                   importData:js.Dynamic): Eternitas ={
-    val pinata  = importData.pinata;
-     if(js.isUndefined(pinata))
-      eternitas else new Eternitas(
-       eternitas.keyPairOpt,
-         Some(
-           PinataAuth(pinata.api.toString(),
-             pinata.apisecret.toString())
-         ),
-       eternitas.keyOpt,
-       eternitas.pinDataOpt
-     )
-}
+                   walletNative: WalletNative): Eternitas ={
+
+    walletNative.pinata.map(p=>new Eternitas(
+        eternitas.keyPairOpt,
+        Some(
+          PinataAuth(p.api,
+            p.apisecret)
+        ),
+        eternitas.keyOpt,
+        eternitas.pinDataOpt)).getOrElse(eternitas)
+  }
 
   def importKeyPair(eternitas: Eternitas,
-                    json:js.Dynamic,
+                    walletNative:WalletNative,
                     cb:(Eternitas)=>Unit)(
     implicit executionContext: ExecutionContext,
-    userFeedback: UserFeedback)=crypto.subtle.importKey(
+    userFeedback: UserFeedback)=walletNative.
+    asym.map(kp=> kp.`public`.map(apublicKey=>crypto.subtle.importKey(
        aKeyFormat,
-       json.asym.`public`.asInstanceOf[JsonWebKey],
+      apublicKey,
        aHashAlgorithm,
        true,
        usageEncrypt
@@ -75,9 +74,10 @@ object AsymCrypto {
     t.failed.map(e=>println("Error importing public key: " + e.getMessage))
     t.map(aAny=>{
       val publicKey = aAny.asInstanceOf[CryptoKey]
+      kp.`private`.map(aprivkey=>
       crypto.subtle.importKey(
         aKeyFormat,
-        json.asym.`private`.asInstanceOf[JsonWebKey],
+        aprivkey,
         aHashAlgorithm,
         true,
         usageDecrypt
@@ -86,7 +86,8 @@ object AsymCrypto {
         t2.map(aAny2=>{
           val privateKey = aAny2.asInstanceOf[CryptoKey]
           userFeedback.logString("Loaded symmetric keys.")
-          cb(eternitas.addKeyPair(privateKey,publicKey))})})})})
+          cb(eternitas.addKeyPair(privateKey,publicKey))})}))
+    })})))
 
 
 

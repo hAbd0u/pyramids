@@ -2,17 +2,8 @@ package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.PinData.PinningData
-import com.eternitas.lastwill.axioss.{
-  AxiosResponse,
-  Pinata,
-  PinataMetaData,
-  PinataPinResponse
-}
-import com.eternitas.lastwill.cryptoo.{
-  AsymCrypto,
-  SymCrypto,
-  SymEncryptionResult
-}
+import com.eternitas.lastwill.axioss.{AxiosResponse, Pinata, PinataMetaData, PinataPinResponse}
+import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, SymEncryptionResult, WalletNative}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.{JQuery, JQueryEventObject}
@@ -212,30 +203,26 @@ object Actions {
     implicit $ : JQueryWrapper,
     feedback: UserFeedback,
     executionContext: ExecutionContext) = {
-    val importData: js.Dynamic =
-      js.JSON.parse(bufferSource.toNormalString())
-    val et1 =
-      if (importData.pinfolder.hash.toString() == "")
-        oldEternitas
-      else
-        oldEternitas.withPinData(importData.pinfolder.hash.toString)
+    val walletNative: WalletNative =
+      js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
+    val et1 = oldEternitas.withPinData(walletNative.pinFolder)
 
     et1.pinDataOpt.map(pd =>
       $("#pinfolder").html(s"DATA: ${pd}"))
 
     AsymCrypto.importKeyPair(
       et1,
-      importData,
-      (et2: Eternitas) => onImportKeyPair(file, importData, et2))
+      walletNative,
+      (et2: Eternitas) => onImportKeyPair(file, walletNative, et2))
   }
 
-  def onImportKeyPair(file: File, importData: js.Dynamic, et2: Eternitas)(
+  def onImportKeyPair(file: File, walletNative: WalletNative, et2: Eternitas)(
       implicit $ : JQueryWrapper,
       feedback: UserFeedback,
       executionContext: ExecutionContext): Unit = SymCrypto.importKey(
       et2,
-      importData,
-      (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, importData))
+    walletNative,
+      (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
     )
 
 

@@ -100,26 +100,28 @@ trait SymCryptoTrait {
 
 
   def importKey(eternitas: Eternitas,
-                    json:js.Dynamic,
+                walletNative:WalletNative,
                     cb:(Eternitas)=>Unit)(
                      implicit executionContext: ExecutionContext,
                      userFeedback: UserFeedback)={
+    walletNative.sym.map(key=> {
+      val f = crypto.subtle.importKey(
+        aKeyFormat,
+        key,
+        createKeyAlgorithmIdentifier(),
+        true,
+        encryptDecrypt).
+        toFuture.
+        map(_.asInstanceOf[CryptoKey])
 
-   val f = crypto.subtle.importKey(
-     aKeyFormat,
-     json.sym.asInstanceOf[JsonWebKey],
-     createKeyAlgorithmIdentifier(),
-     true,
-     encryptDecrypt).
-     toFuture.
-     map(_.asInstanceOf[CryptoKey])
+      f.onComplete(t=>t.map((cryptoKey:CryptoKey)=>{
+        userFeedback.logString("Loaded sym key.")
+        cb(eternitas.addKey(cryptoKey))
 
-    f.onComplete(t=>t.map((cryptoKey:CryptoKey)=>{
-      userFeedback.logString("Loaded sym key.")
-      cb(eternitas.addKey(cryptoKey))
+      }))
+      f.failed.map(e=>userFeedback.error(s"Import of sym key failed: "+e.getLocalizedMessage))
+    })
 
-    }))
-    f.failed.map(e=>userFeedback.error(s"Import of sym key failed: "+e.getLocalizedMessage))
 
   }
 
