@@ -123,12 +123,14 @@ object Actions {
 
 
       val el = $(
-        s"<a href='#' download='${pinned.name.getOrElse("item.dat")}'"+
+        s"<a href='#' download='${pinned.name.getOrElse("data.dat")}' "+
           s"  id='${pinned.hash.getOrElse(pinned.hashCode())}'  "+
           s"class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
       $("#data-display").empty().append(el)
       el.click(
-        (event: Event) =>
+        (event: Event) =>{
+          event.preventDefault();
+          event.stopPropagation()
           pinned.`hash`.map(aHash =>
             loadHashAsArrayBuffer(
               aHash,
@@ -147,10 +149,7 @@ object Actions {
                             new Blob(js.Array[js.Any](t),
                               BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
                           val url  = createObjectURL(blob)
-
-
                           dom.window.open(url)
-
                           //$(s"#${pinned.hash}").attr("href",url).click()
                         })
                         f.failed.map(e =>
@@ -158,7 +157,8 @@ object Actions {
                             s"Decryption failed: ${e.getLocalizedMessage}"))
                       })
                 ))
-          )))
+          ))}
+      )
     }
 
     def dataDisplay(eternitas: Eternitas)(implicit ctx: ExecutionContext,
