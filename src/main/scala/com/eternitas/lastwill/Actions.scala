@@ -147,7 +147,10 @@ object Actions {
                             new Blob(js.Array[js.Any](t),
                               BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
                           val url  = createObjectURL(blob)
+
+
                           dom.window.open(url)
+
                           //$(s"#${pinned.hash}").attr("href",url).click()
                         })
                         f.failed.map(e =>
@@ -293,7 +296,7 @@ object Actions {
             "type" -> file.`type`).asInstanceOf[PinDataNative]))
 
       eternitas.pinataAuth.map(auth => {
-        userFeedback.logString("Pinning: " + pinString)
+       // userFeedback.logString("Pinning: " + pinString)
         new Pinata(auth)
           .pinFileToIPFS(
             pinString.toArrayBuffer(),
