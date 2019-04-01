@@ -93,7 +93,7 @@ object Actions {
               else
                 t.map((s: String) => {
                   val blob: Blob =
-                    new Blob(js.Array(s), BlobPropertyBag("octet/stream"))
+                    new Blob(js.Array(s), BlobPropertyBag("application/json"))
                   assignURL(blob)
                 })))
 
