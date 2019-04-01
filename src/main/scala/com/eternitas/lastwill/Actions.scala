@@ -31,6 +31,13 @@ trait URL extends js.Any {
 object Actions {
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
+
+  def assignURL(blob: Blob) = {
+    val url: String = mywindow.URL.createObjectURL(blob)
+    dom.window.location.assign(url)
+  }
+
+
   def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
       implicit
       $ : JQueryWrapper) = {
@@ -87,8 +94,7 @@ object Actions {
                 t.map((s: String) => {
                   val blob: Blob =
                     new Blob(js.Array(s), BlobPropertyBag("octet/stream"))
-                  val url: String = mywindow.URL.createObjectURL(blob)
-                  dom.window.location.assign(url)
+                  assignURL(blob)
                 })))
 
     def upLoad(eternitas: Eternitas)(implicit ctx: ExecutionContext,
@@ -126,11 +132,16 @@ object Actions {
                     avchash,
                     (vc: ArrayBuffer) =>
                       eternitas.keyOpt.map(symKey => {
-                        feedback.log("Data to decrypt", encryptedData)
-                        feedback.log("IV for decrypt", vc)
+                        //feedback.log("Data to decrypt", encryptedData)
+                        //feedback.log("IV for decrypt", vc)
                         val f = SymCrypto.decrypt(symKey, encryptedData, vc)
-                        f.map((t: ArrayBuffer) =>
-                          feedback.message("Decryption successfull"))
+                        f.map((t: ArrayBuffer) =>{
+                          feedback.message("Decryption successfull")
+                          val blob: Blob =
+                            new Blob(js.Array[js.Any](t),
+                              BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
+                          assignURL(blob)
+                        })
                         f.failed.map(e =>
                           feedback.error(
                             s"Decryption failed: ${e.getLocalizedMessage}"))
@@ -171,6 +182,8 @@ object Actions {
       ).onDragOverNothing()
 
   }
+
+
 
   private def onEncryptionResult(t: Try[SymEncryptionResult],
                                  eternitas: Eternitas,
