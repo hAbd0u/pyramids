@@ -32,10 +32,9 @@ object Actions {
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
 
-  def assignURL(blob: Blob) = {
-    val url: String = mywindow.URL.createObjectURL(blob)
-    dom.window.location.assign(url)
-  }
+  def createObjectURL(blob: Blob):String = mywindow.URL.createObjectURL(blob)
+
+
 
 
   def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
@@ -83,10 +82,8 @@ object Actions {
 
     def export(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                      $ : JQueryWrapper,
-                                     feedback: UserFeedback) =
-      jq.click(
-        (e: Event) =>
-          eternitas
+                                     feedback: UserFeedback) ={
+      eternitas
             .export()
             .onComplete(t =>
               if (t.isFailure) feedback.error("Export failed for keypair: " + t)
@@ -94,8 +91,13 @@ object Actions {
                 t.map((s: String) => {
                   val blob: Blob =
                     new Blob(js.Array(s), BlobPropertyBag("application/json"))
-                  assignURL(blob)
-                })))
+                  val url = createObjectURL(blob)
+                  jq.attr("href",url)
+                }))
+      jq
+
+    }
+
 
     def upLoad(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                      $ : JQueryWrapper,
@@ -118,8 +120,10 @@ object Actions {
         implicit ctx: ExecutionContext,
         $ : JQueryWrapper,
         feedback: UserFeedback) = {
+
+
       val el = $(
-        s"<a href='#' class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
+        s"<a href='#'  id='${pinned.hash}'  class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
       $("#data-display").empty().append(el)
       el.click(
         (event: Event) =>
@@ -140,7 +144,8 @@ object Actions {
                           val blob: Blob =
                             new Blob(js.Array[js.Any](t),
                               BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
-                          assignURL(blob)
+                          val url  = createObjectURL(blob)
+                          $(s"#${pinned.hash}").attr("href",url).click()
                         })
                         f.failed.map(e =>
                           feedback.error(
