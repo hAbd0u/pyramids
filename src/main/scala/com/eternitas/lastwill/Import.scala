@@ -11,7 +11,7 @@ import scala.scalajs.js
 object Import {
 
 
-  implicit class ImportJQuery(jq: JQuery) extends PimpedQuery.PJQuery(jq){
+  implicit class ImportJQuery(jq: JQuery) extends PimpedJQuery.PJQuery(jq){
 
     def export(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                      $: JQueryWrapper,
@@ -24,7 +24,7 @@ object Import {
             t.map((s: String) => {
               val blob: Blob =
                 new Blob(js.Array(s), BlobPropertyBag("application/json"))
-              val url = PimpedQuery.createObjectURL(blob)
+              val url = PimpedJQuery.createObjectURL(blob)
               jq.attr("href", url)
             }))
       jq

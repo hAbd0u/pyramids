@@ -28,7 +28,7 @@ trait URL extends js.Any {
 
 }
 
-object PimpedQuery {
+object PimpedJQuery {
 
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 

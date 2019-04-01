@@ -12,7 +12,7 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 
 object Pinning {
 
-  implicit class PPinning(jq: JQuery) extends PimpedQuery.PJQuery(jq){
+  implicit class PPinning(jq: JQuery) extends PimpedJQuery.PJQuery(jq){
 
 
 
@@ -33,11 +33,11 @@ object Pinning {
           event.preventDefault();
           event.stopPropagation()
           pinned.`hash`.map(aHash =>
-            PimpedQuery.loadHashAsArrayBuffer(
+            PimpedJQuery.loadHashAsArrayBuffer(
               aHash,
               (encryptedData: ArrayBuffer) =>
                 pinned.vc.map(avchash =>
-                  PimpedQuery.loadHashAsArrayBuffer(
+                  PimpedJQuery.loadHashAsArrayBuffer(
                     avchash,
                     (vc: ArrayBuffer) =>
                       eternitas.keyOpt.map(symKey => {
@@ -49,7 +49,7 @@ object Pinning {
                           val blob: Blob =
                             new Blob(js.Array[js.Any](t),
                               BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
-                          val url = PimpedQuery.createObjectURL(blob)
+                          val url = PimpedJQuery.createObjectURL(blob)
                           dom.window.open(url)
                         })
                         f.failed.map(e =>
@@ -68,7 +68,7 @@ object Pinning {
 
       eternitas.pinDataOpt.map(
         aHash =>
-          PimpedQuery.loadHashAsText(
+          PimpedJQuery.loadHashAsText(
             aHash,
             (data: String) =>
               js.JSON

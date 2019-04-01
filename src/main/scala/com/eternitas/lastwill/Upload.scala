@@ -18,7 +18,7 @@ import js.Dynamic.{literal => l}
 
 object Upload {
 
-  implicit class PUpload(jq: JQuery) extends PimpedQuery.PJQuery(jq){
+  implicit class PUpload(jq: JQuery) extends PimpedJQuery.PJQuery(jq){
 
 
 
@@ -124,7 +124,7 @@ object Upload {
       def mLoadPinData(cb: (PinDataListNative) => Unit) =
         if (eternitas.pinDataOpt.isDefined)
           eternitas.pinDataOpt.map((aHash: String) =>
-            PimpedQuery.loadHashAsText(aHash, (s: String) => {
+            PimpedJQuery.loadHashAsText(aHash, (s: String) => {
               cb(js.JSON.parse(s).asInstanceOf[PinDataListNative])
             }))
         else
