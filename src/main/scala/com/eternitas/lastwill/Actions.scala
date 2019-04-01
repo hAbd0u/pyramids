@@ -123,7 +123,9 @@ object Actions {
 
 
       val el = $(
-        s"<a href='#'  id='${pinned.hash}'  class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
+        s"<a href='#' download='${pinned.name.getOrElse("item.dat")}'"+
+          s"  id='${pinned.hash.getOrElse(pinned.hashCode())}'  "+
+          s"class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
       $("#data-display").empty().append(el)
       el.click(
         (event: Event) =>
@@ -145,7 +147,8 @@ object Actions {
                             new Blob(js.Array[js.Any](t),
                               BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
                           val url  = createObjectURL(blob)
-                          $(s"#${pinned.hash}").attr("href",url).click()
+                          dom.window.open(url)
+                          //$(s"#${pinned.hash}").attr("href",url).click()
                         })
                         f.failed.map(e =>
                           feedback.error(
