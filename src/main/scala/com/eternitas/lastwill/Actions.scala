@@ -119,7 +119,7 @@ object Actions {
         $ : JQueryWrapper,
         feedback: UserFeedback) = {
       val el = $(
-        s"<a href='#' class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
+        s"<a href='#' target='_blank' class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
       $("#data-display").empty().append(el)
       el.click(
         (event: Event) =>
