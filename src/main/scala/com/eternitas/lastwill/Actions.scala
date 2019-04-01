@@ -325,7 +325,7 @@ object Actions {
     val walletNative: WalletNative =
       js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
     val et1 = oldEternitas.withPinData(walletNative.pinfolder)
-    AsymCrypto.importKeyPair(
+    AsymCrypto.importKeyPair(file,
       et1,
       walletNative,
       (et2: Eternitas) => onImportKeyPair(file, walletNative, et2))

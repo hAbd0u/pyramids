@@ -64,6 +64,10 @@ object LastWillStartup {
     $("#drop_zone").off().upLoad(et)
     $("#data-display").dataDisplay(et)
 
+
+
+
+
     et.pinataAuth.map(
       p => {
         new Pinata(p).authenticate(

@@ -2,6 +2,7 @@ package com.eternitas.lastwill.cryptoo
 
 import com.eternitas.lastwill.{Eternitas, PinataAuth, UserFeedback}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
+import org.scalajs.dom.raw.File
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -59,7 +60,8 @@ object AsymCrypto {
         eternitas.pinDataOpt)).getOrElse(eternitas)
   }
 
-  def importKeyPair(eternitas: Eternitas,
+  def importKeyPair(file:File,
+                    eternitas: Eternitas,
                     walletNative:WalletNative,
                     cb:(Eternitas)=>Unit)(
     implicit executionContext: ExecutionContext,
@@ -85,7 +87,7 @@ object AsymCrypto {
         t2.failed.map(e=>println("Error importing private key: " + e.getMessage))
         t2.map(aAny2=>{
           val privateKey = aAny2.asInstanceOf[CryptoKey]
-          userFeedback.logString("Loaded symmetric keys.")
+          userFeedback.message(s"YOUR DATA FROM ${file.name.toUpperCase}")
           cb(eternitas.addKeyPair(privateKey,publicKey))})}))
     })})))
 
