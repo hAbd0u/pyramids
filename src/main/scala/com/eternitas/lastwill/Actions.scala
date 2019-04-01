@@ -150,7 +150,6 @@ object Actions {
                               BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
                           val url  = createObjectURL(blob)
                           dom.window.open(url)
-                          //$(s"#${pinned.hash}").attr("href",url).click()
                         })
                         f.failed.map(e =>
                           feedback.error(
