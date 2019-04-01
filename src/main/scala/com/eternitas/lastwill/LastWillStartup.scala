@@ -62,7 +62,7 @@ object LastWillStartup {
     //SymCrypto.test(et.keyOpt.get,"123456789")
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
-    $("#data-display").dataDisplay(et)
+    $("#data-display").empty().dataDisplay(et)
 
 
 

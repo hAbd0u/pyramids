@@ -126,7 +126,7 @@ object Actions {
         s"<a href='#' download='${pinned.name.getOrElse("data.dat")}' "+
           s"  id='${pinned.hash.getOrElse(pinned.hashCode())}'  "+
           s"class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
-      $("#data-display").empty().append(el)
+      $("#data-display").append(el)
       el.click(
         (event: Event) =>{
           event.preventDefault();
@@ -162,7 +162,8 @@ object Actions {
 
     def dataDisplay(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                           $ : JQueryWrapper,
-                                          feedback: UserFeedback) =
+                                          feedback: UserFeedback) ={
+
       eternitas.pinDataOpt.map(
         aHash =>
           loadHashAsText(
@@ -174,7 +175,7 @@ object Actions {
                 .data
                 .map(realData =>
                   realData.foreach(pinned => showPinned(pinned, eternitas)))
-        ))
+        ))}
 
     def iimport(oldEternitas: Eternitas)(implicit ctx: ExecutionContext,
                                          $ : JQueryWrapper,
