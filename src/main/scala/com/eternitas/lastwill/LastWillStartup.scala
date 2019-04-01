@@ -1,9 +1,11 @@
 package com.lyrx.eternitas.lastwill
 
-import com.eternitas.lastwill.Actions._
+
 import com.eternitas.lastwill.Import.ImportJQuery
+import com.eternitas.lastwill.Pinning.PPinning
 import com.eternitas.lastwill.Upload.PUpload
 import com.eternitas.lastwill.axioss.Pinata
+
 import com.eternitas.lastwill.cryptoo.{HashSum, SymCrypto}
 import com.eternitas.lastwill.{Buffers, Eternitas, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
