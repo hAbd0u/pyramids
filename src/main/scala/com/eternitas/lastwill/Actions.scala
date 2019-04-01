@@ -15,18 +15,8 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
 import scala.util.Try
-@js.native
-@JSGlobal
-class MyWindow extends dom.Window {
-  val URL: URL = js.native
 
-}
-@js.native
-trait URL extends js.Any {
 
-  def createObjectURL(blob: Blob): String = js.native
-
-}
 
 object Actions {
 

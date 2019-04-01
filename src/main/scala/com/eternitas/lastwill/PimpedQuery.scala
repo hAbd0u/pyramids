@@ -10,6 +10,23 @@ import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import com.eternitas.lastwill.Buffers._
+import org.scalajs.dom
+
+import scala.scalajs.js.annotation.JSGlobal
+
+
+@js.native
+@JSGlobal
+class MyWindow extends dom.Window {
+  val URL: URL = js.native
+
+}
+@js.native
+trait URL extends js.Any {
+
+  def createObjectURL(blob: Blob): String = js.native
+
+}
 
 object PimpedQuery {
 
