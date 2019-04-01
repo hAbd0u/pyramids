@@ -20,7 +20,7 @@ object LastWillStartup {
     document.addEventListener("DOMContentLoaded",
                               (e: Event) => new Eternitas(
                                   keyPairOpt = None,
-                                  pinnataOpt = None,
+                                  pinataAuth = None,
                                 keyOpt = None,
                                 pinDataOpt = None
                                 ).withAllKeys().onComplete(t=>{
@@ -64,7 +64,7 @@ object LastWillStartup {
     $("#drop_zone").off().upLoad(et)
     $("#data-display").dataDisplay(et)
 
-    et.pinnataOpt.map(
+    et.pinataAuth.map(
       p => {
         new Pinata(p).authenticate(
           p2 => $("#pinata").html(s"Pinnata: ${p.api}"),
