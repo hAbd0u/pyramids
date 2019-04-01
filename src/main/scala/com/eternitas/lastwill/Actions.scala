@@ -32,6 +32,9 @@ object Actions {
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
 
+
+
+
   def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
     implicit
     $ : JQueryWrapper) = {
@@ -223,7 +226,7 @@ object Actions {
                          .data))
       .`then`((axiosResponse2) =>
         handlePinResult(file,eternitas, axiosResponse, axiosResponse2))
-      .`catch`((error) => feedback.message(s"Error pinning iv: ${error}"))
+      .`catch`((error) => feedback.message(s"Pinning error: ${error}"))
 
   }
 
@@ -258,36 +261,43 @@ object Actions {
                   cb: (Eternitas) => js.Any)(implicit $ : JQueryWrapper,
                                          userFeedback: UserFeedback) = {
     import WalletNative._;
-    val list:PinDataListNative = eternitas.pinDataOpt.map((aHash:String)=>loadHashAsText(aHash, (s:String)=>{
-      js.JSON.parse(s)
-    })).getOrElse(l("data" -> js.Array())).asInstanceOf[PinDataListNative]
-    eternitas.pinnataOpt.map(auth=>{
-      val pinString =Eternitas.stringify(
-        list.withPinData(
-          l("hash"->dataHash,
-            "vc" ->ivHash,
-            "name" -> file.name,
-            "type" -> file.`type`
-          ).asInstanceOf[PinDataNative]))
-      //userFeedback.logString("Pinning: " + pinString)
-      new Pinata(auth).pinFileToIPFS(
-        pinString.toArrayBuffer()
-        ,PinataMetaData(
-          name=Some("Eternitas-Data"),
-          size=None,
-          `type` = Some("application/json"))
-      ).
-        `then`((r:AxiosResponse)=>{
-          val eternitasHash = r.
-            asInstanceOf[PinataPinResponse].
-            data.
-            IpfsHash
-          userFeedback.logString(s"Pinned Eternitas-Data: ${eternitasHash}")
-          cb(eternitas.withPinDataHash(eternitasHash))
-        } ).
-        `catch`((e:AxiosError)=>{
-          userFeedback.error(s"Error pinning eternitas data list: ${e}" )
-          cb(eternitas)})})}
+
+    def mLoadPinData( cb:(PinDataListNative)=>Unit)=if(eternitas.pinnataOpt.isDefined)
+      eternitas.pinDataOpt.map((aHash:String)=>loadHashAsText(aHash, (s:String)=>{
+      cb(js.JSON.parse(s).asInstanceOf[PinDataListNative])
+    }))
+    else
+      cb(l("data" -> js.Array()).asInstanceOf[PinDataListNative])
+
+     mLoadPinData((pinDataNative) => {
+       val pinString = Eternitas.stringify(
+         pinDataNative.withPinData(
+           l("hash"->dataHash,
+             "vc" ->ivHash,
+             "name" -> file.name,
+             "type" -> file.`type`
+           ).asInstanceOf[PinDataNative]))
+
+         //userFeedback.logString("Pinning: " + pinString)
+
+         eternitas.pinnataOpt.map(auth=>new Pinata(auth).pinFileToIPFS(
+             pinString.toArrayBuffer()
+             ,PinataMetaData(
+               name=Some("Eternitas-Data"),
+               size=None,
+               `type` = Some("application/json"))
+           ).
+             `then`((r:AxiosResponse)=>{
+               val eternitasHash = r.
+                 asInstanceOf[PinataPinResponse].
+                 data.
+                 IpfsHash
+               userFeedback.logString(s"Pinned Eternitas-Data: ${eternitasHash}")
+               cb(eternitas.withPinDataHash(eternitasHash))
+             } ).
+             `catch`((e:AxiosError)=>{
+               userFeedback.error(s"Error pinning eternitas data list: ${e}" )
+               cb(eternitas)}))})}
 
 
 
