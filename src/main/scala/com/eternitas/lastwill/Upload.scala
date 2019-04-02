@@ -121,8 +121,13 @@ object Upload {
                                                userFeedback: UserFeedback) = {
       import WalletNative._;
 
+      def havePinData()={
+        eternitas.pinDataOpt.isDefined &&
+        eternitas.pinDataOpt.map(s=>true).getOrElse(false)
+      }
+
       def mLoadPinData(cb: (PinDataListNative) => Unit) =
-        if (eternitas.pinDataOpt.isDefined)
+        if (havePinData())
           eternitas.pinDataOpt.map((aHash: String) =>
             PimpedJQuery.loadHashAsText(aHash, (s: String) => {
               cb(js.JSON.parse(s).asInstanceOf[PinDataListNative])

@@ -27,7 +27,13 @@ class Eternitas(
       this.keyPairOpt,
       this.pinataAuth,
       this.keyOpt,
-      Some(pinDataHash))})).flatten.getOrElse(this)
+      Some(pinDataHash))})).
+      flatten.
+      getOrElse(new Eternitas(
+        this.keyPairOpt,
+        this.pinataAuth,
+        this.keyOpt,
+        None))
   }
 
   def withPinDataHash(s:String) = new Eternitas(
