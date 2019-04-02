@@ -12,20 +12,17 @@ object Loading {
 
     def cidEntered(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                          $ : JQueryWrapper,
-                                         feedback: UserFeedback) =
-      jq.on("keypress", (e: Event) => {
+                                         feedback: UserFeedback) = jq.
+      on("keypress", (e: Event) => if (
+        e.asInstanceOf[KeyboardEvent].keyCode == 13)
+          handleCID(jq.value.toString()))
 
-        val textEvent = e.asInstanceOf[KeyboardEvent]
-
-        if (textEvent.keyCode == 13)
-          handleCID(jq.value.toString())
-      })
 
     def handleCID(s: String)(implicit ctx: ExecutionContext,
                              $ : JQueryWrapper,
-                             feedback: UserFeedback) = {
-      feedback.message(s"${}")
-    }
+                             feedback: UserFeedback) = PimpedJQuery.
+      loadHashAsArrayBuffer(s,b=>feedback.message(s"Resolved: ${s}"))
+
   }
 
 }

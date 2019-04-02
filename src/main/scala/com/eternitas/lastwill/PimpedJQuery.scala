@@ -36,11 +36,26 @@ object PimpedJQuery {
   def createObjectURL(blob: Blob): String = mywindow.URL.createObjectURL(blob)
 
 
+  def resolveUrl(aHash:String) = if(
+    mywindow.location.host.matches("localhost"))
+      s"https://ipfs.io/ipfs/${aHash}"
+      else
+      s"/ipfs/${aHash}"
+
+
+  def currentHash() = {
+    val aHash = mywindow.location.hash
+    val index =aHash.indexOf("#")
+    if( index >= 0) Some(aHash.substring(index))  else  None
+  }
+
+
+
   def loadHashAsArrayBuffer(aHash: String, cb: (ArrayBuffer) => Unit)(
     implicit
     $: JQueryWrapper) = {
     val r = new XMLHttpRequest()
-    r.open("GET", s"/ipfs/${aHash}", true);
+    r.open("GET", resolveUrl(aHash), true);
     r.responseType = "arraybuffer"
     r.onload = (oEvent: Event) => cb(r.response.asInstanceOf[ArrayBuffer]);
     r.send()
@@ -49,7 +64,7 @@ object PimpedJQuery {
   def loadHashAsText(aHash: String, cb: (String) => Unit)(implicit
                                                           $: JQueryWrapper) = {
     val r = new XMLHttpRequest()
-    r.open("GET", s"/ipfs/${aHash}", true);
+    r.open("GET", resolveUrl(aHash), true);
     r.responseType = "text"
     r.onload = (oEvent: Event) => cb(r.response.toString());
     r.send()
