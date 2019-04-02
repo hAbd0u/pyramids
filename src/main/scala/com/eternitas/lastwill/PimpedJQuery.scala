@@ -35,12 +35,14 @@ object PimpedJQuery {
 
   def createObjectURL(blob: Blob): String = mywindow.URL.createObjectURL(blob)
 
+  val PINATA_GW = "https://gateway.pinata.cloud"
+  val IPFS_GW= "https://ipfs.io"
 
   def resolveUrl(aHash:String) = {
   //println(s"Host: ${mywindow.location.host}")
     if (
       mywindow.location.host.matches(".*localhost.*"))
-      s"https://ipfs.io/ipfs/${aHash}"
+      s"${PINATA_GW}/ipfs/${aHash}"
     else
       s"/ipfs/${aHash}"
   }

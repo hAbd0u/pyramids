@@ -97,6 +97,7 @@ object LastWillStartup {
         e => feedback.error(s"Pinnata error ${e}")
       )
     })
+    feedback.message("DOCUMENTS ARE ETERNAL!")
     et.pinDataOpt.map(pd =>{
       $("#pinfolder").html(s"DATA:  <a href='${PimpedJQuery.resolveUrl(pd)}' "+
                                      s"class='pinned' "+
