@@ -123,7 +123,7 @@ object Upload {
 
       def havePinData()={
         eternitas.pinDataOpt.isDefined &&
-        eternitas.pinDataOpt.map(s=>true).getOrElse(false)
+        eternitas.pinDataOpt.map(s=> (s != "")).getOrElse(false)
       }
 
       def mLoadPinData(cb: (PinDataListNative) => Unit) =
