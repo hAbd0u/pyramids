@@ -2,8 +2,8 @@ package com.eternitas.lastwill
 
 import com.eternitas.wizard.JQueryWrapper
 import org.querki.jquery.JQuery
-import org.scalajs.dom.raw.Event
-
+import org.scalajs.dom.KeyboardEvent
+import org.scalajs.dom.Event
 import scala.concurrent.ExecutionContext
 
 object Loading {
@@ -13,8 +13,15 @@ object Loading {
     def cidEntered(eternitas:Eternitas)(implicit ctx: ExecutionContext,
                      $ : JQueryWrapper,
                      feedback: UserFeedback) {
-      jq.on("", (e: Event) => {
-        feedback.message("This is it!")
+      jq.on("keypress", (e: Event) => {
+
+        if(e.asInstanceOf[KeyboardEvent].keyCode == 13){
+          feedback.message("This is it!")
+        }
+        //&e.preventDefault()
+        //e.stopPropagation()
+
+
       })
     }
 

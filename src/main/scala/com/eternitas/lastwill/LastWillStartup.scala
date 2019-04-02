@@ -68,7 +68,7 @@ object LastWillStartup {
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
     $("#data-display").empty().dataDisplay(et)
-    $("#cid").empty().cidEntered(et)
+    $("#cid").empty().off().cidEntered(et)
 
 
 
