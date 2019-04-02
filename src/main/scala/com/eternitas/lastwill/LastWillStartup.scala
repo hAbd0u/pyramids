@@ -101,7 +101,7 @@ object LastWillStartup {
       $("#pinfolder").html(s"DATA:  <a href='${PimpedJQuery.resolveUrl(pd)}' "+
                                      s"class='pinned' "+
                                      s" id='${pd}' "+
-                                     s" download='pindata.json' target='_blank'>"+
+                                     s" download='${pd}.json' target='_blank'>"+
                                      s"${pd}"+
                                      s"</a>" )
 
