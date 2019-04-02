@@ -95,7 +95,7 @@ object LastWillStartup {
       )
     })
     et.pinDataOpt.map(pd =>
-      $("#pinfolder").html(s"DATA: ${pd.substring(0, 10)}[...]"))
+      $("#pinfolder").html(s"DATA: ${pd}"))
 
   }
 

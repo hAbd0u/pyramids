@@ -25,8 +25,12 @@ object Loading {
                              $ : JQueryWrapper,
                              feedback: UserFeedback) = {
       feedback.error("Loading your data, please be very patient ...")
+      jq.value("")
       PimpedJQuery.
-        loadHashAsText(s,b=>LastWillStartup.init(eternitas.withPinDataHash(s)))
+        loadHashAsText(s,b=>{
+          LastWillStartup.init(eternitas.withPinDataHash(s))
+          feedback.message(s"Resolved: ${s}")
+        })
     }
         /*
         val pinDataListNative:PinDataListNative = s.toDynamic()
