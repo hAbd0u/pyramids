@@ -99,11 +99,12 @@ object LastWillStartup {
     })
     feedback.message("DOCUMENTS ARE ETERNAL!")
     et.pinDataOpt.map(pd =>{
+      feedback.message(s"${pd}")
       $("#pinfolder").html(s"DATA:  <a href='${PimpedJQuery.resolveUrl(pd)}' "+
                                      s"class='pinned' "+
                                      s" id='${pd}' "+
                                      s" download='${pd}.json' target='_blank'>"+
-                                     s"${pd}"+
+                                     s"${pd.substring(0,10)}"+
                                      s"</a>" )
 
 
