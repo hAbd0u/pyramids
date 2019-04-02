@@ -15,8 +15,10 @@ object Loading {
                      feedback: UserFeedback) {
       jq.on("keypress", (e: Event) => {
 
-        if(e.asInstanceOf[KeyboardEvent].keyCode == 13){
-          feedback.message("This is it!")
+        val textEvent =e.asInstanceOf[KeyboardEvent]
+
+        if(textEvent.keyCode == 13){
+          feedback.message(s"${jq.value.toString()}")
         }
         //&e.preventDefault()
         //e.stopPropagation()
