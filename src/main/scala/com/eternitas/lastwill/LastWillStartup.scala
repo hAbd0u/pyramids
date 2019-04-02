@@ -68,10 +68,7 @@ object LastWillStartup {
           .onComplete(t => initEternitas(t))
     )
 
-  def initPinDataOpt(): Option[String] = PimpedJQuery.
-    currentHash().map(
-      (hash:String)=>
-        PimpedJQuery.resolveUrl(hash))
+  def initPinDataOpt(): Option[String] = PimpedJQuery.currentHash()
 
 
   def initEternitas(t: Try[Eternitas]): Try[Unit] = {

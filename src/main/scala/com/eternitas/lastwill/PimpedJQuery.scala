@@ -36,17 +36,19 @@ object PimpedJQuery {
   def createObjectURL(blob: Blob): String = mywindow.URL.createObjectURL(blob)
 
 
-  def resolveUrl(aHash:String) = if(
-    mywindow.location.host.matches("localhost"))
+  def resolveUrl(aHash:String) = {
+  //println(s"Host: ${mywindow.location.host}")
+    if (
+      mywindow.location.host.matches(".*localhost.*"))
       s"https://ipfs.io/ipfs/${aHash}"
-      else
+    else
       s"/ipfs/${aHash}"
-
+  }
 
   def currentHash() = {
     val aHash = mywindow.location.hash
     val index =aHash.indexOf("#")
-    if( index >= 0) Some(aHash.substring(index))  else  None
+    if( index >= 0) Some(aHash.substring(index+1))  else  None
   }
 
 

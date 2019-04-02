@@ -26,7 +26,7 @@ object Pinning {
       val el = $(
         s"<a href='#' download='${pinned.name.getOrElse("data.dat")}' " +
           s"  id='${pinned.hash.getOrElse(pinned.hashCode())}'  " +
-          s"class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a>")
+          s"class='pinned'>${pinned.name.getOrElse("[UNNAMED]")}</a> <span>&nbsp; | &nbsp; </span>")
       $("#data-display").append(el)
       el.click(
         (event: Event) => {
