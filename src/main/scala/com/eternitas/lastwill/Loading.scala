@@ -10,23 +10,22 @@ object Loading {
 
   implicit class PLoading(jq: JQuery) extends PimpedJQuery.PJQuery(jq) {
 
-    def cidEntered(eternitas:Eternitas)(implicit ctx: ExecutionContext,
-                     $ : JQueryWrapper,
-                     feedback: UserFeedback) {
+    def cidEntered(eternitas: Eternitas)(implicit ctx: ExecutionContext,
+                                         $ : JQueryWrapper,
+                                         feedback: UserFeedback) =
       jq.on("keypress", (e: Event) => {
 
-        val textEvent =e.asInstanceOf[KeyboardEvent]
+        val textEvent = e.asInstanceOf[KeyboardEvent]
 
-        if(textEvent.keyCode == 13){
-          feedback.message(s"${jq.value.toString()}")
-        }
-        //&e.preventDefault()
-        //e.stopPropagation()
-
-
+        if (textEvent.keyCode == 13)
+          handleCID(jq.value.toString())
       })
-    }
 
+    def handleCID(s: String)(implicit ctx: ExecutionContext,
+                             $ : JQueryWrapper,
+                             feedback: UserFeedback) = {
+      feedback.message(s"${}")
+    }
   }
 
 }
