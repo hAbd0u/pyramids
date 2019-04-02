@@ -5,6 +5,9 @@
     top: 420px;
 }
 
+
+
+
 .eternitas-hidden{
   display:none;
 }
@@ -83,12 +86,12 @@
 
 .drop {
     border: 4px dashed #bbb;
-    max-width: 350px;
+    max-width: 410px;
 }
+input.cid{
 
-.dropped {
-
-    color: black;
+    margin-top:10px;
+    width: 410px;
 }
 
 
