@@ -30,6 +30,7 @@ trait PinDataNative extends js.Object {
   val name :js.UndefOr[String] = js.native
   val `type` :js.UndefOr[String] = js.native
   val pubkey : js.UndefOr[JsonWebKey] = js.native
+  val timeStamp : js.UndefOr[js.Date] = js.native
 
 }
 

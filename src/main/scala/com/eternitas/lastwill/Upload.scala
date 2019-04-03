@@ -119,7 +119,7 @@ object Upload {
                     eternitas: Eternitas,
                     cb: (Eternitas) => js.Any)(implicit $: JQueryWrapper,
                                                userFeedback: UserFeedback) = {
-      import WalletNative._;
+
 
       def havePinData()={
         eternitas.pinDataOpt.isDefined &&
@@ -136,12 +136,7 @@ object Upload {
           cb(l("data" -> js.Array()).asInstanceOf[PinDataListNative])
 
       mLoadPinData((pinDataNative) => {
-        val pinString = Eternitas.stringify(
-          pinDataNative.withPinData(
-            l("hash" -> dataHash,
-              "vc" -> ivHash,
-              "name" -> file.name,
-              "type" -> file.`type`).asInstanceOf[PinDataNative]))
+        val pinString = createPinData(file, dataHash, ivHash, eternitas, pinDataNative)
 
         eternitas.pinataAuth.map(auth => {
           // userFeedback.logString("Pinning: " + pinString)
@@ -166,7 +161,31 @@ object Upload {
     }
 
 
+    def createPinData(file: File,
+                              dataHash: String,
+                              ivHash: String,
+                              eternitas: Eternitas,
+                              pinDataNative: PinDataListNative) = {
+      import WalletNative._
 
+      val d1 =  l("hash" -> dataHash,
+        "vc" -> ivHash,
+        "name" -> file.name,
+        "type" -> file.`type`,
+        "pubkey" -> eternitas.
+          keyPairOpt.
+          getOrElse(null).
+          publicKey).
+        asInstanceOf[PinDataNative]
+
+
+      Eternitas.stringify(eternitas.keyPairOpt.map(kp=> {
+        //kp.publicKey
+        d1
+      }).getOrElse(d1))
+
+
+    }
   }
 
 

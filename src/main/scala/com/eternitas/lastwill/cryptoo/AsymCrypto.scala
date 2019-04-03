@@ -18,15 +18,16 @@ object AsymCrypto {
     literal("name" -> "RSA-OAEP").
     asInstanceOf[KeyAlgorithmIdentifier]
 
-
-
-  val usages = js.Array(
-      KeyUsage.encrypt,
-      KeyUsage.decrypt)
   val usageDecrypt = js.Array(
     KeyUsage.decrypt)
   val usageEncrypt = js.Array(
     KeyUsage.encrypt)
+
+
+  val usages = js.Array(
+      KeyUsage.encrypt,
+      KeyUsage.decrypt
+  )
 
 
 
@@ -107,6 +108,14 @@ object AsymCrypto {
     extractable = true,
     keyUsages = usages).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
+
+  def generateSignatureKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
+  = crypto.subtle.generateKey(
+    algorithm = aHashAlgorithm,
+    extractable = true,
+    keyUsages = js.Array(KeyUsage.sign)).
+    toFuture.map(_.asInstanceOf[CryptoKeyPair])
+
 
 
 
