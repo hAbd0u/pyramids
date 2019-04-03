@@ -5,7 +5,8 @@
 
    - Field `publisher` for the public key
    - Field `date`  for the time stamp 
-   - Field`signed-date` for the signed time stamp
+   - Field`signed-date` for the signed time stamp. Signature 
+     with the private key
 
 ### Extend `Eternitas`-Object ###
 
