@@ -28,12 +28,10 @@ the Key-Button again for saving.
 
 ### New buttons ###
 
-- Button that creates a new key pair (Representing the identity)
-- Button that creates a new key for symmetric encryption
+1. Button that creates a new key pair (Representing an identity)
+2. Button that creates a new key for symmetric encryptioni (Representing a use case, e.g. an inheritance case)
 
-Both buttons: after pressing them, you need to safe the wallet again by clicking the top left 
-
-
+Both buttons: after pressing them, you need to safe the wallet again by clicking the top left key button. 
 
 
 
@@ -47,7 +45,7 @@ Both buttons: after pressing them, you need to safe the wallet again by clicking
 
 
 
-### An Falk-Alexander Birner eine Job-Description schicken. ###
+
 
 
 
