@@ -35,7 +35,14 @@ the Key-Button again for saving.
 Both buttons: after pressing them, you need to safe the wallet again by clicking the top left key button. 
 
 
+## Question to stampd ##
 
+Hi, your service is wonderfully designed!! I have one question: We
+will have different sequences of documents. Sequences will be
+independent from each other, but in each sequence documents will be
+ordered by creation date. So, can we stamp each document in your
+service, and then query your service, specifying the sequence, so that
+we can find all stamps in a specific sequence?
 
 
 
