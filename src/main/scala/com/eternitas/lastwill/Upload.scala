@@ -109,7 +109,6 @@ object Upload {
 
       pinDataList(file, dataHash, ivHash, eternitas, e => {
         LastWillStartup.init(e)
-        userFeedback.message(s"Your data is encrypted and stored!")
       })
 
     }
