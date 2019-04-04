@@ -81,7 +81,7 @@ object Upload {
                      p: PinataAuth,
                      axiosResponse: AxiosResponse)(
                       implicit $: JQueryWrapper,
-                      feedback: UserFeedback): AxiosImpl = {
+                      feedback: UserFeedback,executionContext: ExecutionContext): AxiosImpl = {
 
       new Pinata(p)
         .pinFileToIPFS(symEncryptionResult.iv,
@@ -100,7 +100,8 @@ object Upload {
                                 axiosResponse: AxiosResponse,
                                 axiosResponse2: AxiosResponse)(
                                  implicit $: JQueryWrapper,
-                                 userFeedback: UserFeedback) = {
+                                 userFeedback: UserFeedback,
+                                 executionContext: ExecutionContext) = {
 
       val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
       val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
@@ -119,7 +120,8 @@ object Upload {
                     ivHash: String,
                     eternitas: Eternitas,
                     cb: (Eternitas) => js.Any)(implicit $: JQueryWrapper,
-                                               userFeedback: UserFeedback) = {
+                                               userFeedback: UserFeedback,
+                                               executionContext: ExecutionContext) = {
 
 
       def havePinData()={
