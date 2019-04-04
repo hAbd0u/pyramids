@@ -7,8 +7,9 @@ import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
 import org.scalajs.dom.raw.{File, FileReader}
 import com.eternitas.lastwill.Buffers._
+import org.scalajs.dom.crypto.{CryptoKey, JsonWebKey}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.util.Try
@@ -165,28 +166,38 @@ object Upload {
                               dataHash: String,
                               ivHash: String,
                               eternitas: Eternitas,
-                              pinDataNative: PinDataListNative) = {
+                              pinDataNative: PinDataListNative)
+    //                 (implicit ctx:ExecutionContext)
+    = {
       import WalletNative._
+
+      /*
+      val pubKeyOpt:Option[Future[JsonWebKey]] = eternitas.
+        keyPairOpt.map(kp=>AsymCrypto.eexportKey(kp.publicKey))
+
+*/
+
+
 
       val d1 =  l("hash" -> dataHash,
         "vc" -> ivHash,
         "name" -> file.name,
-        "type" -> file.`type`,
-        "pubkey" -> eternitas.
-          keyPairOpt.
-          getOrElse(null).
-          publicKey).
+        "type" -> file.`type`).
         asInstanceOf[PinDataNative]
 
 
       val s = Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
         pd.append(d1)
-        l("data" -> pd)
+        l(
+          "data" -> pd
+        )
       }).
-        getOrElse(l("data" ->js.Array[PinDataNative](d1)))
+        getOrElse(l(
+          "data" ->js.Array[PinDataNative](d1)
+        ))
           .asInstanceOf[PinDataListNative])
 
-     // println("Eternitas-DATA: " + s)
+      //println("Eternitas-DATA: " + s)
 
       s
     }
