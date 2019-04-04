@@ -45,7 +45,6 @@ object Pinning {
                         //feedback.log("IV for decrypt", vc)
                         val f = SymCrypto.decrypt(symKey, encryptedData, vc)
                         f.map((t: ArrayBuffer) => {
-                          feedback.message("Decryption successfull")
                           val blob: Blob =
                             new Blob(js.Array[js.Any](t),
                               BlobPropertyBag(pinned.`type`.getOrElse("octet/stream").toString))
