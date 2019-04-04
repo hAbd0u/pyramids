@@ -29,7 +29,6 @@ object Loading {
       PimpedJQuery.
         loadHashAsText(s,b=>{
           LastWillStartup.init(eternitas.withPinDataHash(s))
-          feedback.message(s"Resolved: ${s}")
         })
     }
         /*
