@@ -14,6 +14,13 @@ trait KeypairNative extends js.Object {
 
 }
 @js.native
+trait SignkeyNative extends js.Object {
+  val `sign`: js.UndefOr[JsonWebKey] = js.native
+
+}
+
+
+@js.native
 trait PinFolder extends js.Object {
   val `hash`: js.UndefOr[String] = js.native
 }
@@ -56,6 +63,7 @@ trait PinataNative extends js.Object {
 trait WalletNative extends js.Object {
   val pinata:js.UndefOr[PinataNative] = js.native
   val asym:js.UndefOr[KeypairNative]  = js.native
+  val sign:js.UndefOr[SignkeyNative]  = js.native
   val pinfolder:js.UndefOr[PinFolder] = js.native
   val sym:js.UndefOr[JsonWebKey] = js.native
 }

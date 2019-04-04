@@ -63,7 +63,8 @@ object LastWillStartup {
           keyPairOpt = None,
           pinataAuth = None,
           keyOpt = None,
-          pinDataOpt = initPinDataOpt()
+          pinDataOpt = initPinDataOpt(),
+          None
         ).withAllKeys()
           .onComplete(t => initEternitas(t))
     )

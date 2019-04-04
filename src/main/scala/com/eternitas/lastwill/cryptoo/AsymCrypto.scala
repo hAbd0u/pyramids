@@ -7,6 +7,9 @@ import org.scalajs.dom.raw.File
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import js.Dynamic.{literal => l}
+
+
 
 object AsymCrypto {
   val aKeyFormat =  KeyFormat.jwk
@@ -58,7 +61,9 @@ object AsymCrypto {
             p.apisecret.getOrElse(""))
         ),
         eternitas.keyOpt,
-        eternitas.pinDataOpt)).getOrElse(eternitas)
+        eternitas.pinDataOpt,
+      eternitas.signKeyOpt
+    )).getOrElse(eternitas)
   }
 
   def importKeyPair(file:File,
@@ -109,12 +114,6 @@ object AsymCrypto {
     keyUsages = usages).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
 
-  def generateSignatureKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
-  = crypto.subtle.generateKey(
-    algorithm = aHashAlgorithm,
-    extractable = true,
-    keyUsages = js.Array(KeyUsage.sign)).
-    toFuture.map(_.asInstanceOf[CryptoKeyPair])
 
 
 

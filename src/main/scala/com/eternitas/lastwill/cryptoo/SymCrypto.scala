@@ -124,6 +124,15 @@ trait SymCryptoTrait {
 
 
   }
+  def generateSignatureKey()(implicit ctx:ExecutionContext):Future[CryptoKey]
+  = crypto.subtle.generateKey(
+    algorithm = l(
+      "name" -> "HMAC",
+      "hash" -> l("name" -> "SHA-512")
+    ).asInstanceOf[KeyAlgorithmIdentifier],
+    extractable = true,
+    keyUsages = js.Array(KeyUsage.sign,KeyUsage.verify)).
+    toFuture.map(_.asInstanceOf[CryptoKey])
 
 
 
