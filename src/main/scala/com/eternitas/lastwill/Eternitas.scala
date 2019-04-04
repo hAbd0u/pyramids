@@ -42,7 +42,8 @@ class Eternitas(
     this.keyPairOpt,
     this.pinataAuth,
     this.keyOpt,
-    Some(s),this.signKeyOpt)
+    Some(s),
+    this.signKeyOpt)
 
 
 

@@ -13,6 +13,7 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.util.Try
 import js.Dynamic.{literal => l}
+import scala.scalajs.js.UndefOr
 
 
 
@@ -179,12 +180,16 @@ object Upload {
         asInstanceOf[PinDataNative]
 
 
-      Eternitas.stringify(eternitas.keyPairOpt.map(kp=> {
-        //kp.publicKey
-        d1
-      }).getOrElse(d1))
+      val s = Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
+        pd.append(d1)
+        l("data" -> pd)
+      }).
+        getOrElse(l("data" ->js.Array[PinDataNative](d1)))
+          .asInstanceOf[PinDataListNative])
 
+     // println("Eternitas-DATA: " + s)
 
+      s
     }
   }
 
