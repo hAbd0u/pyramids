@@ -212,10 +212,9 @@ object Upload {
         keyPairOpt.
         map(kp =>
           AsymCrypto.eexportKey(kp.publicKey).
-            map(webKey => {
-              generate(webKey, null, pinDataNative, d1)
-            }
-            )).
+            map(webKey => eternitas.signKeyOpt.map(signKey=>
+                  SymCrypto.eexportKey(signKey).map(signKeyJS=>
+                    generate(webKey, signKeyJS, pinDataNative, d1))))).
         getOrElse(Future {
           generate(null, null, pinDataNative, d1)
         })
