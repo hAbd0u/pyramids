@@ -164,48 +164,61 @@ object Upload {
     }
 
 
+    def generate(webKey: JsonWebKey,
+                 signKey:JsonWebKey,
+                 pinDataNative: PinDataListNative,
+                 d1:PinDataNative)=
+      Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
+      pd.append(d1)
+      l(
+        "data" -> pd,
+        "pubkey" -> webKey,
+        "sign" -> signKey
+      )
+    }).
+      getOrElse(l(
+        "data" ->js.Array[PinDataNative](d1)
+      ))
+      .asInstanceOf[PinDataListNative])
+
+
+
     def createPinData(file: File,
                               dataHash: String,
                               ivHash: String,
                               eternitas: Eternitas,
                               pinDataNative: PinDataListNative)
                      (implicit ctx:ExecutionContext)
-    = {
-
-
-
-      val d1 =  l("hash" -> dataHash,
+    = { val d1 =  l("hash" -> dataHash,
         "vc" -> ivHash,
         "name" -> file.name,
-        "type" -> file.`type`).
-        asInstanceOf[PinDataNative]
-
-      def generate(webKey: JsonWebKey,signKey:JsonWebKey)= Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
-        pd.append(d1)
-        l(
-          "data" -> pd,
-          "pubkey" -> webKey,
-          "sign" -> signKey
-        )
-      }).
-        getOrElse(l(
-          "data" ->js.Array[PinDataNative](d1)
-        ))
-        .asInstanceOf[PinDataListNative])
+        "type" -> file.`type`,
+        "timestamp"  -> new js.Date()
+      ).asInstanceOf[PinDataNative]
 
 
 
-      val f:Future[String] = eternitas.
+      val f:Future[String] = createFuturePindata(eternitas, pinDataNative, d1)
+
+
+      generate(null,null,pinDataNative,d1)
+    }
+
+    private def createFuturePindata(eternitas: Eternitas,
+                                    pinDataNative: PinDataListNative,
+                                    d1: PinDataNative)(
+      implicit ctx:ExecutionContext) = {
+      eternitas.
         keyPairOpt.
-       map(kp=>
-         AsymCrypto.eexportKey(kp.publicKey).
-         map(webKey =>  {
-           generate(webKey,null)}
-         )).
-        getOrElse(Future{generate(null,null)})
-
-
-      generate(null,null)
+        map(kp =>
+          AsymCrypto.eexportKey(kp.publicKey).
+            map(webKey => {
+              generate(webKey, null, pinDataNative, d1)
+            }
+            )).
+        getOrElse(Future {
+          generate(null, null, pinDataNative, d1)
+        })
     }
   }
 
