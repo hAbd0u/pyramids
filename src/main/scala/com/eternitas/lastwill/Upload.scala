@@ -208,13 +208,18 @@ object Upload {
                                     pinDataNative: PinDataListNative,
                                     d1: PinDataNative)(
       implicit ctx:ExecutionContext) = {
-      eternitas.
+      val t:Option[Future[String]] = eternitas.
         keyPairOpt.
         map(kp =>
           AsymCrypto.eexportKey(kp.publicKey).
             map(webKey => eternitas.signKeyOpt.map(signKey=>
                   SymCrypto.eexportKey(signKey).map(signKeyJS=>
-                    generate(webKey, signKeyJS, pinDataNative, d1))))).
+                    generate(webKey, signKeyJS, pinDataNative, d1))).getOrElse(
+              Future{generate(webKey,null,pinDataNative,d1)}
+            )).flatten)
+
+
+        t.
         getOrElse(Future {
           generate(null, null, pinDataNative, d1)
         })
