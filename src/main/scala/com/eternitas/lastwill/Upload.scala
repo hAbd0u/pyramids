@@ -16,37 +16,32 @@ import scala.util.Try
 import js.Dynamic.{literal => l}
 import scala.scalajs.js.UndefOr
 
-
-
 object Upload {
 
-  implicit class PUpload(jq: JQuery) extends PimpedJQuery.PJQuery(jq){
-
-
+  implicit class PUpload(jq: JQuery) extends PimpedJQuery.PJQuery(jq) {
 
     def upLoad(eternitas: Eternitas)(implicit ctx: ExecutionContext,
-                                     $: JQueryWrapper,
-                                     feedback: UserFeedback) = onDrop(
-      (file: File) =>
-        eternitas.keyOpt.map(
-          key =>
-            new FileReader().onReadArrayBuffer(
-              file,
-              (arrayBuffer: ArrayBuffer) =>
-                SymCrypto
-                  .encrypt(key, arrayBuffer)
-                  .onComplete((t: Try[SymEncryptionResult]) =>
-                    onEncryptionResult(t, eternitas, file))
+                                     $ : JQueryWrapper,
+                                     feedback: UserFeedback) =
+      onDrop(
+        (file: File) =>
+          eternitas.keyOpt.map(
+            key =>
+              new FileReader().onReadArrayBuffer(
+                file,
+                (arrayBuffer: ArrayBuffer) =>
+                  SymCrypto
+                    .encrypt(key, arrayBuffer)
+                    .onComplete((t: Try[SymEncryptionResult]) =>
+                      onEncryptionResult(t, eternitas, file))
             ))
-    ).onDragOverNothing()
-
+      ).onDragOverNothing()
 
     def onEncryptionResult(t: Try[SymEncryptionResult],
                            eternitas: Eternitas,
-                           file: File)(
-                            implicit feedback: UserFeedback,
-                            $: JQueryWrapper,
-                            executionContext: ExecutionContext) = {
+                           file: File)(implicit feedback: UserFeedback,
+                                       $ : JQueryWrapper,
+                                       executionContext: ExecutionContext) = {
 
       t.failed.map(thr =>
         feedback.error(s"Encryption failed: ${thr.getMessage()}"))
@@ -64,7 +59,7 @@ object Upload {
                    symEncryptionResult: SymEncryptionResult,
                    p: PinataAuth)(implicit feedback: UserFeedback,
                                   executionContext: ExecutionContext,
-                                  $: JQueryWrapper): AxiosImpl = {
+                                  $ : JQueryWrapper): AxiosImpl = {
 
       feedback.message("Start pinning, please be very patient!")
       new Pinata(p)
@@ -80,15 +75,16 @@ object Upload {
                      symEncryptionResult: SymEncryptionResult,
                      p: PinataAuth,
                      axiosResponse: AxiosResponse)(
-                      implicit $: JQueryWrapper,
-                      feedback: UserFeedback,executionContext: ExecutionContext): AxiosImpl = {
+        implicit $ : JQueryWrapper,
+        feedback: UserFeedback,
+        executionContext: ExecutionContext): AxiosImpl = {
 
       new Pinata(p)
         .pinFileToIPFS(symEncryptionResult.iv,
-          PinataMetaData(
-            axiosResponse
-              .asInstanceOf[PinataPinResponse]
-              .data))
+                       PinataMetaData(
+                         axiosResponse
+                           .asInstanceOf[PinataPinResponse]
+                           .data))
         .`then`((axiosResponse2) =>
           handlePinResult(file, eternitas, axiosResponse, axiosResponse2))
         .`catch`((error) => feedback.message(s"Pinning error: ${error}"))
@@ -99,9 +95,9 @@ object Upload {
                                 eternitas: Eternitas,
                                 axiosResponse: AxiosResponse,
                                 axiosResponse2: AxiosResponse)(
-                                 implicit $: JQueryWrapper,
-                                 userFeedback: UserFeedback,
-                                 executionContext: ExecutionContext) = {
+        implicit $ : JQueryWrapper,
+        userFeedback: UserFeedback,
+        executionContext: ExecutionContext) = {
 
       val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
       val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
@@ -119,14 +115,14 @@ object Upload {
                     dataHash: String,
                     ivHash: String,
                     eternitas: Eternitas,
-                    cb: (Eternitas) => js.Any)(implicit $: JQueryWrapper,
-                                               userFeedback: UserFeedback,
-                                               executionContext: ExecutionContext) = {
+                    cb: (Eternitas) => js.Any)(
+        implicit $ : JQueryWrapper,
+        userFeedback: UserFeedback,
+        executionContext: ExecutionContext) = {
 
-
-      def havePinData()={
+      def havePinData() = {
         eternitas.pinDataOpt.isDefined &&
-        eternitas.pinDataOpt.map(s=> (s != "")).getOrElse(false)
+        eternitas.pinDataOpt.map(s => (s != "")).getOrElse(false)
       }
 
       def mLoadPinData(cb: (PinDataListNative) => Unit) =
@@ -139,90 +135,92 @@ object Upload {
           cb(l("data" -> js.Array()).asInstanceOf[PinDataListNative])
 
       mLoadPinData((pinDataNative) => {
-        val pinString = createPinData(file, dataHash, ivHash, eternitas, pinDataNative)
-
-        eternitas.pinataAuth.map(auth => {
-          // userFeedback.logString("Pinning: " + pinString)
-          new Pinata(auth)
-            .pinFileToIPFS(
-              pinString.toArrayBuffer(),
-              PinataMetaData(name = Some("Eternitas-Data"),
-                size = None,
-                `type` = Some("application/json"))
-            )
-            .`then`((r: AxiosResponse) => {
-              val eternitasHash = r.asInstanceOf[PinataPinResponse].data.IpfsHash
-              userFeedback.logString(s"Pinned Eternitas-Data: ${eternitasHash}")
-              cb(eternitas.withPinDataHash(eternitasHash))
-            })
-            .`catch`((e: AxiosError) => {
-              userFeedback.error(s"Error pinning eternitas data list: ${e}")
-              cb(eternitas)
-            })
-        })
+        createPinData(file, dataHash, ivHash, eternitas, pinDataNative).map(
+          pinString =>
+            eternitas.pinataAuth.map(auth => {
+               userFeedback.logString("Pinning: " + pinString)
+              new Pinata(auth)
+                .pinFileToIPFS(
+                  pinString.toArrayBuffer(),
+                  PinataMetaData(name = Some("Eternitas-Data"),
+                                 size = None,
+                                 `type` = Some("application/json"))
+                )
+                .`then`((r: AxiosResponse) => {
+                  val eternitasHash =
+                    r.asInstanceOf[PinataPinResponse].data.IpfsHash
+                  userFeedback.logString(
+                    s"Pinned Eternitas-Data: ${eternitasHash}")
+                  cb(eternitas.withPinDataHash(eternitasHash))
+                })
+                .`catch`((e: AxiosError) => {
+                  userFeedback.error(s"Error pinning eternitas data list: ${e}")
+                  cb(eternitas)
+                })
+            }))
       })
-    }
 
+    }
 
     def generate(webKey: JsonWebKey,
-                 signKey:JsonWebKey,
+                 signKey: JsonWebKey,
                  pinDataNative: PinDataListNative,
-                 d1:PinDataNative)=
-      Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
-      pd.append(d1)
-      l(
-        "data" -> pd,
-        "pubkey" -> webKey,
-        "sign" -> signKey
-      )
-    }).
-      getOrElse(l(
-        "data" ->js.Array[PinDataNative](d1)
-      ))
-      .asInstanceOf[PinDataListNative])
+                 d1: PinDataNative) =
+      Eternitas.stringify(
+        pinDataNative.data
+          .map((pd: js.Array[PinDataNative]) => {
+            pd.append(d1)
+            l(
+              "data" -> pd,
+              "pubkey" -> webKey,
+              "sign" -> signKey
+            )
+          })
+          .getOrElse(l(
+            "data" -> js.Array[PinDataNative](d1)
+          ))
+          .asInstanceOf[PinDataListNative])
 
+    def createPinData(
+        file: File,
+        dataHash: String,
+        ivHash: String,
+        eternitas: Eternitas,
+        pinDataNative: PinDataListNative)(implicit ctx: ExecutionContext) = {
+      val d1 = l("hash" -> dataHash,
+                 "vc" -> ivHash,
+                 "name" -> file.name,
+                 "type" -> file.`type`,
+                 "timestamp" -> new js.Date()).asInstanceOf[PinDataNative]
 
-
-    def createPinData(file: File,
-                              dataHash: String,
-                              ivHash: String,
-                              eternitas: Eternitas,
-                              pinDataNative: PinDataListNative)
-                     (implicit ctx:ExecutionContext)
-    = { val d1 =  l("hash" -> dataHash,
-        "vc" -> ivHash,
-        "name" -> file.name,
-        "type" -> file.`type`,
-        "timestamp"  -> new js.Date()
-      ).asInstanceOf[PinDataNative]
-
-
-
-      val f:Future[String] = createFuturePindata(eternitas, pinDataNative, d1)
-
-
-      generate(null,null,pinDataNative,d1)
+      createFuturePindata(eternitas, pinDataNative, d1)
+      //generate(null,null,pinDataNative,d1)
     }
 
-    private def createFuturePindata(eternitas: Eternitas,
-                                    pinDataNative: PinDataListNative,
-                                    d1: PinDataNative)(
-      implicit ctx:ExecutionContext) = {
-      val t:Option[Future[String]] = eternitas.
-        keyPairOpt.
-        map(kp =>
-          AsymCrypto.eexportKey(kp.publicKey).
-            map(webKey => eternitas.signKeyOpt.map(signKey=>
-                  SymCrypto.eexportKey(signKey).map(signKeyJS=>
-                    generate(webKey, signKeyJS, pinDataNative, d1))).getOrElse(
-              Future{generate(webKey,null,pinDataNative,d1)}
-            )).flatten)
+    private def createFuturePindata(
+        eternitas: Eternitas,
+        pinDataNative: PinDataListNative,
+        d1: PinDataNative)(implicit ctx: ExecutionContext) = {
+      val t: Option[Future[String]] = eternitas.keyPairOpt.map(
+        kp =>
+          AsymCrypto
+            .eexportKey(kp.publicKey)
+            .map(
+              webKey =>
+                eternitas.signKeyOpt
+                  .map(signKey =>
+                    SymCrypto
+                      .eexportKey(signKey)
+                      .map(signKeyJS =>
+                        generate(webKey, signKeyJS, pinDataNative, d1)))
+                  .getOrElse(
+                    Future { generate(webKey, null, pinDataNative, d1) }
+                ))
+            .flatten)
 
-
-        t.
-        getOrElse(Future {
-          generate(null, null, pinDataNative, d1)
-        })
+      t.getOrElse(Future {
+        generate(null, null, pinDataNative, d1)
+      })
     }
   }
 
