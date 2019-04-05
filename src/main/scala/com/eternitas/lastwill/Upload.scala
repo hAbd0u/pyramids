@@ -180,11 +180,12 @@ object Upload {
         "type" -> file.`type`).
         asInstanceOf[PinDataNative]
 
-      def generate(webKey: JsonWebKey)= Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
+      def generate(webKey: JsonWebKey,signKey:JsonWebKey)= Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
         pd.append(d1)
         l(
           "data" -> pd,
-          "pubkey" -> webKey
+          "pubkey" -> webKey,
+          "sign" -> signKey
         )
       }).
         getOrElse(l(
@@ -198,10 +199,13 @@ object Upload {
         keyPairOpt.
        map(kp=>
          AsymCrypto.eexportKey(kp.publicKey).
-         map(webKey =>  generate(webKey))).getOrElse(Future{generate(null)})
+         map(webKey =>  {
+           generate(webKey,null)}
+         )).
+        getOrElse(Future{generate(null,null)})
 
 
-      generate(null)
+      generate(null,null)
     }
   }
 
