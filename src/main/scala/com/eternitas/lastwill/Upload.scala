@@ -171,7 +171,7 @@ object Upload {
                               pinDataNative: PinDataListNative)
                      (implicit ctx:ExecutionContext)
     = {
-      import WalletNative._
+
 
 
       val d1 =  l("hash" -> dataHash,
@@ -180,51 +180,28 @@ object Upload {
         "type" -> file.`type`).
         asInstanceOf[PinDataNative]
 
-      eternitas.
-        keyPairOpt.
-       map(kp=>
-         AsymCrypto.eexportKey(kp.publicKey).
-         map(webKey =>  {Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
-           pd.append(d1)
-           l(
-             "data" -> pd,
-             "pubkey" -> webKey
-           ) }
-
-         ))})).getOrElse(Future{
-        Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
-          pd.append(d1)
-          l(
-            "data" -> pd
-          )
-        }).
-          getOrElse(l(
-            "data" ->js.Array[PinDataNative](d1)
-          ))
-          .asInstanceOf[PinDataListNative])
-      })
-
-
-
-
-
-
-
-
-      val s = Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
+      def generate(webKey: JsonWebKey)= Eternitas.stringify(pinDataNative.data.map((pd:js.Array[PinDataNative])=>{
         pd.append(d1)
         l(
-          "data" -> pd
+          "data" -> pd,
+          "pubkey" -> webKey
         )
       }).
         getOrElse(l(
           "data" ->js.Array[PinDataNative](d1)
         ))
-          .asInstanceOf[PinDataListNative])
+        .asInstanceOf[PinDataListNative])
 
-      //println("Eternitas-DATA: " + s)
 
-      s
+
+      val f:Future[String] = eternitas.
+        keyPairOpt.
+       map(kp=>
+         AsymCrypto.eexportKey(kp.publicKey).
+         map(webKey =>  generate(webKey))).getOrElse(Future{generate(null)})
+
+
+      generate(null)
     }
   }
 
