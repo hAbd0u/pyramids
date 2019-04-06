@@ -187,13 +187,16 @@ class Eternitas(
         exportKey(),
         exportPinata(),
         exportPinFolder(),
-        exportSignKeyPair()
+        exportSignKeyPair(),
+        Future{titleOpt.map(t=>l("text" -> t)).getOrElse(l())}
       )).
-      map(s => l("asym" -> s(0),
+      map(s => l("asym" -> l(),
         "sym" -> s(1),
         "pinata" -> s(2),
         "pinfolder" -> s(3),
-        "sign" ->s(4)))
+        "sign" ->s(4),
+        "title" -> s(5)
+      ))
   }.map((aDynamic: js.Dynamic) =>
     Eternitas.stringify(aDynamic: js.Any))
 

@@ -124,7 +124,10 @@ object PimpedJQuery {
       executionContext: ExecutionContext): Unit = SymCrypto.importKey(
       et2,
       walletNative,
-      (et3) => LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
+      (et3) => {
+
+        LastWillStartup.init(AsymCrypto.importPinata(et3, walletNative))
+      }
     )
 
 
