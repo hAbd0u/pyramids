@@ -182,7 +182,7 @@ object Upload {
         createPinData(file, dataHash, ivHash, eternitas, pinDataNative).map(
           pinString =>
             eternitas.pinataAuth.map(auth => {
-               userFeedback.logString("Pinning: " + pinString)
+               //userFeedback.logString("Pinning: " + pinString)
               new Pinata(auth)
                 .pinFileToIPFS(
                   pinString.toArrayBuffer(),
