@@ -188,7 +188,8 @@ object Upload {
             l(
               "data" -> pd,
               "pubkey" -> webKey,
-              "sign" -> signKey
+              "sign" -> signKey,
+              "purpose" -> "box"
             )
           })
           .getOrElse(l(

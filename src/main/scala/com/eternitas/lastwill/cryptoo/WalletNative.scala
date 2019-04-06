@@ -29,6 +29,8 @@ trait PinFolder extends js.Object {
 trait PinDataListNative extends js.Object {
   val data: js.UndefOr[js.Array[PinDataNative]] = js.native
   val pubkey: js.UndefOr[JsonWebKey] = js.native
+  val purpose: js.UndefOr[String] = js.native
+
 }
 
 @js.native

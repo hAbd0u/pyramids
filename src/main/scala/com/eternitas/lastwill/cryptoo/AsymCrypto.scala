@@ -94,7 +94,6 @@ object AsymCrypto {
         t2.failed.map(e=>println("Error importing private key: " + e.getMessage))
         t2.map(aAny2=>{
           val privateKey = aAny2.asInstanceOf[CryptoKey]
-          userFeedback.message(s"YOUR DATA FROM ${file.name.toUpperCase}")
           cb(eternitas.addKeyPair(privateKey,publicKey))})}))
     })})))
 
