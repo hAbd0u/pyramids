@@ -25,17 +25,32 @@ object Upload {
                                      feedback: UserFeedback) =
       onDrop(
         (file: File) =>
-          eternitas.keyOpt.map(
-            key =>
-              new FileReader().onReadArrayBuffer(
-                file,
-                (arrayBuffer: ArrayBuffer) =>
-                  SymCrypto
-                    .encrypt(key, arrayBuffer)
-                    .onComplete((t: Try[SymEncryptionResult]) =>
-                      onEncryptionResult(t, eternitas, file))
-            ))
+          handleDrop(eternitas, file)
       ).onDragOverNothing()
+
+
+    def handleDrop(eternitas: Eternitas, file: File)(implicit ctx: ExecutionContext,
+                                                     $ : JQueryWrapper,
+                                                     feedback: UserFeedback): Unit = {
+      encryptAndUpload(eternitas, file)
+    }
+
+    def encryptAndUpload(eternitas: Eternitas, file: File)(implicit ctx: ExecutionContext,
+                                                           $ : JQueryWrapper,
+                                                           feedback: UserFeedback): Unit = {
+      eternitas.keyOpt.map(
+        key =>
+          new FileReader().onReadArrayBuffer(
+            file,
+            (arrayBuffer: ArrayBuffer) =>
+              SymCrypto
+                .encrypt(key, arrayBuffer)
+                .onComplete((t: Try[SymEncryptionResult]) =>
+                  onEncryptionResult(t, eternitas, file))
+          ))
+    }
+
+
 
     def onEncryptionResult(t: Try[SymEncryptionResult],
                            eternitas: Eternitas,

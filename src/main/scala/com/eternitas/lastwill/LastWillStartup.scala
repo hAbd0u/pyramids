@@ -100,7 +100,7 @@ object LastWillStartup {
     })
 
     et.titleOpt.
-      map(title=>feedback.message(title))
+      map(title=>$("#title").html(title.trim()))
 
     et.pinDataOpt.map(pd =>{
       feedback.message(s"${pd}")
