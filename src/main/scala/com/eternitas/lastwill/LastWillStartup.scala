@@ -64,7 +64,7 @@ object LastWillStartup {
           pinataAuth = None,
           keyOpt = None,
           pinDataOpt = initPinDataOpt(),
-          None
+          None,Some("THIS IS YOUR PYRAMID")
         ).withAllKeys()
           .onComplete(t => initEternitas(t))
     )
@@ -98,7 +98,10 @@ object LastWillStartup {
         e => feedback.error(s"Pinnata error ${e}")
       )
     })
-    feedback.message("DOCUMENTS ARE ETERNAL!")
+
+    et.titleOpt.
+      map(title=>feedback.message(title))
+
     et.pinDataOpt.map(pd =>{
       feedback.message(s"${pd}")
       $("#pinfolder").html(s"DATA:  <a href='${PimpedJQuery.resolveUrl(pd)}' "+

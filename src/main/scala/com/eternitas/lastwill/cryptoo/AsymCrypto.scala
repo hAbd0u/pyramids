@@ -62,7 +62,8 @@ object AsymCrypto {
         ),
         eternitas.keyOpt,
         eternitas.pinDataOpt,
-      eternitas.signKeyOpt
+      eternitas.signKeyOpt,
+      eternitas.titleOpt
     )).getOrElse(eternitas)
   }
 

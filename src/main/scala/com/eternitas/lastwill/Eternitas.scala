@@ -19,6 +19,8 @@ class Eternitas(
                  val keyOpt: Option[CryptoKey],
                  val pinDataOpt:Option[String],
                  val signKeyOpt: Option[CryptoKey],
+                 val titleOpt: Option[String]
+                 ,
 ) {
 
   def withPinData(pinFolderOr:js.UndefOr[PinFolder] )(implicit userFeedback: UserFeedback) = {
@@ -28,14 +30,18 @@ class Eternitas(
       this.keyPairOpt,
       this.pinataAuth,
       this.keyOpt,
-      Some(pinDataHash),this.signKeyOpt)})).
+      Some(pinDataHash),
+        this.signKeyOpt,
+        this.titleOpt)})).
       flatten.
       getOrElse(new Eternitas(
         this.keyPairOpt,
         this.pinataAuth,
         this.keyOpt,
         None,
-        this.signKeyOpt))
+        this.signKeyOpt,
+        this.titleOpt
+    ))
   }
 
   def withPinDataHash(s:String) = new Eternitas(
@@ -43,11 +49,17 @@ class Eternitas(
     this.pinataAuth,
     this.keyOpt,
     Some(s),
-    this.signKeyOpt)
+    this.signKeyOpt,
+    this.titleOpt)
 
 
 
-  def addKey(key:CryptoKey) = new Eternitas(keyPairOpt,pinataAuth,Some(key),pinDataOpt,this.signKeyOpt)
+  def addKey(key:CryptoKey) = new Eternitas(
+    keyPairOpt,
+    pinataAuth,Some(key),
+    pinDataOpt,
+    this.signKeyOpt,
+    this.titleOpt)
 
   def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
     Some(js.Dictionary(
@@ -57,7 +69,8 @@ class Eternitas(
     pinataAuth = this.pinataAuth,
     keyOpt=this.keyOpt,
     pinDataOpt=this.pinDataOpt,
-    this.signKeyOpt
+    this.signKeyOpt,
+    this.titleOpt
   )
 
 
@@ -71,7 +84,10 @@ class Eternitas(
               keyPairOpt = Some(key),
               pinataAuth = this.pinataAuth,
               keyOpt = this.keyOpt,
-              pinDataOpt=this.pinDataOpt,this.signKeyOpt))
+              pinDataOpt=this.pinDataOpt,
+              this.signKeyOpt,
+              this.titleOpt),
+        )
     else
       Future.successful(this)
   }
@@ -87,7 +103,8 @@ class Eternitas(
               pinataAuth = this.pinataAuth,
               keyOpt = this.keyOpt,
               pinDataOpt=this.pinDataOpt,
-              Some(key)))
+              Some(key),
+              this.titleOpt))
     else
       Future.successful(this)
   }
@@ -108,7 +125,8 @@ class Eternitas(
               pinataAuth = this.pinataAuth,
               keyOpt = Some(key),
               pinDataOpt=this.pinDataOpt,
-              this.signKeyOpt
+              this.signKeyOpt,
+              this.titleOpt
             ))}
     else
       Future.successful(this)
