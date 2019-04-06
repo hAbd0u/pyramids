@@ -1,7 +1,7 @@
 package com.eternitas.lastwill
 
 import com.eternitas.lastwill.axioss.Pinata
-import com.eternitas.lastwill.cryptoo.{AsymCrypto, PinFolder, SymCrypto}
+import com.eternitas.lastwill.cryptoo.{AsymCrypto, PinFolder, SymCrypto, WalletNative}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -90,6 +90,23 @@ class Eternitas(
         )
     else
       Future.successful(this)
+  }
+
+
+  def importTitle(walletNative: WalletNative) = {
+    new Eternitas(
+      keyPairOpt =this.keyPairOpt,
+      pinataAuth = this.pinataAuth,
+      keyOpt = this.keyOpt,
+      pinDataOpt=this.pinDataOpt,
+      this.signKeyOpt,
+      Some(
+        walletNative.
+          title.
+          map(t => t.text.map(s=>s)).
+          flatten.
+          getOrElse("[UNTITLED]"))
+     )
   }
 
   def withSignKeyPair()(implicit ctx: ExecutionContext) = {
