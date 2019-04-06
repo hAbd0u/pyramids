@@ -56,7 +56,8 @@ object Upload {
                                                      feedback: UserFeedback): Unit = {
       val cidOpt =cidFromFile(file)
       if(cidOpt.isDefined){
-        feedback.message("CID found in file name: " + cidOpt.get)
+        //feedback.message("CID found in file name: " + cidOpt.get)
+        LastWillStartup.init(eternitas.withPinDataHash(cidOpt.get))
       }
       else {
         encryptAndUpload(eternitas, file)
