@@ -18,6 +18,26 @@ import scala.scalajs.js.UndefOr
 
 object Upload {
 
+  val SAMPLE_CID="QmSVBM2wzJhEiSXr2acC7Bid2mCXVE3pSfWVYErrQED5Ld"
+
+  def isCID(s:String) = s.startsWith("Qm") && (s.length == SAMPLE_CID.length)
+
+  def cidFromFile(f:File)=if (js.isUndefined(f) || js.isUndefined(f.name)) None
+    else {
+      val name = f.name
+      val index =name.lastIndexOf(".")
+      if( index == SAMPLE_CID.length()){
+        val maybeCID = name.substring(0,index)
+        if(isCID(maybeCID))
+         Some(maybeCID)
+        else
+          None
+      }
+      else  None
+    }
+
+
+
   implicit class PUpload(jq: JQuery) extends PimpedJQuery.PJQuery(jq) {
 
     def upLoad(eternitas: Eternitas)(implicit ctx: ExecutionContext,
@@ -29,10 +49,18 @@ object Upload {
       ).onDragOverNothing()
 
 
+
+
     def handleDrop(eternitas: Eternitas, file: File)(implicit ctx: ExecutionContext,
                                                      $ : JQueryWrapper,
                                                      feedback: UserFeedback): Unit = {
-      encryptAndUpload(eternitas, file)
+      val cidOpt =cidFromFile(file)
+      if(cidOpt.isDefined){
+        feedback.message("CID found in file name: " + cidOpt.get)
+      }
+      else {
+        encryptAndUpload(eternitas, file)
+      }
     }
 
     def encryptAndUpload(eternitas: Eternitas, file: File)(implicit ctx: ExecutionContext,
