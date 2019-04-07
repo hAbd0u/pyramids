@@ -75,7 +75,7 @@ class Eternitas(
 
 
   def withKeyPair()(implicit ctx: ExecutionContext) = {
-    if (keyPairOpt.isEmpty)
+    if (keyPairOpt.isEmpty){
       AsymCrypto
         .generateKeys()
         .map(
@@ -87,7 +87,7 @@ class Eternitas(
               pinDataOpt=this.pinDataOpt,
               this.signKeyOpt,
               this.titleOpt),
-        )
+        )}
     else
       Future.successful(this)
   }
@@ -207,7 +207,7 @@ class Eternitas(
         exportSignKeyPair(),
         Future{titleOpt.map(t=>l("text" -> t)).getOrElse(l())}
       )).
-      map(s => l("asym" -> l(),
+      map(s => l("asym" -> s(0),
         "sym" -> s(1),
         "pinata" -> s(2),
         "pinfolder" -> s(3),
