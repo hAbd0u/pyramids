@@ -20,6 +20,7 @@ object LastWillStartup {
   implicit val ec = ExecutionContext.global;
   def msgField()(implicit $ : JQueryWrapper) = $("#message")
 
+  def welcomeMessage()= "LOCK UP YOUR DOCUMENTS"
   def createFeedBack()(implicit $ : JQueryWrapper): UserFeedback =
     new UserFeedback {
       override def showTime(): UserFeedback = {
@@ -27,6 +28,7 @@ object LastWillStartup {
         this;
       }
       override def message(s: String): Unit = {
+        val realMessage = if(s == "") welcomeMessage() else s;
         msgField()
           .removeClass("error-message")
           .addClass("normal-message")
@@ -64,13 +66,13 @@ object LastWillStartup {
           pinataAuth = None,
           keyOpt = None,
           pinDataOpt = initPinDataOpt(),
-          None,Some("THIS IS YOUR PYRAMID")
+          None,
+          Some("THIS IS YOUR PYRAMID")
         ).withAllKeys()
           .onComplete(t => initEternitas(t))
     )
 
   def initPinDataOpt(): Option[String] = PimpedJQuery.currentHash()
-
 
   def initEternitas(t: Try[Eternitas]): Try[Unit] = {
 
@@ -91,7 +93,6 @@ object LastWillStartup {
     $("#pinfolder").empty()
     $("#pinata").empty()
 
-
     et.pinataAuth.map(p => {
       new Pinata(p).authenticate(
         p2 => $("#pinata").html(s"Pinnata: ${p.api}"),
@@ -99,28 +100,31 @@ object LastWillStartup {
       )
     })
 
-
-    val titleRef  =$("#title")
-    et.titleOpt.
-      map(title=>titleRef.html(title.trim()))
+    val titleRef = $("#title")
+    et.titleOpt.map(title => titleRef.html(title.trim()))
     titleRef.off().unload(et)
 
-    if(et.pinDataOpt.isDefined)
-    et.pinDataOpt.map(pd =>{
-      feedback.message(s"${pd}")
-      $("#pinfolder").html(s"CHAMBER:  <a href='${PimpedJQuery.resolveUrl(pd)}' "+
-                                     s"class='pinned' "+
-                                     s" id='${pd}' "+
-                                     s" download='${pd}.json' target='_blank'>"+
-                                     s"${pd.substring(0,10)} [...]"+
-                                     s"</a>" )
 
-
-    })
-    else{
+    def clearPinFolder() = {
       $("#pinfolder").html("")
-      feedback.message("")
+      feedback.message(welcomeMessage())
     }
+
+
+    if (et.pinDataOpt.isDefined) {
+      et.pinDataOpt.map(pd =>
+        if (pd.length() > 10) {
+          feedback.message(s"${pd}")
+          $("#pinfolder").html(
+            s"CHAMBER:  <a href='${PimpedJQuery.resolveUrl(pd)}' " +
+              s"class='pinned' " +
+              s" id='${pd}' " +
+              s" download='${pd}.json' target='_blank'>" +
+              s"${pd.substring(0, 10)} [...]" +
+              s"</a>")
+
+        } else clearPinFolder())
+    } else clearPinFolder()
 
   }
 
