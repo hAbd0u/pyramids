@@ -234,7 +234,7 @@ object Upload {
         pinDataNative: PinDataListNative)(implicit ctx: ExecutionContext) = {
       val d1 = l("hash" -> dataHash,
                  "vc" -> ivHash,
-                 "name" -> file.name,
+                 //"name" -> file.name,
                  "type" -> file.`type`,
                  "timestamp" -> new js.Date()).asInstanceOf[PinDataNative]
 

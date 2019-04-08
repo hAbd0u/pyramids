@@ -37,7 +37,7 @@ trait PinDataListNative extends js.Object {
 trait PinDataNative extends js.Object {
   val hash: js.UndefOr[String]  = js.native
   val vc: js.UndefOr[String] = js.native
-  val name :js.UndefOr[String] = js.native
+  //val name :js.UndefOr[String] = js.native
   val `type` :js.UndefOr[String] = js.native
 
   val timeStamp : js.UndefOr[js.Date] = js.native

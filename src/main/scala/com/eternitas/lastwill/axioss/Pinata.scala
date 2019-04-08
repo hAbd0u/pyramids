@@ -62,7 +62,8 @@ class Pinata(auth: PinataAuth) {
     data.append("file", new Blob(js.Array[js.Any](arrayBuffer)))
     data.append("pinataMetadata",
                 js.JSON.stringify(
-                  l("name" -> pn.name.getOrElse("NOT SPECIFIED").toString(),
+                  l(
+                    "name" -> pn.name.getOrElse("NOT SPECIFIED").toString(),
                     "keyvalues" -> l(
                       "size" -> pn.size.getOrElse("???").toString(),
                       "type" -> pn.`type`.getOrElse("NONE").toString()
