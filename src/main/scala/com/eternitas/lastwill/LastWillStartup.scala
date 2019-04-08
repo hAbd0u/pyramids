@@ -105,6 +105,7 @@ object LastWillStartup {
       map(title=>titleRef.html(title.trim()))
     titleRef.off().unload(et)
 
+    if(et.pinDataOpt.isDefined)
     et.pinDataOpt.map(pd =>{
       feedback.message(s"${pd}")
       $("#pinfolder").html(s"CHAMBER:  <a href='${PimpedJQuery.resolveUrl(pd)}' "+
@@ -116,6 +117,10 @@ object LastWillStartup {
 
 
     })
+    else{
+      $("#pinfolder").html("")
+      feedback.message("")
+    }
 
   }
 

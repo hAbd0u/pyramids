@@ -33,8 +33,12 @@ object Loading {
     def unload(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                      $ : JQueryWrapper,
                                      feedback: UserFeedback) = jq.
-      click((e:Event)=>
-        LastWillStartup.init(eternitas.withoutPinDataHash()))
+      click((e:Event)=>{
+        e.preventDefault()
+        e.stopPropagation()
+        LastWillStartup.init(eternitas.withoutPinDataHash())
+      })
+
 
 
 
