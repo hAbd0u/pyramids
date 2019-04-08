@@ -1,14 +1,11 @@
 package com.eternitas.lastwill
 
 import com.eternitas.wizard.JQueryWrapper
+import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
-import org.scalajs.dom.KeyboardEvent
-import org.scalajs.dom.Event
+import org.scalajs.dom.{Event, KeyboardEvent}
 
 import scala.concurrent.ExecutionContext
-import Buffers.PimpedString
-import com.eternitas.lastwill.cryptoo.{PinDataListNative, PinDataNative}
-import com.lyrx.eternitas.lastwill.LastWillStartup
 object Loading {
 
   implicit class PLoading(jq: JQuery) extends PimpedJQuery.PJQuery(jq) {
@@ -31,6 +28,20 @@ object Loading {
           LastWillStartup.init(eternitas.withPinDataHash(s))
         })
     }
+
+
+    def unload(eternitas: Eternitas)(implicit ctx: ExecutionContext,
+                                     $ : JQueryWrapper,
+                                     feedback: UserFeedback) = jq.
+      click((e:Event)=>
+        LastWillStartup.init(eternitas.withoutPinDataHash()))
+
+
+
+
+
+
+
         /*
         val pinDataListNative:PinDataListNative = s.toDynamic()
         feedback.message(s"Resolved: ${pinDataListNative}")

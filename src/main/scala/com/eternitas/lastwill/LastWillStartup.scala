@@ -99,8 +99,11 @@ object LastWillStartup {
       )
     })
 
+
+    val titleRef  =$("#title")
     et.titleOpt.
-      map(title=>$("#title").html(title.trim()))
+      map(title=>titleRef.html(title.trim()))
+    titleRef.off().unload(et)
 
     et.pinDataOpt.map(pd =>{
       feedback.message(s"${pd}")

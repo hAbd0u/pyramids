@@ -52,6 +52,15 @@ class Eternitas(
     this.signKeyOpt,
     this.titleOpt)
 
+  def withoutPinDataHash() = new Eternitas(
+    this.keyPairOpt,
+    this.pinataAuth,
+    this.keyOpt,
+    None,
+    this.signKeyOpt,
+    this.titleOpt)
+
+
 
 
   def addKey(key:CryptoKey) = new Eternitas(
