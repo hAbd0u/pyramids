@@ -8,14 +8,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
 
-case class PinataAuth(api: String, secretApi: String)
+case class AllCredentials(api: String, secretApi: String)
 
 
 case class EncryptedPin(dataHash:String,ivHash:String)
 
 class Eternitas(
                  val keyPairOpt: Option[CryptoKeyPair],
-                 val pinataAuth: Option[PinataAuth],
+                 val allAuth: Option[AllCredentials],
                  val keyOpt: Option[CryptoKey],
                  val pinDataOpt:Option[String],
                  val signKeyOpt: Option[CryptoKey],
@@ -28,7 +28,7 @@ class Eternitas(
       userFeedback.logString(s"Found user data: ${pinDataHash}")
       new Eternitas(
       this.keyPairOpt,
-      this.pinataAuth,
+      this.allAuth,
       this.keyOpt,
       Some(pinDataHash),
         this.signKeyOpt,
@@ -36,7 +36,7 @@ class Eternitas(
       flatten.
       getOrElse(new Eternitas(
         this.keyPairOpt,
-        this.pinataAuth,
+        this.allAuth,
         this.keyOpt,
         None,
         this.signKeyOpt,
@@ -46,7 +46,7 @@ class Eternitas(
 
   def withPinDataHash(s:String) = new Eternitas(
     this.keyPairOpt,
-    this.pinataAuth,
+    this.allAuth,
     this.keyOpt,
     Some(s),
     this.signKeyOpt,
@@ -54,7 +54,7 @@ class Eternitas(
 
   def withoutPinDataHash() = new Eternitas(
     this.keyPairOpt,
-    this.pinataAuth,
+    this.allAuth,
     this.keyOpt,
     None,
     this.signKeyOpt,
@@ -65,7 +65,7 @@ class Eternitas(
 
   def addKey(key:CryptoKey) = new Eternitas(
     keyPairOpt,
-    pinataAuth,Some(key),
+    allAuth,Some(key),
     pinDataOpt,
     this.signKeyOpt,
     this.titleOpt)
@@ -75,7 +75,7 @@ class Eternitas(
       "publicKey"->publicKey,
       "privateKey" -> privateKey
     ).asInstanceOf[CryptoKeyPair]),
-    pinataAuth = this.pinataAuth,
+    allAuth = this.allAuth,
     keyOpt=this.keyOpt,
     pinDataOpt=this.pinDataOpt,
     this.signKeyOpt,
@@ -91,7 +91,7 @@ class Eternitas(
           key =>
             new Eternitas(
               keyPairOpt = Some(key),
-              pinataAuth = this.pinataAuth,
+              allAuth = this.allAuth,
               keyOpt = this.keyOpt,
               pinDataOpt=this.pinDataOpt,
               this.signKeyOpt,
@@ -105,7 +105,7 @@ class Eternitas(
   def importTitle(walletNative: WalletNative) = {
     new Eternitas(
       keyPairOpt =this.keyPairOpt,
-      pinataAuth = this.pinataAuth,
+      allAuth = this.allAuth,
       keyOpt = this.keyOpt,
       pinDataOpt=this.pinDataOpt,
       this.signKeyOpt,
@@ -126,7 +126,7 @@ class Eternitas(
           key =>
             new Eternitas(
               keyPairOpt =this.keyPairOpt,
-              pinataAuth = this.pinataAuth,
+              allAuth = this.allAuth,
               keyOpt = this.keyOpt,
               pinDataOpt=this.pinDataOpt,
               Some(key),
@@ -148,7 +148,7 @@ class Eternitas(
           key =>
             new Eternitas(
               keyPairOpt =this.keyPairOpt,
-              pinataAuth = this.pinataAuth,
+              allAuth = this.allAuth,
               keyOpt = Some(key),
               pinDataOpt=this.pinDataOpt,
               this.signKeyOpt,
@@ -199,7 +199,7 @@ class Eternitas(
         SymCrypto.eexportKey(key).map(_.asInstanceOf[js.Dynamic]))
     .getOrElse(Future{l()})
 
-  def exportCredentials()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {pinataAuth.
+  def exportCredentials()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {allAuth.
     map(p => new Pinata(p).export()).getOrElse(
     l("pinataApi" ->"",
       "pinataApiSecret" ->"",

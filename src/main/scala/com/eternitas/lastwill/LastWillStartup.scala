@@ -63,7 +63,7 @@ object LastWillStartup {
       (e: Event) =>
         new Eternitas(
           keyPairOpt = None,
-          pinataAuth = None,
+          allAuth = None,
           keyOpt = None,
           pinDataOpt = initPinDataOpt(),
           None,
@@ -93,7 +93,7 @@ object LastWillStartup {
     $("#pinfolder").empty()
     $("#pinata").empty()
 
-    et.pinataAuth.map(p => {
+    et.allAuth.map(p => {
       new Pinata(p).authenticate(
         p2 => $("#pinata").html(s"Pinnata: ${p.api}"),
         e => feedback.error(s"Pinnata error ${e}")

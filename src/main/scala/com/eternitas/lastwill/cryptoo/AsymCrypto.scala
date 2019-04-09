@@ -1,6 +1,6 @@
 package com.eternitas.lastwill.cryptoo
 
-import com.eternitas.lastwill.{Eternitas, PinataAuth, UserFeedback}
+import com.eternitas.lastwill.{Eternitas, AllCredentials, UserFeedback}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 import org.scalajs.dom.raw.File
 
@@ -57,7 +57,7 @@ object AsymCrypto {
     walletNative.credentials.map(p=>new Eternitas(
         eternitas.keyPairOpt,
         Some(
-          PinataAuth(p.pinataApi.getOrElse(""),
+          AllCredentials(p.pinataApi.getOrElse(""),
             p.pinataApiSecret.getOrElse(""))
         ),
         eternitas.keyOpt,

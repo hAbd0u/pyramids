@@ -1,6 +1,6 @@
 package com.eternitas.lastwill.axioss
 
-import com.eternitas.lastwill.PinataAuth
+import com.eternitas.lastwill.AllCredentials
 import org.scalajs.dom.raw.{Blob, File, FormData, HTMLFormElement}
 
 import scala.scalajs.js
@@ -39,7 +39,7 @@ case class PinataMetaData(name:Option[String],size:Option[Double],`type`:Option[
 
 
 
-class Pinata(auth: PinataAuth) {
+class Pinata(auth: AllCredentials) {
   val url = "https://api.pinata.cloud";
 
   def export(): js.Dynamic = {

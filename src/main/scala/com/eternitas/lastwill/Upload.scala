@@ -92,7 +92,7 @@ object Upload {
       t.map((symEncryptionResult: SymEncryptionResult) => {
         feedback.log(s"Encrypted", symEncryptionResult.result)
         feedback.log(s"IV", symEncryptionResult.iv)
-        eternitas.pinataAuth.map(p =>
+        eternitas.allAuth.map(p =>
           withPinata(eternitas, file, symEncryptionResult, p))
       })
 
@@ -101,9 +101,9 @@ object Upload {
     def withPinata(eternitas: Eternitas,
                    file: File,
                    symEncryptionResult: SymEncryptionResult,
-                   p: PinataAuth)(implicit feedback: UserFeedback,
-                                  executionContext: ExecutionContext,
-                                  $ : JQueryWrapper): AxiosImpl = {
+                   p: AllCredentials)(implicit feedback: UserFeedback,
+                                      executionContext: ExecutionContext,
+                                      $ : JQueryWrapper): AxiosImpl = {
 
       feedback.message("Start pinning, please be very patient!")
       new Pinata(p)
@@ -117,7 +117,7 @@ object Upload {
     def pinataUpload(file: File,
                      eternitas: Eternitas,
                      symEncryptionResult: SymEncryptionResult,
-                     p: PinataAuth,
+                     p: AllCredentials,
                      axiosResponse: AxiosResponse)(
         implicit $ : JQueryWrapper,
         feedback: UserFeedback,
@@ -181,7 +181,7 @@ object Upload {
       mLoadPinData((pinDataNative) => {
         createPinData(file, dataHash, ivHash, eternitas, pinDataNative).map(
           pinString =>
-            eternitas.pinataAuth.map(auth => {
+            eternitas.allAuth.map(auth => {
                //userFeedback.logString("Pinning: " + pinString)
               new Pinata(auth)
                 .pinFileToIPFS(
