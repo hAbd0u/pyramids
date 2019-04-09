@@ -199,7 +199,7 @@ class Eternitas(
         SymCrypto.eexportKey(key).map(_.asInstanceOf[js.Dynamic]))
     .getOrElse(Future{l()})
 
-  def exportPinata()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {pinataAuth.
+  def exportCredentials()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {pinataAuth.
     map(p => new Pinata(p).export()).getOrElse(l("api" ->"","apisecret" ->""))}
 
 
@@ -211,14 +211,14 @@ class Eternitas(
     Future.sequence(
       Seq(exportKeyPair(),
         exportKey(),
-        exportPinata(),
+        exportCredentials(),
         exportPinFolder(),
         exportSignKeyPair(),
         Future{titleOpt.map(t=>l("text" -> t)).getOrElse(l())}
       )).
       map(s => l("asym" -> s(0),
         "sym" -> s(1),
-        "pinata" -> s(2),
+        "credentials" -> s(2),
         "pinfolder" -> s(3),
         "sign" ->s(4),
         "title" -> s(5)

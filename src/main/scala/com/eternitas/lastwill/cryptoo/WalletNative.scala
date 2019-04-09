@@ -57,8 +57,12 @@ object WalletNative{
 
 @js.native
 trait Credentials extends js.Object {
-  val api: js.UndefOr[String] = js.native
-  val apisecret: js.UndefOr[String] = js.native
+  val pinataApi: js.UndefOr[String] = js.native
+  val pinataApiSecret: js.UndefOr[String] = js.native
+  val stampdApi: js.UndefOr[String] = js.native
+  val stampdApiSecret: js.UndefOr[String] = js.native
+
+
 }
 
 @js.native
@@ -69,7 +73,7 @@ trait TitleNative extends js.Object {
 
 @js.native
 trait WalletNative extends js.Object {
-  val pinata:js.UndefOr[Credentials] = js.native
+  val credentials:js.UndefOr[Credentials] = js.native
   val asym:js.UndefOr[KeypairNative]  = js.native
   val sign:js.UndefOr[SignkeyNative]  = js.native
   val pinfolder:js.UndefOr[PinFolder] = js.native
