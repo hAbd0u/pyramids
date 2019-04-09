@@ -25,7 +25,7 @@ trait StampdResponse extends AxiosResponse {
 
 
 class Stampd(auth: AllCredentials) {
-  val url = "";
+  val url = "https://stampd.io/api/v2";
 
   def export(ain:js.Dynamic): js.Dynamic = {
     ain.stampdApi=auth.stampdApi
@@ -33,9 +33,14 @@ class Stampd(auth: AllCredentials) {
     ain
   }
 
-  def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) = {
+  def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) = axios.
+    get(url + "/init", l(
+      "params" ->  l(
+        "client_id" -> auth.stampdApi,
+        "secret_key" -> auth.stampdApiSecret,
+      )
+    )).`then`(r=>c(r)).`catch`(thr=>ec(thr))
 
-  }
 
 
 
