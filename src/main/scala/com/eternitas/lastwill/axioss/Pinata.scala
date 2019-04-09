@@ -44,7 +44,9 @@ class Pinata(auth: AllCredentials) {
 
   def export(): js.Dynamic = {
     l("pinataApi" -> auth.pinataApi,
-      "pinataApiSecret" -> auth.pinataApiSecret)
+      "pinataApiSecret" -> auth.pinataApiSecret,
+     "stampdApi" -> auth.stampdApi,
+     "stampdApiSecret" -> auth.stampdApiSecret)
   }
 
   def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) =
