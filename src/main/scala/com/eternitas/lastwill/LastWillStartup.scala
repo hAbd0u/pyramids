@@ -1,9 +1,13 @@
 package com.lyrx.eternitas.lastwill
 
 import com.eternitas.lastwill.Import.ImportJQuery
+
 import com.eternitas.lastwill.Pinning.PPinning
 import com.eternitas.lastwill.Upload.PUpload
 import com.eternitas.lastwill.Loading.PLoading
+import com.eternitas.lastwill.Stampd.PStampd
+
+
 import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{HashSum, SymCrypto}
 import com.eternitas.lastwill.{Buffers, Eternitas, PimpedJQuery, UserFeedback}
@@ -89,6 +93,8 @@ object LastWillStartup {
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
     $("#data-display").empty().dataDisplay(et)
+    $("#stampd").off().stamp(et)
+
     $("#cid").empty().off().cidEntered(et)
     $("#pinfolder").empty()
     $("#pinata").empty()

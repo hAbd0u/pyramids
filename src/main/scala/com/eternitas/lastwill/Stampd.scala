@@ -13,7 +13,12 @@ object Stampd {
 
     def stamp(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                          $ : JQueryWrapper,
-                                         feedback: UserFeedback) = {}
+                                         feedback: UserFeedback) = jq.click(
+      (e:Event) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    )
 
 
 
