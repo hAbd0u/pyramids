@@ -200,7 +200,12 @@ class Eternitas(
     .getOrElse(Future{l()})
 
   def exportCredentials()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {pinataAuth.
-    map(p => new Pinata(p).export()).getOrElse(l("api" ->"","apisecret" ->""))}
+    map(p => new Pinata(p).export()).getOrElse(
+    l("pinataApi" ->"",
+      "pinataApiSecret" ->"",
+      "stampdApi" -> "",
+      "stampdApiSecret" -> ""
+    ))}
 
 
   def exportPinFolder()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future{

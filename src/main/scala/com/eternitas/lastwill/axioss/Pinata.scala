@@ -43,7 +43,8 @@ class Pinata(auth: PinataAuth) {
   val url = "https://api.pinata.cloud";
 
   def export(): js.Dynamic = {
-    l("api" -> auth.api, "apisecret" -> auth.secretApi)
+    l("pinataApi" -> auth.api,
+      "pinataApiSecret" -> auth.secretApi)
   }
 
   def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) =
