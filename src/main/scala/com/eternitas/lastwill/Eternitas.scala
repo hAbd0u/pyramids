@@ -10,7 +10,9 @@ import js.Dynamic.{literal => l}
 
 case class AllCredentials(
                            pinataApi: String,
-                           pinataApiSecret: String)
+                           pinataApiSecret: String,
+                           stampdApi:String,
+                           stampdApiSecret:String)
 
 
 case class EncryptedPin(dataHash:String,ivHash:String)

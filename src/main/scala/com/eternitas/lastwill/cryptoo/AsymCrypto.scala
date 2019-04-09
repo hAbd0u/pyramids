@@ -51,14 +51,19 @@ object AsymCrypto {
 
 
 
-  def importPinata(eternitas: Eternitas,
-                   walletNative: WalletNative): Eternitas ={
+  def importCredentials(eternitas: Eternitas,
+                        walletNative: WalletNative): Eternitas ={
 
     walletNative.credentials.map(p=>new Eternitas(
         eternitas.keyPairOpt,
         Some(
-          AllCredentials(p.pinataApi.getOrElse(""),
-            p.pinataApiSecret.getOrElse(""))
+          AllCredentials(
+            pinataApi = p.pinataApi.getOrElse(""),
+            pinataApiSecret = p.pinataApiSecret.getOrElse(""),
+            stampdApi = p.stampdApi.getOrElse(""),
+            stampdApiSecret = p.stampdApiSecret.getOrElse("")
+
+          )
         ),
         eternitas.keyOpt,
         eternitas.pinDataOpt,

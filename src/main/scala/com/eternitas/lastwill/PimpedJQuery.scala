@@ -125,7 +125,7 @@ object PimpedJQuery {
       et2,
       walletNative,
       (et3) => {
-        val et4 = AsymCrypto.importPinata(et3, walletNative)
+        val et4 = AsymCrypto.importCredentials(et3, walletNative)
         val et5 = et4.importTitle(walletNative)
         LastWillStartup.init(et5)
       }
