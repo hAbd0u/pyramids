@@ -8,7 +8,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
 
-case class AllCredentials(api: String, secretApi: String)
+case class AllCredentials(
+                           pinataApi: String,
+                           pinataApiSecret: String)
 
 
 case class EncryptedPin(dataHash:String,ivHash:String)

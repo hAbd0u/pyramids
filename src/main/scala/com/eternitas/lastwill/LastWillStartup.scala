@@ -95,7 +95,7 @@ object LastWillStartup {
 
     et.allAuth.map(p => {
       new Pinata(p).authenticate(
-        p2 => $("#pinata").html(s"Pinnata: ${p.api}"),
+        p2 => $("#pinata").html(s"Pinnata: ${p.pinataApi}"),
         e => feedback.error(s"Pinnata error ${e}")
       )
     })
