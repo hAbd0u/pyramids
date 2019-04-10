@@ -139,18 +139,19 @@ class Eternitas(
   }
 
   def withSignKeyPair()(implicit ctx: ExecutionContext) = {
-    if (signKeyOpt.isEmpty)
-      SymCrypto
-        .generateSignatureKey()
+    if (signKeyPairOpt.isEmpty)
+      AsymCrypto
+        .generateSignKeys()
         .map(
-          key =>
+          keys =>
             new Eternitas(
               keyPairOpt =this.keyPairOpt,
               allAuth = this.allAuth,
               keyOpt = this.keyOpt,
               pinDataOpt=this.pinDataOpt,
-              Some(key),
-              this.titleOpt,this.signKeyPairOpt))
+              this.signKeyOpt,
+              this.titleOpt,
+              Some(keys)))
     else
       Future.successful(this)
   }

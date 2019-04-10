@@ -115,21 +115,20 @@ object PimpedJQuery {
       AsymCrypto.importKeyPair(file,
         et1,
         walletNative,
-        (et2: Eternitas) => onImportKeyPair(file, walletNative, et2))
-    }
+        (et2: Eternitas) =>
+          AsymCrypto.importSignKeyPair(file,et2,walletNative,(et3=>
+            onImportKeyPairs(file, walletNative, et3))))}
 
-    def onImportKeyPair(file: File, walletNative: WalletNative, et2: Eternitas)(
+    def onImportKeyPairs(file: File, walletNative: WalletNative, aEternitas: Eternitas)(
       implicit $: JQueryWrapper,
       feedback: UserFeedback,
-      executionContext: ExecutionContext): Unit = SymCrypto.importKey(
-      et2,
-      walletNative,
-      (et3) => {
-        val et4 = AsymCrypto.importCredentials(et3, walletNative)
-        val et5 = et4.importTitle(walletNative)
-        LastWillStartup.init(et5)
-      }
-    )
+      executionContext: ExecutionContext): Unit = LastWillStartup.
+        init(
+          AsymCrypto.importCredentials(
+            aEternitas,
+            walletNative).
+            importTitle(walletNative))
+
 
 
   }
