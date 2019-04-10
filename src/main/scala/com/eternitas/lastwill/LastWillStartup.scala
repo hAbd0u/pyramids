@@ -87,6 +87,7 @@ object LastWillStartup {
   def init(et: Eternitas)(implicit $ : JQueryWrapper,
                           feedback: UserFeedback): Unit = {
 
+    println("have sign: " + et.signKeyPairOpt)
 
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)

@@ -28,16 +28,16 @@ class Stampd(auth: AllCredentials) {
   val url = "https://stampd.io/api/v2";
 
   def export(ain:js.Dynamic): js.Dynamic = {
-    ain.stampdApi=auth.stampdApi
-    ain.stampdApiSecret=auth.stampdApiSecret
+    ain.stampdApi=auth.stampdApi.getOrElse(null)
+    ain.stampdApiSecret=auth.stampdApiSecret.getOrElse(null)
     ain
   }
 
   def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) = axios.
     get(url + "/init", l(
       "params" ->  l(
-        "client_id" -> auth.stampdApi,
-        "secret_key" -> auth.stampdApiSecret,
+        "client_id" -> auth.stampdApi.getOrElse(null),
+        "secret_key" -> auth.stampdApiSecret.getOrElse(null),
       )
     )).`then`(r=>c(r)).`catch`(thr=>ec(thr))
 

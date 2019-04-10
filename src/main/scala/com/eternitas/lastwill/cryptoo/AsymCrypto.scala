@@ -73,17 +73,18 @@ object AsymCrypto {
         eternitas.keyPairOpt,
         Some(
           AllCredentials(
-            pinataApi = p.pinataApi.getOrElse(""),
-            pinataApiSecret = p.pinataApiSecret.getOrElse(""),
-            stampdApi = p.stampdApi.getOrElse(""),
-            stampdApiSecret = p.stampdApiSecret.getOrElse("")
+            pinataApi = p.pinataApi.map(s=>Some(s)).getOrElse(None),
+            pinataApiSecret = p.pinataApiSecret.map(s=>Some(s)).getOrElse(None),
+            stampdApi = p.stampdApi.map(s=>Some(s)).getOrElse(None),
+            stampdApiSecret = p.stampdApiSecret.map(s=>Some(s)).getOrElse(None)
 
           )
         ),
         eternitas.keyOpt,
         eternitas.pinDataOpt,
       eternitas.signKeyOpt,
-      eternitas.titleOpt,None
+      eternitas.titleOpt,
+      eternitas.signKeyPairOpt
     )).getOrElse(eternitas)
   }
 

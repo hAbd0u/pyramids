@@ -43,10 +43,10 @@ class Pinata(auth: AllCredentials) {
   val url = "https://api.pinata.cloud";
 
   def export(): js.Dynamic = {
-    l("pinataApi" -> auth.pinataApi,
-      "pinataApiSecret" -> auth.pinataApiSecret,
-     "stampdApi" -> auth.stampdApi,
-     "stampdApiSecret" -> auth.stampdApiSecret)
+    l("pinataApi" -> auth.pinataApi.getOrElse(null),
+      "pinataApiSecret" -> auth.pinataApiSecret.getOrElse(null),
+     "stampdApi" -> auth.stampdApi.getOrElse(null),
+     "stampdApiSecret" -> auth.stampdApiSecret.getOrElse(null))
   }
 
   def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) =
@@ -54,8 +54,8 @@ class Pinata(auth: AllCredentials) {
       .get(url+"/data/testAuthentication",
            l(
              "headers" -> l(
-               "pinata_api_key" -> auth.pinataApi,
-               "pinata_secret_api_key" -> auth.pinataApiSecret
+               "pinata_api_key" -> auth.pinataApi.getOrElse(null),
+               "pinata_secret_api_key" -> auth.pinataApiSecret.getOrElse(null)
              )))
       .`then`(a => c(a))
       .`catch`(e => ec(e))
@@ -78,8 +78,8 @@ class Pinata(auth: AllCredentials) {
         "headers" -> l(
           //"Content-Type" -> s"multipart/form-data; boundary= ${data._boundary}",
           "Content-Type" -> s"multipart/form-data",
-          "pinata_api_key" -> auth.pinataApi,
-          "pinata_secret_api_key" -> auth.pinataApiSecret
+          "pinata_api_key" -> auth.pinataApi.getOrElse(null),
+          "pinata_secret_api_key" -> auth.pinataApiSecret.getOrElse(null)
         )
       )
     )

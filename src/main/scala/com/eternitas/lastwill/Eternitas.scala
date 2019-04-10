@@ -9,10 +9,10 @@ import scala.scalajs.js
 import js.Dynamic.{literal => l}
 
 case class AllCredentials(
-                           pinataApi: String,
-                           pinataApiSecret: String,
-                           stampdApi:String,
-                           stampdApiSecret:String)
+                           pinataApi: Option[String],
+                           pinataApiSecret: Option[String],
+                           stampdApi:Option[String],
+                           stampdApiSecret:Option[String])
 
 
 case class EncryptedPin(dataHash:String,ivHash:String)
@@ -85,7 +85,11 @@ class Eternitas(
     this.signKeyOpt,
     this.titleOpt,this.signKeyPairOpt
   )
-  def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
+  def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = {
+
+    //println("Adding sign key pair: " + privateKey)
+    new Eternitas(
+
    keyPairOpt=this.keyPairOpt,
     allAuth = this.allAuth,
     keyOpt=this.keyOpt,
@@ -96,7 +100,7 @@ class Eternitas(
       "publicKey"->publicKey,
       "privateKey" -> privateKey
     ).asInstanceOf[CryptoKeyPair])
-  )
+  )}
 
 
 

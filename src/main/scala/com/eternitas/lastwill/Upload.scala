@@ -172,7 +172,8 @@ object Upload {
       def mLoadPinData(cb: (PinDataListNative) => Unit) =
         if (havePinData())
           eternitas.pinDataOpt.map((aHash: String) =>
-            PimpedJQuery.loadHashAsText(aHash, (s: String) => {
+            if(aHash.length() > 0)
+              PimpedJQuery.loadHashAsText(aHash, (s: String) => {
               cb(js.JSON.parse(s).asInstanceOf[PinDataListNative])
             }))
         else

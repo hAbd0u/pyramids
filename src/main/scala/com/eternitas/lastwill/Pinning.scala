@@ -66,7 +66,7 @@ object Pinning {
                                           feedback: UserFeedback) = {
 
       eternitas.pinDataOpt.map(
-        aHash =>
+        aHash => if(aHash.length > 0)
           PimpedJQuery.loadHashAsText(
             aHash,
             (data: String) =>
