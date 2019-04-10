@@ -85,6 +85,18 @@ class Eternitas(
     this.signKeyOpt,
     this.titleOpt
   )
+  def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
+   keyPairOpt=this.keyPairOpt,
+    allAuth = this.allAuth,
+    keyOpt=this.keyOpt,
+    pinDataOpt=this.pinDataOpt,
+    this.signKeyOpt,
+    this.titleOpt
+  )
+
+
+
+
 
 
   def withKeyPair()(implicit ctx: ExecutionContext) = {

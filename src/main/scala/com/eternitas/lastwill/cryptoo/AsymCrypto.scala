@@ -31,6 +31,11 @@ object AsymCrypto {
   val usageEncrypt = js.Array(
     KeyUsage.encrypt)
 
+  val usageVerify = js.Array(
+    KeyUsage.verify)
+  val usageSign = js.Array(
+    KeyUsage.sign)
+
 
   val usages = js.Array(
       KeyUsage.encrypt,
@@ -119,28 +124,28 @@ object AsymCrypto {
                     cb:(Eternitas)=>Unit)(
                      implicit executionContext: ExecutionContext,
                      userFeedback: UserFeedback)=walletNative.
-    asym.map(kp=> kp.`public`.map(apublicKey=>crypto.subtle.importKey(
+    asym.map(kp=> kp.signPublic.map(apublicKey=>crypto.subtle.importKey(
     aKeyFormat,
     apublicKey,
-    aHashAlgorithm,
+    aSignAlgorithm,
     true,
-    usageEncrypt
+    usageVerify
   ).toFuture.onComplete(t=>{
-    t.failed.map(e=>println("Error importing public key: " + e.getMessage))
+    t.failed.map(e=>println("Error importing verify key: " + e.getMessage))
     t.map(aAny=>{
       val publicKey = aAny.asInstanceOf[CryptoKey]
-      kp.`private`.map(aprivkey=>
+      kp.signPrivate.map(aprivkey=>
         crypto.subtle.importKey(
           aKeyFormat,
           aprivkey,
-          aHashAlgorithm,
+          aSignAlgorithm,
           true,
-          usageDecrypt
+          usageSign
         ).toFuture.onComplete(t2=>{
-          t2.failed.map(e=>println("Error importing private key: " + e.getMessage))
+          t2.failed.map(e=>println("Error importing sign key: " + e.getMessage))
           t2.map(aAny2=>{
             val privateKey = aAny2.asInstanceOf[CryptoKey]
-            cb(eternitas.addKeyPair(privateKey,publicKey))})}))
+            cb(eternitas.addSignKeyPair(privateKey,publicKey))})}))
     })})))
 
 
