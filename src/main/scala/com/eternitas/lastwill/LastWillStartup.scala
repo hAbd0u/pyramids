@@ -68,7 +68,7 @@ object LastWillStartup {
           keyOpt = None,
           pinDataOpt = initPinDataOpt(),
           None,
-          Some("THIS IS YOUR PYRAMID")
+          Some("THIS IS YOUR PYRAMID"),None
         ).withAllKeys()
           .onComplete(t => initEternitas(t))
     )
@@ -86,11 +86,6 @@ object LastWillStartup {
 
   def init(et: Eternitas)(implicit $ : JQueryWrapper,
                           feedback: UserFeedback): Unit = {
-    //SymCrypto.test(et.keyOpt.get,"123456789")
-    val f = AsymCrypto.generateSignKeys()
-
-      //f.map(k=>println("Generated sign keys: " + k))
-    f.onComplete(t=>println("Generated sign keys: " + t))
 
 
     $("#logo").off().export(et).iimport(et)

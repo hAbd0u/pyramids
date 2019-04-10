@@ -23,8 +23,8 @@ class Eternitas(
                  val keyOpt: Option[CryptoKey],
                  val pinDataOpt:Option[String],
                  val signKeyOpt: Option[CryptoKey],
-                 val titleOpt: Option[String]
-                 ,
+                 val titleOpt: Option[String],
+                 val signKeyPairOpt: Option[CryptoKeyPair]
 ) {
 
   def withPinData(pinFolderOr:js.UndefOr[PinFolder] )(implicit userFeedback: UserFeedback) = {
@@ -36,7 +36,7 @@ class Eternitas(
       this.keyOpt,
       Some(pinDataHash),
         this.signKeyOpt,
-        this.titleOpt)})).
+        this.titleOpt,this.signKeyPairOpt)})).
       flatten.
       getOrElse(new Eternitas(
         this.keyPairOpt,
@@ -44,7 +44,7 @@ class Eternitas(
         this.keyOpt,
         None,
         this.signKeyOpt,
-        this.titleOpt
+        this.titleOpt,this.signKeyPairOpt
     ))
   }
 
@@ -54,7 +54,7 @@ class Eternitas(
     this.keyOpt,
     Some(s),
     this.signKeyOpt,
-    this.titleOpt)
+    this.titleOpt,this.signKeyPairOpt)
 
   def withoutPinDataHash() = new Eternitas(
     this.keyPairOpt,
@@ -62,7 +62,7 @@ class Eternitas(
     this.keyOpt,
     None,
     this.signKeyOpt,
-    this.titleOpt)
+    this.titleOpt,this.signKeyPairOpt)
 
 
 
@@ -72,7 +72,7 @@ class Eternitas(
     allAuth,Some(key),
     pinDataOpt,
     this.signKeyOpt,
-    this.titleOpt)
+    this.titleOpt,this.signKeyPairOpt)
 
   def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
     Some(js.Dictionary(
@@ -83,7 +83,7 @@ class Eternitas(
     keyOpt=this.keyOpt,
     pinDataOpt=this.pinDataOpt,
     this.signKeyOpt,
-    this.titleOpt
+    this.titleOpt,this.signKeyPairOpt
   )
   def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
    keyPairOpt=this.keyPairOpt,
@@ -91,7 +91,11 @@ class Eternitas(
     keyOpt=this.keyOpt,
     pinDataOpt=this.pinDataOpt,
     this.signKeyOpt,
-    this.titleOpt
+    this.titleOpt,
+    Some(js.Dictionary(
+      "publicKey"->publicKey,
+      "privateKey" -> privateKey
+    ).asInstanceOf[CryptoKeyPair])
   )
 
 
@@ -111,7 +115,7 @@ class Eternitas(
               keyOpt = this.keyOpt,
               pinDataOpt=this.pinDataOpt,
               this.signKeyOpt,
-              this.titleOpt),
+              this.titleOpt,this.signKeyPairOpt),
         )}
     else
       Future.successful(this)
@@ -130,7 +134,7 @@ class Eternitas(
           title.
           map(t => t.text.map(s=>s)).
           flatten.
-          getOrElse("[UNTITLED]"))
+          getOrElse("[UNTITLED]")),this.signKeyPairOpt
      )
   }
 
@@ -146,7 +150,7 @@ class Eternitas(
               keyOpt = this.keyOpt,
               pinDataOpt=this.pinDataOpt,
               Some(key),
-              this.titleOpt))
+              this.titleOpt,this.signKeyPairOpt))
     else
       Future.successful(this)
   }
@@ -168,29 +172,26 @@ class Eternitas(
               keyOpt = Some(key),
               pinDataOpt=this.pinDataOpt,
               this.signKeyOpt,
-              this.titleOpt
+              this.titleOpt,this.signKeyPairOpt
             ))}
     else
       Future.successful(this)
   }
 
   def withAllKeys()(implicit ctx: ExecutionContext) = withKeyPair().
-    map(e=>e.withSymKey().map(e2=>e2.withSignKeyPair())).flatten.flatten
+    map(e=>e.withSymKey().map(e2=>e2.withSignKeyPair().map(e3=>e.withSignKeyPair()))).flatten.flatten.flatten
 
 
 
   def exportKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(keyPairOpt)
-  def exportSignKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = signKeyOpt
-    .map(
-      key =>
-        AsymCrypto
-          .eexportKey(key)
-          .map(aJw =>
-            (l("key" -> aJw)
-          )
-    )).getOrElse(Future{l()})
+  def exportSignKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(signKeyPairOpt)
 
 
+  def exportKeyPairs()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(keyPairOpt).
+    map(d=>{
+      exportSignKeyPair()
+      d
+    })
 
   def exportKeyPairOpt(aKeyPairOpt:Option[CryptoKeyPair])(implicit ctx: ExecutionContext):Future[js.Dynamic] = aKeyPairOpt
     .map(

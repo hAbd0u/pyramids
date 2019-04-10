@@ -11,15 +11,10 @@ import js.Dynamic.{literal => l}
 trait KeypairNative extends js.Object {
   val `private`: js.UndefOr[JsonWebKey] = js.native
   val `public` : js.UndefOr[JsonWebKey] = js.native
-  val signPrivate : js.UndefOr[JsonWebKey] = js.native
-  val signPublic : js.UndefOr[JsonWebKey] = js.native
+
 
 }
-@js.native
-trait SignkeyNative extends js.Object {
-  val `sign`: js.UndefOr[JsonWebKey] = js.native
 
-}
 
 
 @js.native
@@ -77,7 +72,7 @@ trait TitleNative extends js.Object {
 trait WalletNative extends js.Object {
   val credentials:js.UndefOr[Credentials] = js.native
   val asym:js.UndefOr[KeypairNative]  = js.native
-  val sign:js.UndefOr[SignkeyNative]  = js.native
+  val sign:js.UndefOr[KeypairNative]  = js.native
   val pinfolder:js.UndefOr[PinFolder] = js.native
   val sym:js.UndefOr[JsonWebKey] = js.native
   val title:js.UndefOr[TitleNative] = js.native

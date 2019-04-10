@@ -83,7 +83,7 @@ object AsymCrypto {
         eternitas.keyOpt,
         eternitas.pinDataOpt,
       eternitas.signKeyOpt,
-      eternitas.titleOpt
+      eternitas.titleOpt,None
     )).getOrElse(eternitas)
   }
 
@@ -124,7 +124,7 @@ object AsymCrypto {
                     cb:(Eternitas)=>Unit)(
                      implicit executionContext: ExecutionContext,
                      userFeedback: UserFeedback)=walletNative.
-    asym.map(kp=> kp.signPublic.map(apublicKey=>crypto.subtle.importKey(
+    sign.map(keyPair=> keyPair.public.map(apublicKey=>crypto.subtle.importKey(
     aKeyFormat,
     apublicKey,
     aSignAlgorithm,
@@ -134,7 +134,7 @@ object AsymCrypto {
     t.failed.map(e=>println("Error importing verify key: " + e.getMessage))
     t.map(aAny=>{
       val publicKey = aAny.asInstanceOf[CryptoKey]
-      kp.signPrivate.map(aprivkey=>
+      keyPair.`private`.map(aprivkey=>
         crypto.subtle.importKey(
           aKeyFormat,
           aprivkey,
