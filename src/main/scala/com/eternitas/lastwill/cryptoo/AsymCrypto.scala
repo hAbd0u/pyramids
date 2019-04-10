@@ -17,6 +17,11 @@ object AsymCrypto {
     publicExponent = new Uint8Array( js.Array(1,0,1)),
     hash = HashAlgorithm.`SHA-256`)
 
+  val aSignAlgorithm = l(
+    "name" ->"ECDSA",
+    "namedCurve" -> "P-384"
+  ).asInstanceOf[KeyAlgorithmIdentifier]
+
   val aAlgorithm:KeyAlgorithmIdentifier = js.Dynamic.
     literal("name" -> "RSA-OAEP").
     asInstanceOf[KeyAlgorithmIdentifier]
@@ -108,6 +113,42 @@ object AsymCrypto {
     })})))
 
 
+  def importSignKeyPair(file:File,
+                    eternitas: Eternitas,
+                    walletNative:WalletNative,
+                    cb:(Eternitas)=>Unit)(
+                     implicit executionContext: ExecutionContext,
+                     userFeedback: UserFeedback)=walletNative.
+    asym.map(kp=> kp.`public`.map(apublicKey=>crypto.subtle.importKey(
+    aKeyFormat,
+    apublicKey,
+    aHashAlgorithm,
+    true,
+    usageEncrypt
+  ).toFuture.onComplete(t=>{
+    t.failed.map(e=>println("Error importing public key: " + e.getMessage))
+    t.map(aAny=>{
+      val publicKey = aAny.asInstanceOf[CryptoKey]
+      kp.`private`.map(aprivkey=>
+        crypto.subtle.importKey(
+          aKeyFormat,
+          aprivkey,
+          aHashAlgorithm,
+          true,
+          usageDecrypt
+        ).toFuture.onComplete(t2=>{
+          t2.failed.map(e=>println("Error importing private key: " + e.getMessage))
+          t2.map(aAny2=>{
+            val privateKey = aAny2.asInstanceOf[CryptoKey]
+            cb(eternitas.addKeyPair(privateKey,publicKey))})}))
+    })})))
+
+
+
+
+
+
+
 
   def eexportKey(key: CryptoKey)
                 (implicit ctx:ExecutionContext) = crypto.subtle.
@@ -122,10 +163,7 @@ object AsymCrypto {
 
 
   def generateSignKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
-  = generateKeysFor(signUsages, l(
-    "name" ->"ECDSA",
-    "namedCurve" -> "P-384"
-  ).asInstanceOf[KeyAlgorithmIdentifier])
+  = generateKeysFor(signUsages, aSignAlgorithm)
 
   def generateKeysFor(aUsage:js.Array[KeyUsage],alg:KeyAlgorithmIdentifier)(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
