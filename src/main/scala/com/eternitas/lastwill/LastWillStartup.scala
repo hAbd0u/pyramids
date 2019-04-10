@@ -87,7 +87,7 @@ object LastWillStartup {
   def init(et: Eternitas)(implicit $ : JQueryWrapper,
                           feedback: UserFeedback): Unit = {
 
-    println("have sign: " + et.signKeyPairOpt)
+
 
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
@@ -97,13 +97,17 @@ object LastWillStartup {
     $("#cid").empty().off().cidEntered(et)
     $("#pinfolder").empty()
     $("#pinata").empty()
+    $("#sign").empty()
+
 
     et.allAuth.map(p => {
       new Pinata(p).authenticate(
-        p2 => $("#pinata").html(s"Pinnata: ${p.pinataApi}"),
-        e => feedback.error(s"Pinnata error ${e}")
+        p2 => $("#pinata").html(s"Pinata: ${p.pinataApi.get}"),
+        e => feedback.error(s"Pinata error ${e}")
       )
     })
+
+    et.signKeyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
 
     val titleRef = $("#title")
     et.titleOpt.map(title => titleRef.html(title.trim()))

@@ -29,7 +29,6 @@ class Eternitas(
 
   def withPinData(pinFolderOr:js.UndefOr[PinFolder] )(implicit userFeedback: UserFeedback) = {
     pinFolderOr.map(f=>f.`hash`.map(pinDataHash=>{
-      userFeedback.logString(s"Found user data: ${pinDataHash}")
       new Eternitas(
       this.keyPairOpt,
       this.allAuth,

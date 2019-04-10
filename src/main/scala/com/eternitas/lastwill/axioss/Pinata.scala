@@ -10,69 +10,79 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 
 @js.native
 trait PinataData extends AxiosData {
-  val IpfsHash:String = js.native
-  val PinSize:String =js.native
-  val Timestamp:String = js.native
+  val IpfsHash: String = js.native
+  val PinSize: String = js.native
+  val Timestamp: String = js.native
 
 }
-
-
 @js.native
 trait PinataPinResponse extends AxiosResponse {
-  override val data:PinataData = js.native
+  override val data: PinataData = js.native
 
 }
-
 
 //type; application/octet-stream'
-object PinataMetaData{
+object PinataMetaData {
 
-  def apply(f:File):PinataMetaData = PinataMetaData(Some(f.name),Some(f.size),Some("application/octet-stream"))
+  def apply(f: File): PinataMetaData =
+    PinataMetaData(Some(f.name), Some(f.size), Some("application/octet-stream"))
 
-  def apply(p:PinataData):PinataMetaData = PinataMetaData(Some(p.IpfsHash),None,Some("application/octet-stream"))
+  def apply(p: PinataData): PinataMetaData =
+    PinataMetaData(Some(p.IpfsHash), None, Some("application/octet-stream"))
 
 }
 
-
-case class PinataMetaData(name:Option[String],size:Option[Double],`type`:Option[String])
-
-
-
+case class PinataMetaData(name: Option[String],
+                          size: Option[Double],
+                          `type`: Option[String])
 
 class Pinata(auth: AllCredentials) {
   val url = "https://api.pinata.cloud";
 
-  def export(): js.Dynamic = {
-    l("pinataApi" -> auth.pinataApi.getOrElse(null),
+  def export(): js.Dynamic =
+    l(
+      "pinataApi" -> auth.pinataApi.getOrElse(null),
       "pinataApiSecret" -> auth.pinataApiSecret.getOrElse(null),
-     "stampdApi" -> auth.stampdApi.getOrElse(null),
-     "stampdApiSecret" -> auth.stampdApiSecret.getOrElse(null))
+      "stampdApi" -> auth.stampdApi.getOrElse(null),
+      "stampdApiSecret" -> auth.stampdApiSecret.getOrElse(null)
+    )
+
+  def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) = {
+
+    val aAuth = auth.pinataApi.getOrElse("")
+    val aAuthSecrect = auth.pinataApiSecret.getOrElse("")
+
+    if (aAuth.length > 0 && aAuthSecrect.length > 0)
+      axios
+        .get(
+          url + "/data/testAuthentication",
+          l(
+            "headers" -> l(
+              "pinata_api_key" -> auth.pinataApi.getOrElse(null),
+              "pinata_secret_api_key" -> auth.pinataApiSecret.getOrElse(null)
+            ))
+        )
+        .`then`(a => c(a))
+        .`catch`(e => ec(e))
+
   }
 
-  def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) =
-    axios
-      .get(url+"/data/testAuthentication",
-           l(
-             "headers" -> l(
-               "pinata_api_key" -> auth.pinataApi.getOrElse(null),
-               "pinata_secret_api_key" -> auth.pinataApiSecret.getOrElse(null)
-             )))
-      .`then`(a => c(a))
-      .`catch`(e => ec(e))
-
-  def pinFileToIPFS(arrayBuffer: ArrayBuffer,pn:PinataMetaData) = {
+  def pinFileToIPFS(arrayBuffer: ArrayBuffer, pn: PinataMetaData) = {
     val data = new FormData()
     data.append("file", new Blob(js.Array[js.Any](arrayBuffer)))
-    data.append("pinataMetadata",
-                js.JSON.stringify(
-                  l(
-                    "name" -> pn.name.getOrElse("NOT SPECIFIED").toString(),
-                    "keyvalues" -> l(
-                      "size" -> pn.size.getOrElse("???").toString(),
-                      "type" -> pn.`type`.getOrElse("NONE").toString()
-                    ))))
+    data.append(
+      "pinataMetadata",
+      js.JSON.stringify(
+        l(
+          "name" -> pn.name.getOrElse("NOT SPECIFIED").toString(),
+          "keyvalues" -> l(
+            "size" -> pn.size.getOrElse("???").toString(),
+            "type" -> pn.`type`.getOrElse("NONE").toString()
+          )
+        ))
+    )
     axios.post(
-      url +"/pinning/pinFileToIPFS",
+      url + "/pinning/pinFileToIPFS",
       data,
       l(
         "headers" -> l(
