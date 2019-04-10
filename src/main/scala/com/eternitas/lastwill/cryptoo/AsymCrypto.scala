@@ -118,15 +118,27 @@ object AsymCrypto {
 
 
   def generateKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
-  = generateKeysFor(usages)
+  = generateKeysFor(usages,aHashAlgorithm)
 
 
   def generateSignKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
-  = generateKeysFor(signUsages)
+  = generateKeysFor(signUsages, l(
+    "name" ->"ECDSA",
+    "namedCurve" -> "P-384"
+  ).asInstanceOf[KeyAlgorithmIdentifier])
 
-  def generateKeysFor(aUsage:js.Array[KeyUsage])(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
+  def generateKeysFor(aUsage:js.Array[KeyUsage],alg:KeyAlgorithmIdentifier)(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
-    algorithm = aHashAlgorithm,
+    algorithm = alg
+
+      /*
+      l(
+      "name" ->"ECDSA",
+      "namedCurve" -> "P-384"
+    ).asInstanceOf[KeyAlgorithmIdentifier]
+    */
+
+    ,
     extractable = true,
     keyUsages = aUsage).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
