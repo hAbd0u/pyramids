@@ -98,16 +98,20 @@ object LastWillStartup {
     $("#pinfolder").empty()
     $("#pinata").empty()
     $("#sign").empty()
+    $("#sym").empty()
 
 
     et.allAuth.map(p => {
       new Pinata(p).authenticate(
-        p2 => $("#pinata").html(s"Pinata: ${p.pinataApi.get}"),
+        p2 => $("#pinata").html(s"Pinata: ${p.pinataApi.get.substring(0,6)}..."),
         e => feedback.error(s"Pinata error ${e}")
       )
     })
 
     et.signKeyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
+    et.keyOpt.map(key=> $("#sym").html(s"SYM: ${key.algorithm.name}" ))
+
+
 
     val titleRef = $("#title")
     et.titleOpt.map(title => titleRef.html(title.trim()))
@@ -129,7 +133,7 @@ object LastWillStartup {
               s"class='pinned' " +
               s" id='${pd}' " +
               s" download='${pd}.json' target='_blank'>" +
-              s"${pd.substring(0, 10)} [...]" +
+              s"${pd.substring(0, 10)}..." +
               s"</a>")
 
         } else clearPinFolder())

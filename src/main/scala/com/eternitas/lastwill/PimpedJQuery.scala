@@ -116,8 +116,15 @@ object PimpedJQuery {
         et1,
         walletNative,
         (et2: Eternitas) =>
-          AsymCrypto.importSignKeyPair(file,et2,walletNative,(et3=>
-            onImportKeyPairs(file, walletNative, et3))))}
+          AsymCrypto.importSignKeyPair(file,et2,walletNative, et3=>
+            SymCrypto.
+              importKey(et3,
+                walletNative,
+                et4=>
+                  onImportKeyPairs(file,
+                    walletNative,
+                    et4))
+            ))}
 
     def onImportKeyPairs(file: File, walletNative: WalletNative, aEternitas: Eternitas)(
       implicit $: JQueryWrapper,

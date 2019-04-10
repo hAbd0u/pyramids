@@ -54,6 +54,7 @@ object Upload {
     def handleDrop(eternitas: Eternitas, file: File)(implicit ctx: ExecutionContext,
                                                      $ : JQueryWrapper,
                                                      feedback: UserFeedback): Unit = {
+
       val cidOpt =cidFromFile(file)
       if(cidOpt.isDefined){
         //feedback.message("CID found in file name: " + cidOpt.get)

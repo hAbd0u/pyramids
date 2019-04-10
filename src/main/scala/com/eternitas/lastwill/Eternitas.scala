@@ -53,7 +53,8 @@ class Eternitas(
     this.keyOpt,
     Some(s),
     this.signKeyOpt,
-    this.titleOpt,this.signKeyPairOpt)
+    this.titleOpt,
+    this.signKeyPairOpt)
 
   def withoutPinDataHash() = new Eternitas(
     this.keyPairOpt,
@@ -71,7 +72,8 @@ class Eternitas(
     allAuth,Some(key),
     pinDataOpt,
     this.signKeyOpt,
-    this.titleOpt,this.signKeyPairOpt)
+    this.titleOpt,
+    this.signKeyPairOpt)
 
   def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
     Some(js.Dictionary(
@@ -82,7 +84,8 @@ class Eternitas(
     keyOpt=this.keyOpt,
     pinDataOpt=this.pinDataOpt,
     this.signKeyOpt,
-    this.titleOpt,this.signKeyPairOpt
+    this.titleOpt,
+    this.signKeyPairOpt
   )
   def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = {
 
@@ -152,9 +155,9 @@ class Eternitas(
               allAuth = this.allAuth,
               keyOpt = this.keyOpt,
               pinDataOpt=this.pinDataOpt,
-              this.signKeyOpt,
-              this.titleOpt,
-              Some(keys)))
+              signKeyOpt = this.signKeyOpt,
+              titleOpt = this.titleOpt,
+              signKeyPairOpt = Some(keys)))
     else
       Future.successful(this)
   }
@@ -164,8 +167,8 @@ class Eternitas(
       val kf = SymCrypto
         .generateKey()
       kf.onComplete(t => {
-       // t.failed.map(e=>println("Error generating symmetric key: " +e.getMessage))
-       // t.map(key => println("Generated: " + key))
+        t.failed.map(e=>println("Error generating symmetric key: " +e.getMessage))
+        //t.map(key => println("Generated symmetric key: " + key))
       })
 
         kf.map(
@@ -176,14 +179,15 @@ class Eternitas(
               keyOpt = Some(key),
               pinDataOpt=this.pinDataOpt,
               this.signKeyOpt,
-              this.titleOpt,this.signKeyPairOpt
+              this.titleOpt,
+              this.signKeyPairOpt
             ))}
     else
       Future.successful(this)
   }
 
   def withAllKeys()(implicit ctx: ExecutionContext) = withKeyPair().
-    map(e=>e.withSymKey().map(e2=>e2.withSignKeyPair().map(e3=>e.withSignKeyPair()))).flatten.flatten.flatten
+    map(e=>e.withSymKey().map(e2=>e2.withSignKeyPair())).flatten.flatten
 
 
 
