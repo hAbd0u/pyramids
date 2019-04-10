@@ -32,6 +32,11 @@ object AsymCrypto {
       KeyUsage.decrypt
   )
 
+  val signUsages = js.Array(
+    KeyUsage.sign,
+    KeyUsage.verify
+  )
+
 
 
   def encrypt(keys:CryptoKeyPair,data:ArrayBuffer)
@@ -113,13 +118,18 @@ object AsymCrypto {
 
 
   def generateKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
+  = generateKeysFor(usages)
+
+
+  def generateSignKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
+  = generateKeysFor(signUsages)
+
+  def generateKeysFor(aUsage:js.Array[KeyUsage])(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
     algorithm = aHashAlgorithm,
     extractable = true,
-    keyUsages = usages).
+    keyUsages = aUsage).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
-
-
 
 
 
