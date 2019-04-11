@@ -5,7 +5,9 @@ import com.eternitas.wizard.JQueryWrapper
 import org.querki.jquery.JQuery
 import org.scalajs.dom.Event
 import org.scalajs.dom.raw.File
-import Buffers._;
+import Buffers._
+import com.eternitas.lastwill.axioss.{Pinata, PinataMetaData, PinataPinResponse}
+
 import scala.concurrent.ExecutionContext
 
 object Stampd {
@@ -26,7 +28,13 @@ object Stampd {
             signKeyPair.
           keyPairOpt.
           map(kp=>AsymCrypto.sign(kp,pinData.toArrayBuffer()).
-          onComplete(t=>println("Sign: " + t))))
+          onComplete(t=>t.map(b=>eternitas.config.allAuth.map(
+            auth=>new Pinata(auth).pinFileToIPFS(
+              b,
+              PinataMetaData(Some("SIGNATURE"),None,None)).
+              `then`(r=>feedback.message(r.asInstanceOf[PinataPinResponse].data.IpfsHash)).
+              `catch`(e=>feedback.error(e.toString))
+          )))))
         }
       )
 
