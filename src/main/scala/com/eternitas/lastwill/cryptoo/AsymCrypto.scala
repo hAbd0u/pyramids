@@ -115,7 +115,10 @@ object AsymCrypto {
                     cb:(Eternitas)=>Unit)(
                      implicit executionContext: ExecutionContext,
                      userFeedback: UserFeedback)=walletNative.
-    sign.map(keyPair=> keyPair.public.map(apublicKey=>crypto.subtle.importKey(
+    sign.map((keyPair:KeypairNative)=> {
+    val keyPairNameOpt:Option[String]=keyPair.name.toOption
+
+    keyPair.public.map(apublicKey=>crypto.subtle.importKey(
     aKeyFormat,
     apublicKey,
     aSignAlgorithm,
@@ -136,8 +139,10 @@ object AsymCrypto {
           t2.failed.map(e=>println("Error importing sign key: " + e.getMessage))
           t2.map(aAny2=>{
             val privateKey = aAny2.asInstanceOf[CryptoKey]
-            cb(eternitas.addSignKeyPair(privateKey,publicKey))})}))
-    })})))
+            cb(eternitas.addSignKeyPair(privateKey,publicKey,keyPairNameOpt))})}))
+    })}))}
+
+  )
 
 
 

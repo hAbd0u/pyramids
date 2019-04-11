@@ -59,7 +59,7 @@ class Eternitas(val config:ETConfig) {
   ).asInstanceOf[CryptoKeyPair])) ))
 
 
-  def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(config.copy(signKeyPair = NamedKeyPair(None,Some(js.Dictionary(
+  def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey,nameOpt:Option[String]) = new Eternitas(config.copy(signKeyPair = NamedKeyPair(nameOpt,Some(js.Dictionary(
     "publicKey"->publicKey,
     "privateKey" -> privateKey
   ).asInstanceOf[CryptoKeyPair]))))
