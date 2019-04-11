@@ -8,7 +8,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 import js.Dynamic.{literal => l}
-
+import js.Dynamic.{literal => l}
 
 
 object AsymCrypto {
@@ -66,7 +66,10 @@ object AsymCrypto {
 
   def sign(keys:CryptoKeyPair,data:ArrayBuffer)
              (implicit executionContext: ExecutionContext)= crypto.subtle.sign(
-      aSignAlgorithm,
+    l(
+      "name" -> "ECDSA",
+      "hash" -> l("name" -> "SHA-384"),
+    ).asInstanceOf[KeyAlgorithmIdentifier],
       keys.privateKey,
       data
     ).toFuture.map(_.asInstanceOf[ArrayBuffer])
