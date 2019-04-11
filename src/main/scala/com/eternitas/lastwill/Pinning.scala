@@ -40,7 +40,7 @@ object Pinning {
                   PimpedJQuery.loadHashAsArrayBuffer(
                     avchash,
                     (vc: ArrayBuffer) =>
-                      eternitas.keyOpt.map(symKey => {
+                      eternitas.config.keyOpt.map(symKey => {
                         //feedback.log("Data to decrypt", encryptedData)
                         //feedback.log("IV for decrypt", vc)
                         val f = SymCrypto.decrypt(symKey, encryptedData, vc)
@@ -65,7 +65,7 @@ object Pinning {
                                           $: JQueryWrapper,
                                           feedback: UserFeedback) = {
 
-      eternitas.pinDataOpt.map(
+      eternitas.config.pinDataOpt.map(
         aHash => if(aHash.length > 0)
           PimpedJQuery.loadHashAsText(
             aHash,

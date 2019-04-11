@@ -14,10 +14,10 @@ case class AllCredentials(
                            stampdApi:Option[String],
                            stampdApiSecret:Option[String])
 
-object EtConfig{
-  def empty()=EtConfig( None,None,None, None,None,None,None)
+object ETConfig{
+  def empty()=ETConfig( None,None,None, None,None,None,None)
 }
-case class EtConfig(
+case class ETConfig(
 val keyPairOpt: Option[CryptoKeyPair],
 val allAuth: Option[AllCredentials],
 val keyOpt: Option[CryptoKey],
@@ -30,92 +30,40 @@ val signKeyPairOpt: Option[CryptoKeyPair]){
 
 
 
-class Eternitas(
-                 val keyPairOpt: Option[CryptoKeyPair],
-                 val allAuth: Option[AllCredentials],
-                 val keyOpt: Option[CryptoKey],
-                 val pinDataOpt:Option[String],
-                 val signKeyOpt: Option[CryptoKey],
-                 val titleOpt: Option[String],
-                 val signKeyPairOpt: Option[CryptoKeyPair]
-) {
+class Eternitas(val config:ETConfig) {
 
   def withPinData(pinFolderOr:js.UndefOr[PinFolder] )(implicit userFeedback: UserFeedback) = {
     pinFolderOr.map(f=>f.`hash`.map(pinDataHash=>{
-      new Eternitas(
-      this.keyPairOpt,
-      this.allAuth,
-      this.keyOpt,
-      Some(pinDataHash),
-        this.signKeyOpt,
-        this.titleOpt,this.signKeyPairOpt)})).
+      new Eternitas(config.copy(pinDataOpt = Some(pinDataHash) ))})).
       flatten.
-      getOrElse(new Eternitas(
-        this.keyPairOpt,
-        this.allAuth,
-        this.keyOpt,
-        None,
-        this.signKeyOpt,
-        this.titleOpt,this.signKeyPairOpt
-    ))
+      getOrElse(new Eternitas(config.copy(pinDataOpt = None)))
   }
 
-  def withPinDataHash(s:String) = new Eternitas(
-    this.keyPairOpt,
-    this.allAuth,
-    this.keyOpt,
-    Some(s),
-    this.signKeyOpt,
-    this.titleOpt,
-    this.signKeyPairOpt)
+  def withPinDataHash(s:String) = new Eternitas(config.copy(pinDataOpt =  Some(s)))
 
-  def withoutPinDataHash() = new Eternitas(
-    this.keyPairOpt,
-    this.allAuth,
-    this.keyOpt,
-    None,
-    this.signKeyOpt,
-    this.titleOpt,this.signKeyPairOpt)
+
+  def withoutPinDataHash() = new Eternitas(config.copy(pinDataOpt =   None))
 
 
 
 
-  def addKey(key:CryptoKey) = new Eternitas(
-    keyPairOpt,
-    allAuth,Some(key),
-    pinDataOpt,
-    this.signKeyOpt,
-    this.titleOpt,
-    this.signKeyPairOpt)
+  def addKey(key:CryptoKey) = new Eternitas( config.copy(keyOpt = Some(key)))
 
-  def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(
-    Some(js.Dictionary(
-      "publicKey"->publicKey,
-      "privateKey" -> privateKey
-    ).asInstanceOf[CryptoKeyPair]),
-    allAuth = this.allAuth,
-    keyOpt=this.keyOpt,
-    pinDataOpt=this.pinDataOpt,
-    this.signKeyOpt,
-    this.titleOpt,
-    this.signKeyPairOpt
-  )
-  def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = {
 
-    //println("Adding sign key pair: " + privateKey)
-    new Eternitas(
+  def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(config.copy(keyPairOpt = Some(js.Dictionary(
+    "publicKey"->publicKey,
+    "privateKey" -> privateKey
+  ).asInstanceOf[CryptoKeyPair]) ))
 
-   keyPairOpt=this.keyPairOpt,
-    allAuth = this.allAuth,
-    keyOpt=this.keyOpt,
-    pinDataOpt=this.pinDataOpt,
-    this.signKeyOpt,
-    this.titleOpt,
-    Some(js.Dictionary(
-      "publicKey"->publicKey,
-      "privateKey" -> privateKey
-    ).asInstanceOf[CryptoKeyPair])
-  )}
+
+  def addSignKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(config.copy(signKeyPairOpt = Some(js.Dictionary(
+    "publicKey"->publicKey,
+    "privateKey" -> privateKey
+  ).asInstanceOf[CryptoKeyPair])))
+
+
+
+
 
 
 
@@ -123,60 +71,40 @@ class Eternitas(
 
 
   def withKeyPair()(implicit ctx: ExecutionContext) = {
-    if (keyPairOpt.isEmpty){
+    if (config.keyPairOpt.isEmpty)
       AsymCrypto
         .generateKeys()
         .map(
           key =>
-            new Eternitas(
-              keyPairOpt = Some(key),
-              allAuth = this.allAuth,
-              keyOpt = this.keyOpt,
-              pinDataOpt=this.pinDataOpt,
-              this.signKeyOpt,
-              this.titleOpt,this.signKeyPairOpt),
-        )}
+            new Eternitas( config.copy(keyPairOpt = Some(key))))
+
     else
       Future.successful(this)
   }
 
 
   def importTitle(walletNative: WalletNative) = {
-    new Eternitas(
-      keyPairOpt =this.keyPairOpt,
-      allAuth = this.allAuth,
-      keyOpt = this.keyOpt,
-      pinDataOpt=this.pinDataOpt,
-      this.signKeyOpt,
-      Some(
-        walletNative.
-          title.
-          map(t => t.text.map(s=>s)).
-          flatten.
-          getOrElse("[UNTITLED]")),this.signKeyPairOpt
-     )
+    new Eternitas(config.copy(titleOpt = Some(
+      walletNative.
+        title.
+        map(t => t.text.map(s=>s)).
+        flatten.
+        getOrElse("[UNTITLED]"))))
   }
 
   def withSignKeyPair()(implicit ctx: ExecutionContext) = {
-    if (signKeyPairOpt.isEmpty)
+    if (config.signKeyPairOpt.isEmpty)
       AsymCrypto
         .generateSignKeys()
         .map(
           keys =>
-            new Eternitas(
-              keyPairOpt =this.keyPairOpt,
-              allAuth = this.allAuth,
-              keyOpt = this.keyOpt,
-              pinDataOpt=this.pinDataOpt,
-              signKeyOpt = this.signKeyOpt,
-              titleOpt = this.titleOpt,
-              signKeyPairOpt = Some(keys)))
+            new Eternitas(config.copy(signKeyPairOpt = Some(keys))))
     else
       Future.successful(this)
   }
 
   def withSymKey()(implicit ctx: ExecutionContext) = {
-    if (keyOpt.isEmpty){
+    if (config.keyOpt.isEmpty){
       val kf = SymCrypto
         .generateKey()
       kf.onComplete(t => {
@@ -185,16 +113,8 @@ class Eternitas(
       })
 
         kf.map(
-          key =>
-            new Eternitas(
-              keyPairOpt =this.keyPairOpt,
-              allAuth = this.allAuth,
-              keyOpt = Some(key),
-              pinDataOpt=this.pinDataOpt,
-              this.signKeyOpt,
-              this.titleOpt,
-              this.signKeyPairOpt
-            ))}
+          key => new Eternitas(config.copy(keyOpt = Some(key))))
+             }
     else
       Future.successful(this)
   }
@@ -204,11 +124,11 @@ class Eternitas(
 
 
 
-  def exportKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(keyPairOpt)
-  def exportSignKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(signKeyPairOpt)
+  def exportKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.keyPairOpt)
+  def exportSignKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.signKeyPairOpt)
 
 
-  def exportKeyPairs()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(keyPairOpt).
+  def exportKeyPairs()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.keyPairOpt).
     map(d=>{
       exportSignKeyPair()
       d
@@ -231,13 +151,13 @@ class Eternitas(
 
 
 
-  def exportKey()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = keyOpt
+  def exportKey()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = config.keyOpt
     .map(
       key =>
         SymCrypto.eexportKey(key).map(_.asInstanceOf[js.Dynamic]))
     .getOrElse(Future{l()})
 
-  def exportCredentials()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {allAuth.
+  def exportCredentials()()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future {config.allAuth.
     map(p => new Pinata(p).export()).getOrElse(
     l("pinataApi" ->"",
       "pinataApiSecret" ->"",
@@ -247,7 +167,7 @@ class Eternitas(
 
 
   def exportPinFolder()(implicit ctx: ExecutionContext):Future[js.Dynamic] = Future{
-    l("hash" -> pinDataOpt.getOrElse("").toString)
+    l("hash" -> config.pinDataOpt.getOrElse("").toString)
   }
 
   def export()(implicit ctx: ExecutionContext) ={
@@ -257,7 +177,7 @@ class Eternitas(
         exportCredentials(),
         exportPinFolder(),
         exportSignKeyPair(),
-        Future{titleOpt.map(t=>l("text" -> t)).getOrElse(l())}
+        Future{config.titleOpt.map(t=>l("text" -> t)).getOrElse(l())}
       )).
       map(s => l("asym" -> s(0),
         "sym" -> s(1),

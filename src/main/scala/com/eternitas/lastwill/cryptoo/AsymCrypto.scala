@@ -69,23 +69,13 @@ object AsymCrypto {
   def importCredentials(eternitas: Eternitas,
                         walletNative: WalletNative): Eternitas ={
 
-    walletNative.credentials.map(p=>new Eternitas(
-        eternitas.keyPairOpt,
-        Some(
-          AllCredentials(
-            pinataApi = p.pinataApi.map(s=>Some(s)).getOrElse(None),
-            pinataApiSecret = p.pinataApiSecret.map(s=>Some(s)).getOrElse(None),
-            stampdApi = p.stampdApi.map(s=>Some(s)).getOrElse(None),
-            stampdApiSecret = p.stampdApiSecret.map(s=>Some(s)).getOrElse(None)
-
-          )
-        ),
-        eternitas.keyOpt,
-        eternitas.pinDataOpt,
-      eternitas.signKeyOpt,
-      eternitas.titleOpt,
-      eternitas.signKeyPairOpt
-    )).getOrElse(eternitas)
+    walletNative.credentials.map(p=>new Eternitas(eternitas.config.copy(allAuth = Some(
+      AllCredentials(
+        pinataApi = p.pinataApi.map(s=>Some(s)).getOrElse(None),
+        pinataApiSecret = p.pinataApiSecret.map(s=>Some(s)).getOrElse(None),
+        stampdApi = p.stampdApi.map(s=>Some(s)).getOrElse(None),
+        stampdApiSecret = p.stampdApiSecret.map(s=>Some(s)).getOrElse(None)
+      ))))).getOrElse(eternitas)
   }
 
   def importKeyPair(file:File,

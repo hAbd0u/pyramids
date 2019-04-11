@@ -7,7 +7,7 @@ import com.eternitas.lastwill.Loading.PLoading
 import com.eternitas.lastwill.Stampd.PStampd
 import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, HashSum, SymCrypto}
-import com.eternitas.lastwill.{Buffers, Eternitas, PimpedJQuery, UserFeedback}
+import com.eternitas.lastwill.{Buffers, ETConfig, Eternitas, PimpedJQuery, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
 import org.scalajs.dom.document
 import org.scalajs.dom.raw._
@@ -62,14 +62,15 @@ object LastWillStartup {
     document.addEventListener(
       "DOMContentLoaded",
       (e: Event) =>
-        new Eternitas(
+        new Eternitas(ETConfig(
           keyPairOpt = None,
           allAuth = None,
           keyOpt = None,
           pinDataOpt = initPinDataOpt(),
           None,
-          Some("THIS IS YOUR PYRAMID"),None
-        ).withAllKeys()
+          Some("THIS IS YOUR PYRAMID"),
+          None
+        )).withAllKeys()
           .onComplete(t => initEternitas(t))
     )
 
@@ -101,20 +102,20 @@ object LastWillStartup {
     $("#sym").empty()
 
 
-    et.allAuth.map(p => {
+    et.config.allAuth.map(p => {
       new Pinata(p).authenticate(
         p2 => $("#pinata").html(s"Pinata: ${p.pinataApi.get.substring(0,6)}..."),
         e => feedback.error(s"Pinata error ${e}")
       )
     })
 
-    et.signKeyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
-    et.keyOpt.map(key=> $("#sym").html(s"SYM: ${key.algorithm.name}" ))
+    et.config.signKeyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
+    et.config.keyOpt.map(key=> $("#sym").html(s"SYM: ${key.algorithm.name}" ))
 
 
 
     val titleRef = $("#title")
-    et.titleOpt.map(title => titleRef.html(title.trim()))
+    et.config.titleOpt.map(title => titleRef.html(title.trim()))
     titleRef.off().unload(et)
 
 
@@ -124,8 +125,8 @@ object LastWillStartup {
     }
 
 
-    if (et.pinDataOpt.isDefined) {
-      et.pinDataOpt.map(pd =>
+    if (et.config.pinDataOpt.isDefined) {
+      et.config.pinDataOpt.map(pd =>
         if (pd.length() > 10) {
           feedback.message(s"${pd}")
           $("#pinfolder").html(

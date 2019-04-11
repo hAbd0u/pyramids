@@ -68,7 +68,7 @@ object Upload {
     def encryptAndUpload(eternitas: Eternitas, file: File)(implicit ctx: ExecutionContext,
                                                            $ : JQueryWrapper,
                                                            feedback: UserFeedback): Unit = {
-      eternitas.keyOpt.map(
+      eternitas.config.keyOpt.map(
         key =>
           new FileReader().onReadArrayBuffer(
             file,
@@ -93,7 +93,7 @@ object Upload {
       t.map((symEncryptionResult: SymEncryptionResult) => {
         feedback.log(s"Encrypted", symEncryptionResult.result)
         feedback.log(s"IV", symEncryptionResult.iv)
-        eternitas.allAuth.map(p =>
+        eternitas.config.allAuth.map(p =>
           withPinata(eternitas, file, symEncryptionResult, p))
       })
 
@@ -166,13 +166,13 @@ object Upload {
         executionContext: ExecutionContext) = {
 
       def havePinData() = {
-        eternitas.pinDataOpt.isDefined &&
-        eternitas.pinDataOpt.map(s => (s != "")).getOrElse(false)
+        eternitas.config.pinDataOpt.isDefined &&
+        eternitas.config.pinDataOpt.map(s => (s != "")).getOrElse(false)
       }
 
       def mLoadPinData(cb: (PinDataListNative) => Unit) =
         if (havePinData())
-          eternitas.pinDataOpt.map((aHash: String) =>
+          eternitas.config.pinDataOpt.map((aHash: String) =>
             if(aHash.length() > 0)
               PimpedJQuery.loadHashAsText(aHash, (s: String) => {
               cb(js.JSON.parse(s).asInstanceOf[PinDataListNative])
@@ -183,7 +183,7 @@ object Upload {
       mLoadPinData((pinDataNative) => {
         createPinData(file, dataHash, ivHash, eternitas, pinDataNative).map(
           pinString =>
-            eternitas.allAuth.map(auth => {
+            eternitas.config.allAuth.map(auth => {
                //userFeedback.logString("Pinning: " + pinString)
               new Pinata(auth)
                 .pinFileToIPFS(
@@ -248,13 +248,13 @@ object Upload {
         eternitas: Eternitas,
         pinDataNative: PinDataListNative,
         d1: PinDataNative)(implicit ctx: ExecutionContext) = {
-      val t: Option[Future[String]] = eternitas.keyPairOpt.map(
+      val t: Option[Future[String]] = eternitas.config.keyPairOpt.map(
         kp =>
           AsymCrypto
             .eexportKey(kp.publicKey)
             .map(
               webKey =>
-                eternitas.signKeyOpt
+                eternitas.config.signKeyOpt
                   .map(signKey =>
                     SymCrypto
                       .eexportKey(signKey)

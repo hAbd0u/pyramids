@@ -41,9 +41,7 @@ object Import {
             file,
             bufferSource =>
               if (file.`type` == "application/json")
-                importFromData(new Eternitas(
-                  None,None,None,None,None,None,None
-                ), file, bufferSource)
+                importFromData( new Eternitas(ETConfig.empty()), file, bufferSource)
               else
                 feedback.error("Unsupported data type: " + file.`type`)
           )
