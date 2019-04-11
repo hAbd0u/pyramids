@@ -109,7 +109,7 @@ object LastWillStartup {
       )
     })
 
-    et.config.signKeyPairOpt.keyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
+    et.config.signKeyPair.keyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
     et.config.keyOpt.map(key=> $("#sym").html(s"SYM: ${key.algorithm.name}" ))
 
 
