@@ -10,6 +10,7 @@ import org.scalajs.dom.Event
 import org.scalajs.dom.raw.{File, FileReader}
 
 import scala.concurrent.ExecutionContext
+import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.scalajs.js.Dynamic.{literal => l}
 
@@ -86,7 +87,13 @@ object Stampd {
       new Pinata(auth).pinFileToIPFS(
       Eternitas.stringify(l(
         "signature" -> r.data.IpfsHash,
-        "data" -> pinData
+        "data" -> pinData,
+        "description" -> eternitas.
+          config.
+          signKeyPair.
+          nameOpt.map(s=>s"SIGNATURE-MAPPING ${s}").
+          getOrElse("SIGNATURE-MAPPING").toString(),
+        "date" -> new js.Date()
       )).toArrayBuffer(),
         nameOpt.map(name=>PinataMetaData(Some(s"SIGNATURE-MAPPING ${name}"),None,None)).
           getOrElse(PinataMetaData(Some(s"SIGNATURE-MAPPING"),None,None))).
