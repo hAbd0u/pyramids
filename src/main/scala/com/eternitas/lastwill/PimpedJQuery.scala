@@ -110,7 +110,7 @@ object PimpedJQuery {
                                 feedback: UserFeedback,
                                 executionContext: ExecutionContext) = {
       val walletNative: WalletNative =
-        js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
+        getNativeData(bufferSource)
       val et1 = oldEternitas.withPinData(walletNative.pinfolder)
       AsymCrypto.importKeyPair(file,
         et1,
@@ -127,6 +127,12 @@ object PimpedJQuery {
             ))}
 
 
+
+
+
+     def getNativeData(bufferSource: ArrayBuffer) = {
+      js.JSON.parse(bufferSource.toNormalString()).asInstanceOf[WalletNative]
+    }
 
     def onImportKeyPairs(file: File, walletNative: WalletNative, aEternitas: Eternitas)(
       implicit $: JQueryWrapper,

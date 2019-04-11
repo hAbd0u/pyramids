@@ -2,12 +2,12 @@ package com.eternitas.lastwill
 
 import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.axioss.{AxiosImpl, Pinata, PinataMetaData, PinataPinResponse}
-import com.eternitas.lastwill.cryptoo.AsymCrypto
+import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, WalletNative}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
 import org.scalajs.dom.Event
-import org.scalajs.dom.raw.File
+import org.scalajs.dom.raw.{File, FileReader}
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js.typedarray.ArrayBuffer
@@ -50,10 +50,27 @@ object Stampd {
         }
       )
 
-      onDrop( (f:File)=>{
-        println("TODO: Implement dop")
-      }).onDragOverNothing()
+      onDrop( (f:File)=>new FileReader().onReadArrayBuffer(f,b=>importSignKey(
+          eternitas, f, b))).onDragOverNothing()
     }
+
+    def importSignKey(oldEternitas: Eternitas,
+                       file: File,
+                       bufferSource: ArrayBuffer)(
+                        implicit $: JQueryWrapper,
+                        feedback: UserFeedback,
+                        executionContext: ExecutionContext) =
+            AsymCrypto.importSignKeyPair(
+              file,
+              oldEternitas,
+              getNativeData(bufferSource),
+              newEternitas=>
+            LastWillStartup.init(newEternitas)
+          )
+
+
+
+
 
 
     def onPinnedSignature(
