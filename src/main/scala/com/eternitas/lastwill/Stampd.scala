@@ -3,6 +3,7 @@ package com.eternitas.lastwill
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
+import org.scalajs.dom.raw.File
 import org.scalajs.dom.{Event, KeyboardEvent}
 
 import scala.concurrent.ExecutionContext
@@ -13,12 +14,19 @@ object Stampd {
 
     def stamp(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                          $ : JQueryWrapper,
-                                         feedback: UserFeedback) = jq.click(
-      (e:Event) => {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    )
+                                         feedback: UserFeedback) = {
+      jq.click(
+        (e:Event) => {
+          e.preventDefault()
+          e.stopPropagation()
+          println("TODO: Implement click")
+        }
+      )
+
+      onDrop( (f:File)=>{
+        println("TODO: Implement dop")
+      }).onDragOverNothing()
+    }
 
 
 
