@@ -24,9 +24,12 @@ val keyOpt: Option[CryptoKey],
 val pinDataOpt:Option[String],
 val signKeyOpt: Option[CryptoKey],
 val titleOpt: Option[String],
-val signKeyPairOpt: Option[CryptoKeyPair]){
+val signKeyPairOpt: Option[CryptoKeyPair])
 
-}
+
+case class NamedKeyPair(nameOpt:Option[String],keyPairOpt: Option[CryptoKeyPair])
+
+
 
 
 

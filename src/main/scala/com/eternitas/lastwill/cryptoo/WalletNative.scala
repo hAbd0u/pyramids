@@ -11,7 +11,7 @@ import js.Dynamic.{literal => l}
 trait KeypairNative extends js.Object {
   val `private`: js.UndefOr[JsonWebKey] = js.native
   val `public` : js.UndefOr[JsonWebKey] = js.native
-
+  val name : js.UndefOr[String] = js.native
 
 }
 
