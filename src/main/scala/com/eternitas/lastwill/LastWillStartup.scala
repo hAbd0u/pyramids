@@ -69,7 +69,8 @@ object LastWillStartup {
           pinDataOpt = initPinDataOpt(),
           None,
           Some("THIS IS YOUR PYRAMID"),
-          NamedKeyPair(None,None)
+          NamedKeyPair(None,None),
+          None
         )).withAllKeys()
           .onComplete(t => initEternitas(t))
     )

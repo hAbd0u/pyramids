@@ -15,7 +15,7 @@ case class AllCredentials(
                            stampdApiSecret:Option[String])
 
 object ETConfig{
-  def empty()=ETConfig( NamedKeyPair(None,None),None,None,None, None,None,NamedKeyPair(None,None))
+  def empty()=ETConfig( NamedKeyPair(None,None),None,None,None, None,None,NamedKeyPair(None,None),None)
 }
 case class ETConfig(
                      val namedKeyPair: NamedKeyPair,
@@ -24,7 +24,9 @@ case class ETConfig(
                      val pinDataOpt:Option[String],
                      val signKeyOpt: Option[CryptoKey],
                      val titleOpt: Option[String],
-                     val signKeyPair: NamedKeyPair)
+                     val signKeyPair: NamedKeyPair,
+                     val signatureOpt:Option[String]
+                   )
 
 
 case class NamedKeyPair(nameOpt:Option[String],keyPairOpt: Option[CryptoKeyPair])
