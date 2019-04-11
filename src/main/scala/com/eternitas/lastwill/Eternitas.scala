@@ -37,6 +37,9 @@ case class NamedKeyPair(nameOpt:Option[String],keyPairOpt: Option[CryptoKeyPair]
 
 class Eternitas(val config:ETConfig) {
 
+
+  def withSignature(s:String) = new Eternitas(config.copy(signatureOpt = Some(s)))
+
   def withPinData(pinFolderOr:js.UndefOr[PinFolder] )(implicit userFeedback: UserFeedback) = {
     pinFolderOr.map(f=>f.`hash`.map(pinDataHash=>{
       new Eternitas(config.copy(pinDataOpt = Some(pinDataHash) ))})).

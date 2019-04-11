@@ -101,6 +101,7 @@ object LastWillStartup {
     $("#pinata").empty()
     $("#sign").empty()
     $("#sym").empty()
+    $("#signature").empty()
 
 
     et.config.allAuth.map(p => {
@@ -140,6 +141,8 @@ object LastWillStartup {
 
         } else clearPinFolder())
     } else clearPinFolder()
+
+    et.config.signatureOpt.map(s=>$("#signature").html(s"SIGNATURE: ${s}"))
 
   }
 

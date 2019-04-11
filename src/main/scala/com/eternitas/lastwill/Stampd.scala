@@ -4,6 +4,7 @@ import com.eternitas.lastwill.Buffers._
 import com.eternitas.lastwill.axioss.{AxiosImpl, Pinata, PinataMetaData, PinataPinResponse}
 import com.eternitas.lastwill.cryptoo.AsymCrypto
 import com.eternitas.wizard.JQueryWrapper
+import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
 import org.scalajs.dom.Event
 import org.scalajs.dom.raw.File
@@ -39,7 +40,8 @@ object Stampd {
                 eternitas.
                   config.
                   signKeyPair.
-                  nameOpt
+                  nameOpt,
+                eternitas
               )).
               `catch`(e=>feedback.error(e.toString))
           )))))
@@ -56,8 +58,11 @@ object Stampd {
                            r: PinataPinResponse,
                            pinData:String,
                            auth:AllCredentials,
-                           nameOpt:Option[String]
-                         )(implicit userFeedback: UserFeedback): Unit = {
+                           nameOpt:Option[String],
+                           eternitas: Eternitas
+                         )(implicit ctx: ExecutionContext,
+                           $ : JQueryWrapper,
+                           feedback: UserFeedback): Unit = {
 
       new Pinata(auth).pinFileToIPFS(
       Eternitas.stringify(l(
@@ -66,8 +71,11 @@ object Stampd {
       )).toArrayBuffer(),
         nameOpt.map(name=>PinataMetaData(Some(s"SIGNATURE-MAPPING ${name}"),None,None)).
           getOrElse(PinataMetaData(Some(s"SIGNATURE-MAPPING"),None,None))).
-        `then`(r=>userFeedback.message( s"${r.asInstanceOf[PinataPinResponse].data.IpfsHash}")).
-      `catch`(e=>userFeedback.error(e.toString()))
+        `then`(r=>{
+
+          LastWillStartup.init(eternitas.withSignature(r.asInstanceOf[PinataPinResponse].data.IpfsHash))
+        }).
+      `catch`(e=>feedback.error(e.toString()))
 
       //userFeedback.message(r.data.IpfsHash)
     }
