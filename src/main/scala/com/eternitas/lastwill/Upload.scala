@@ -108,7 +108,11 @@ object Upload {
 
       feedback.message("Start pinning, please be very patient!")
       new Pinata(p)
-        .pinFileToIPFS(symEncryptionResult.result, PinataMetaData(file))
+        .pinFileToIPFS(symEncryptionResult.result,
+          PinataMetaData(
+            Some("ETERNITAS-FILE"),
+            None,
+            Some("application/octet-stream")))
         .`then`((axiosResponse) =>
           pinataUpload(file, eternitas, symEncryptionResult, p, axiosResponse))
         .`catch`((error) => feedback.message(s"Error pinning hash: ${error}"))
