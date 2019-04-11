@@ -18,13 +18,13 @@ object ETConfig{
   def empty()=ETConfig( None,None,None, None,None,None,None)
 }
 case class ETConfig(
-val keyPairOpt: Option[CryptoKeyPair],
-val allAuth: Option[AllCredentials],
-val keyOpt: Option[CryptoKey],
-val pinDataOpt:Option[String],
-val signKeyOpt: Option[CryptoKey],
-val titleOpt: Option[String],
-val signKeyPairOpt: Option[CryptoKeyPair])
+                     val namedKeyPairOpt: Option[CryptoKeyPair],
+                     val allAuth: Option[AllCredentials],
+                     val keyOpt: Option[CryptoKey],
+                     val pinDataOpt:Option[String],
+                     val signKeyOpt: Option[CryptoKey],
+                     val titleOpt: Option[String],
+                     val signKeyPairOpt: Option[CryptoKeyPair])
 
 
 case class NamedKeyPair(nameOpt:Option[String],keyPairOpt: Option[CryptoKeyPair])
@@ -53,7 +53,7 @@ class Eternitas(val config:ETConfig) {
   def addKey(key:CryptoKey) = new Eternitas( config.copy(keyOpt = Some(key)))
 
 
-  def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(config.copy(keyPairOpt = Some(js.Dictionary(
+  def addKeyPair(privateKey:CryptoKey,publicKey:CryptoKey) = new Eternitas(config.copy(namedKeyPairOpt = Some(js.Dictionary(
     "publicKey"->publicKey,
     "privateKey" -> privateKey
   ).asInstanceOf[CryptoKeyPair]) ))
@@ -74,12 +74,12 @@ class Eternitas(val config:ETConfig) {
 
 
   def withKeyPair()(implicit ctx: ExecutionContext) = {
-    if (config.keyPairOpt.isEmpty)
+    if (config.namedKeyPairOpt.isEmpty)
       AsymCrypto
         .generateKeys()
         .map(
           key =>
-            new Eternitas( config.copy(keyPairOpt = Some(key))))
+            new Eternitas( config.copy(namedKeyPairOpt = Some(key))))
 
     else
       Future.successful(this)
@@ -127,11 +127,11 @@ class Eternitas(val config:ETConfig) {
 
 
 
-  def exportKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.keyPairOpt)
+  def exportKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.namedKeyPairOpt)
   def exportSignKeyPair()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.signKeyPairOpt)
 
 
-  def exportKeyPairs()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.keyPairOpt).
+  def exportKeyPairs()(implicit ctx: ExecutionContext):Future[js.Dynamic] = exportKeyPairOpt(config.namedKeyPairOpt).
     map(d=>{
       exportSignKeyPair()
       d

@@ -63,7 +63,7 @@ object LastWillStartup {
       "DOMContentLoaded",
       (e: Event) =>
         new Eternitas(ETConfig(
-          keyPairOpt = None,
+          namedKeyPairOpt = None,
           allAuth = None,
           keyOpt = None,
           pinDataOpt = initPinDataOpt(),
