@@ -14,8 +14,21 @@ case class AllCredentials(
                            stampdApi:Option[String],
                            stampdApiSecret:Option[String])
 
+object EtConfig{
+  def empty()=EtConfig( None,None,None, None,None,None,None)
+}
+case class EtConfig(
+val keyPairOpt: Option[CryptoKeyPair],
+val allAuth: Option[AllCredentials],
+val keyOpt: Option[CryptoKey],
+val pinDataOpt:Option[String],
+val signKeyOpt: Option[CryptoKey],
+val titleOpt: Option[String],
+val signKeyPairOpt: Option[CryptoKeyPair]){
 
-case class EncryptedPin(dataHash:String,ivHash:String)
+}
+
+
 
 class Eternitas(
                  val keyPairOpt: Option[CryptoKeyPair],
