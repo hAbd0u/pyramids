@@ -25,6 +25,8 @@ object Stampd {
           e.preventDefault()
           e.stopPropagation()
 
+          feedback.message("Signing, please be very patient ...")
+
 
           eternitas.config.pinDataOpt.map(pinData=>eternitas.
             config.
@@ -72,12 +74,13 @@ object Stampd {
         nameOpt.map(name=>PinataMetaData(Some(s"SIGNATURE-MAPPING ${name}"),None,None)).
           getOrElse(PinataMetaData(Some(s"SIGNATURE-MAPPING"),None,None))).
         `then`(r=>{
-
-          LastWillStartup.init(eternitas.withSignature(r.asInstanceOf[PinataPinResponse].data.IpfsHash))
+          val hash = r.asInstanceOf[PinataPinResponse].data.IpfsHash
+          feedback.message(s"SIGNATURE: ${hash}")
+          LastWillStartup.init(eternitas.withSignature(hash))
         }).
       `catch`(e=>feedback.error(e.toString()))
 
-      //userFeedback.message(r.data.IpfsHash)
+
     }
 
     def pinSignature(eternitas: Eternitas, b: ArrayBuffer, auth: AllCredentials): AxiosImpl = {

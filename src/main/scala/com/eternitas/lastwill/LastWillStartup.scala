@@ -127,22 +127,26 @@ object LastWillStartup {
     }
 
 
+    def createHref(pd: String,kind:String) = {
+      s"${kind}:  <a href='${PimpedJQuery.resolveUrl(pd)}' " +
+        s"class='pinned' " +
+        s" id='${pd}' " +
+        s" download='${pd}.json' target='_blank'>" +
+        s"${pd.substring(0, 10)}..." +
+        s"</a>"
+    }
+
     if (et.config.pinDataOpt.isDefined) {
       et.config.pinDataOpt.map(pd =>
         if (pd.length() > 10) {
-          feedback.message(s"${pd}")
+          //feedback.message(s"${pd}")
           $("#pinfolder").html(
-            s"CHAMBER:  <a href='${PimpedJQuery.resolveUrl(pd)}' " +
-              s"class='pinned' " +
-              s" id='${pd}' " +
-              s" download='${pd}.json' target='_blank'>" +
-              s"${pd.substring(0, 10)}..." +
-              s"</a>")
+            createHref(pd,"CHAMBER"))
 
         } else clearPinFolder())
     } else clearPinFolder()
 
-    et.config.signatureOpt.map(s=>$("#signature").html(s"SIGNATURE: ${s}"))
+    et.config.signatureOpt.map(s=>$("#signature").html(createHref(s,"SIGNATURE")))
 
   }
 
