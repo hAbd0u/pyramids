@@ -31,7 +31,13 @@ object Stampd {
           onComplete(t=>t.map(b=>eternitas.config.allAuth.map(
             auth=>new Pinata(auth).pinFileToIPFS(
               b,
-              PinataMetaData(Some("SIGNATURE"),None,None)).
+              eternitas.
+                config.
+                signKeyPair.
+                nameOpt.
+                map(name=>
+                  PinataMetaData(Some("SIGNATURE from " + name),None,None)).
+                getOrElse(PinataMetaData(Some("SIGNATURE"),None,None))).
               `then`(r=>feedback.message(r.asInstanceOf[PinataPinResponse].data.IpfsHash)).
               `catch`(e=>feedback.error(e.toString))
           )))))
