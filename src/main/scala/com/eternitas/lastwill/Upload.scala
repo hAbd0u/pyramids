@@ -248,7 +248,7 @@ object Upload {
         eternitas: Eternitas,
         pinDataNative: PinDataListNative,
         d1: PinDataNative)(implicit ctx: ExecutionContext) = {
-      val t: Option[Future[String]] = eternitas.config.namedKeyPairOpt.map(
+      val t: Option[Future[String]] = eternitas.config.namedKeyPairOpt.get.keyPairOpt.map(
         kp =>
           AsymCrypto
             .eexportKey(kp.publicKey)
