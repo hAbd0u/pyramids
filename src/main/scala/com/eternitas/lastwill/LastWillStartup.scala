@@ -7,7 +7,7 @@ import com.eternitas.lastwill.Loading.PLoading
 import com.eternitas.lastwill.Stampd.PStampd
 import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, HashSum, SymCrypto}
-import com.eternitas.lastwill.{Buffers, ETConfig, Eternitas, PimpedJQuery, UserFeedback}
+import com.eternitas.lastwill.{Buffers, ETConfig, Eternitas, NamedKeyPair, PimpedJQuery, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
 import org.scalajs.dom.document
 import org.scalajs.dom.raw._
@@ -63,7 +63,7 @@ object LastWillStartup {
       "DOMContentLoaded",
       (e: Event) =>
         new Eternitas(ETConfig(
-          namedKeyPairOpt = None,
+          namedKeyPair = NamedKeyPair(None,None),
           allAuth = None,
           keyOpt = None,
           pinDataOpt = initPinDataOpt(),
