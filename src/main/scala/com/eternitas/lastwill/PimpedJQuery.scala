@@ -126,6 +126,8 @@ object PimpedJQuery {
                     et4))
             ))}
 
+
+
     def onImportKeyPairs(file: File, walletNative: WalletNative, aEternitas: Eternitas)(
       implicit $: JQueryWrapper,
       feedback: UserFeedback,

@@ -1,11 +1,11 @@
 package com.eternitas.lastwill
 
+import com.eternitas.lastwill.cryptoo.AsymCrypto
 import com.eternitas.wizard.JQueryWrapper
-import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
+import org.scalajs.dom.Event
 import org.scalajs.dom.raw.File
-import org.scalajs.dom.{Event, KeyboardEvent}
-
+import Buffers._;
 import scala.concurrent.ExecutionContext
 
 object Stampd {
@@ -19,7 +19,14 @@ object Stampd {
         (e:Event) => {
           e.preventDefault()
           e.stopPropagation()
-          println("TODO: Implement click")
+
+
+          eternitas.config.pinDataOpt.map(pinData=>eternitas.
+            config.
+            signKeyPair.
+          keyPairOpt.
+          map(kp=>AsymCrypto.sign(kp,pinData.toArrayBuffer()).
+          onComplete(t=>println("Sign: " + t))))
         }
       )
 

@@ -64,9 +64,17 @@ object AsymCrypto {
 
 
 
+  def sign(keys:CryptoKeyPair,data:ArrayBuffer)
+             (implicit executionContext: ExecutionContext)= crypto.subtle.sign(
+      aSignAlgorithm,
+      keys.privateKey,
+      data
+    ).toFuture.map(_.asInstanceOf[ArrayBuffer])
 
 
-  def importCredentials(eternitas: Eternitas,
+
+
+    def importCredentials(eternitas: Eternitas,
                         walletNative: WalletNative): Eternitas ={
 
     walletNative.credentials.map(p=>new Eternitas(eternitas.config.copy(allAuth = Some(
@@ -169,14 +177,6 @@ object AsymCrypto {
   def generateKeysFor(aUsage:js.Array[KeyUsage],alg:KeyAlgorithmIdentifier)(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
     algorithm = alg
-
-      /*
-      l(
-      "name" ->"ECDSA",
-      "namedCurve" -> "P-384"
-    ).asInstanceOf[KeyAlgorithmIdentifier]
-    */
-
     ,
     extractable = true,
     keyUsages = aUsage).
