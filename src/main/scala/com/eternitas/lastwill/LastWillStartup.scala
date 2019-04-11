@@ -69,7 +69,7 @@ object LastWillStartup {
           pinDataOpt = initPinDataOpt(),
           None,
           Some("THIS IS YOUR PYRAMID"),
-          None
+          NamedKeyPair(None,None)
         )).withAllKeys()
           .onComplete(t => initEternitas(t))
     )
@@ -109,7 +109,7 @@ object LastWillStartup {
       )
     })
 
-    et.config.signKeyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
+    et.config.signKeyPairOpt.keyPairOpt.map(keyPair=> $("#sign").html(s"SIGN: ${keyPair.publicKey.algorithm.name}" ))
     et.config.keyOpt.map(key=> $("#sym").html(s"SYM: ${key.algorithm.name}" ))
 
 
