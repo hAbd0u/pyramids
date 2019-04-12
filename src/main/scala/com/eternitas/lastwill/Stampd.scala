@@ -7,6 +7,7 @@ import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
 import org.scalajs.dom.Event
+import org.scalajs.dom.crypto.CryptoKey
 import org.scalajs.dom.raw.{File, FileReader}
 
 import scala.concurrent.ExecutionContext
@@ -44,7 +45,14 @@ object Stampd {
                   config.
                   signKeyPair.
                   nameOpt,
-                eternitas
+                eternitas,
+                eternitas.
+                  config.
+                  signKeyPair.
+                  keyPairOpt.
+                  get.
+                  publicKey
+
               )).
               `catch`(e=>feedback.error(e.toString))
           )))))
@@ -79,33 +87,34 @@ object Stampd {
                            pinData:String,
                            auth:AllCredentials,
                            nameOpt:Option[String],
-                           eternitas: Eternitas
+                           eternitas: Eternitas,
+                           pubKey:CryptoKey
                          )(implicit ctx: ExecutionContext,
                            $ : JQueryWrapper,
-                           feedback: UserFeedback): Unit = {
+                           feedback: UserFeedback): Unit = AsymCrypto.
+        eexportKey(pubKey).
+        onComplete(t=>
+          t.map(webKey=>new Pinata(auth).pinFileToIPFS(
+            Eternitas.stringify(l(
+              "verify" -> webKey,
+              "signature" -> r.data.IpfsHash,
+              "data" -> pinData,
+              "description" -> eternitas.
+                config.
+                signKeyPair.
+                nameOpt.map(s=>s"SIGNATURE-MAPPING ${s}").
+                getOrElse("SIGNATURE-MAPPING").toString(),
+              "date" -> new js.Date()
+            )).toArrayBuffer(),
+            nameOpt.map(name=>PinataMetaData(Some(s"SIGNATURE-MAPPING ${name}"),None,None)).
+              getOrElse(PinataMetaData(Some(s"SIGNATURE-MAPPING"),None,None))).
+            `then`(r=>{
+              val hash = r.asInstanceOf[PinataPinResponse].data.IpfsHash
+              feedback.message(s"SIGNATURE: ${hash}")
+              LastWillStartup.init(eternitas.withSignature(hash))
+            }).
+            `catch`(e=>feedback.error(e.toString()))))
 
-      new Pinata(auth).pinFileToIPFS(
-      Eternitas.stringify(l(
-        "signature" -> r.data.IpfsHash,
-        "data" -> pinData,
-        "description" -> eternitas.
-          config.
-          signKeyPair.
-          nameOpt.map(s=>s"SIGNATURE-MAPPING ${s}").
-          getOrElse("SIGNATURE-MAPPING").toString(),
-        "date" -> new js.Date()
-      )).toArrayBuffer(),
-        nameOpt.map(name=>PinataMetaData(Some(s"SIGNATURE-MAPPING ${name}"),None,None)).
-          getOrElse(PinataMetaData(Some(s"SIGNATURE-MAPPING"),None,None))).
-        `then`(r=>{
-          val hash = r.asInstanceOf[PinataPinResponse].data.IpfsHash
-          feedback.message(s"SIGNATURE: ${hash}")
-          LastWillStartup.init(eternitas.withSignature(hash))
-        }).
-      `catch`(e=>feedback.error(e.toString()))
-
-
-    }
 
     def pinSignature(eternitas: Eternitas, b: ArrayBuffer, auth: AllCredentials): AxiosImpl = {
       new Pinata(auth).pinFileToIPFS(
