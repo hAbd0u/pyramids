@@ -151,10 +151,10 @@ object Upload {
       val dataHash = axiosResponse.asInstanceOf[PinataPinResponse].data.IpfsHash
       val ivHash = axiosResponse2.asInstanceOf[PinataPinResponse].data.IpfsHash
 
-      userFeedback.logString(s"Data uploaded: ${dataHash}")
-      userFeedback.logString(s"IV uploaded: ${ivHash}")
+
 
       pinDataList(file, dataHash, ivHash, eternitas, e => {
+        userFeedback.message(s"PINNED: ${dataHash}")
         LastWillStartup.init(e)
       })
 
