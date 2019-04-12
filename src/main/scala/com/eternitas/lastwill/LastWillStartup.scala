@@ -96,7 +96,10 @@ object LastWillStartup {
     $("#data-display").empty().dataDisplay(et)
     $("#stampd").off().stamp(et)
 
-    $("#cid").empty().off().cidEntered(et)
+
+    $("#cid").value("UNSIGNED").off().cidEntered(et)
+    $("#signed").value("SIGNED")
+
     $("#pinfolder").empty()
     $("#pinata").empty()
     $("#sign").empty()
