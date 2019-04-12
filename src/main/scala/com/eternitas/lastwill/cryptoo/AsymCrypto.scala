@@ -75,9 +75,27 @@ object AsymCrypto {
     ).toFuture.map(_.asInstanceOf[ArrayBuffer])
 
 
+  def verify(key:CryptoKey,signature:ArrayBuffer,data:ArrayBuffer)
+          (implicit executionContext: ExecutionContext)= crypto.subtle.verify(
+    l(
+      "name" -> "ECDSA",
+      "hash" -> l("name" -> "SHA-384"),
+    ).asInstanceOf[KeyAlgorithmIdentifier],
+    key,
+    signature,
+    data
+  ).toFuture.map(_.asInstanceOf[Boolean])
 
 
-    def importCredentials(eternitas: Eternitas,
+  def importVerifyKey(key:JsonWebKey)
+            (implicit executionContext: ExecutionContext)= crypto.subtle.importKey(
+    aKeyFormat,
+    key, aSignAlgorithm,true,usageVerify).toFuture.map(_.asInstanceOf[CryptoKey])
+
+
+
+
+  def importCredentials(eternitas: Eternitas,
                         walletNative: WalletNative): Eternitas ={
 
     walletNative.credentials.map(p=>new Eternitas(eternitas.config.copy(allAuth = Some(

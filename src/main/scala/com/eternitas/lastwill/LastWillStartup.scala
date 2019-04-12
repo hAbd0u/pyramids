@@ -98,7 +98,7 @@ object LastWillStartup {
 
 
     $("#cid").value("UNSIGNED").off().cidEntered(et)
-    $("#signed").value("SIGNED")
+    $("#signed").value("SIGNED").off().handleSigned(et)
 
     $("#pinfolder").empty()
     $("#pinata").empty()

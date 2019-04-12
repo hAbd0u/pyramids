@@ -1,13 +1,16 @@
 package com.eternitas.lastwill
 
-import com.eternitas.lastwill.cryptoo.SignatureNative
+import com.eternitas.lastwill.cryptoo.{AsymCrypto, SignatureNative}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
-import org.scalajs.dom.{Event, KeyboardEvent}
+import org.scalajs.dom.{Event, KeyboardEvent, crypto}
+import com.eternitas.lastwill.Buffers._
+import org.scalajs.dom.crypto.JsonWebKey
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
+import scala.scalajs.js.typedarray.ArrayBuffer
 object Loading {
 
   implicit class PLoading(jq: JQuery) extends PimpedJQuery.PJQuery(jq) {
@@ -47,12 +50,46 @@ object Loading {
                                                     feedback: UserFeedback) = {
       jq.value("")
       PimpedJQuery.
-      loadHashAsText(aHash, b => js.JSON.parse(b).asInstanceOf[SignatureNative])
+      loadHashAsText(aHash, b =>{
+        val signNative = js.JSON.parse(b).asInstanceOf[SignatureNative]
+         signNative.
+           signature.
+           map(signatureHash=>
+             PimpedJQuery.
+               loadHashAsArrayBuffer(signatureHash,
+                 (signatureData:ArrayBuffer)=>{
+                   signNative.verify.map(
+                     verifyJSKey=>
+                       AsymCrypto.importVerifyKey(verifyJSKey).
+                         onComplete(t=>t.map(verifyKey=>{
+                           signNative.data.map(dataHash=>{
+                             AsymCrypto.
+                               verify(
+                                 verifyKey,
+                                 signatureData,
+                                 dataHash.toArrayBuffer()).
+                               onComplete(t=>t.map(b=>
+                                 if(b)
+                                   signNative.
+                                     data.
+                                     map(pinHash=>
+                                       LastWillStartup.
+                                         init(
+                                           eternitas.
+                                             withPinDataHash(pinHash)))
+                                 else
+                                   feedback.error(s"Verification failed!")
+                               ))
+                           })
+                         })))
+                 }))
+
+      } )
   }
 
 
 
-    def handleSigned(eternitas: Eternitas, s: String)(implicit ctx: ExecutionContext,
+    def handleSigned(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                                       $ : JQueryWrapper,
                                                       feedback: UserFeedback) = {
       jq.

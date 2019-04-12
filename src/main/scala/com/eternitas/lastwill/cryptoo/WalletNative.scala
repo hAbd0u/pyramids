@@ -44,7 +44,7 @@ trait PinDataNative extends js.Object {
 
 @js.native
 trait SignatureNative extends js.Object {
-  val verify:js.UndefOr[String]  = js.native
+  val verify:js.UndefOr[JsonWebKey]  = js.native
   val signature:js.UndefOr[String]  = js.native
   val data:js.UndefOr[String]  = js.native
   val description:js.UndefOr[String]   = js.native
