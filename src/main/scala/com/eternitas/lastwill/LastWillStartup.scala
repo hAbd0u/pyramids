@@ -7,6 +7,7 @@ import com.eternitas.lastwill.Loading.PLoading
 import com.eternitas.lastwill.Stampd.PStampd
 import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, HashSum, SymCrypto}
+import com.eternitas.lastwill.ipfss.IPFSS
 import com.eternitas.lastwill.{Buffers, ETConfig, Eternitas, NamedKeyPair, PimpedJQuery, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
 import org.scalajs.dom.document
@@ -86,10 +87,17 @@ object LastWillStartup {
 
   }
 
+  def initIPFS() = {
+     val ipfs =   IPFSS.instance()
+
+    println("IPFS: " + ipfs)
+  }
+
   def init(et: Eternitas)(implicit $ : JQueryWrapper,
                           feedback: UserFeedback): Unit = {
 
 
+    initIPFS()
 
     $("#logo").off().export(et).iimport(et)
     $("#drop_zone").off().upLoad(et)
