@@ -2,8 +2,8 @@ package com.eternitas.lastwill.ipfss
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
-
 import scala.scalajs.js.Dynamic.{literal => l}
+import scala.scalajs.js.Math
 
 @js.native
 @JSGlobal
@@ -18,7 +18,7 @@ object IPFSS {
     (js.Dynamic.newInstance(tag.constructor)(args)).asInstanceOf[C]
 
   def instance()={
-    instantiate[Ipfs](l())
+    instantiate[Ipfs](l("repo"  -> s"ipfs-${Math.random().toString()}" ))
    // js.Dynamic.newInstance(js.constructorOf[IPFS].constructor)().asInstanceOf[IPFS]
   }
 
