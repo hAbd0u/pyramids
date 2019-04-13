@@ -18,6 +18,8 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.util.Try
 
+import com.eternitas.lastwill.ipfss.IPFSS._
+
 object LastWillStartup {
   implicit val ec = ExecutionContext.global;
   def msgField()(implicit $ : JQueryWrapper) = $("#message")
@@ -87,10 +89,14 @@ object LastWillStartup {
 
   }
 
-  def initIPFS() = {
-     val ipfs =   IPFSS.instance()
+  def initIPFS()(implicit $ : JQueryWrapper,
+                 feedback: UserFeedback) = {
 
-    println("IPFS: " + ipfs)
+    node.onReadyOnce(()=>{
+      feedback.message(s"IPFS node is online: ${node.isOnline()}" )
+    })
+
+    //println("IPFS: " + node)
   }
 
   def init(et: Eternitas)(implicit $ : JQueryWrapper,
