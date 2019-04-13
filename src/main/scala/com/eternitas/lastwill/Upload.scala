@@ -5,7 +5,7 @@ import com.eternitas.lastwill.cryptoo._
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
 import org.querki.jquery.JQuery
-import org.scalajs.dom.raw.{File, FileReader}
+import org.scalajs.dom.raw.{Event, File, FileReader}
 import com.eternitas.lastwill.Buffers._
 import org.scalajs.dom.crypto.{CryptoKey, JsonWebKey}
 
@@ -42,11 +42,17 @@ object Upload {
 
     def upLoad(eternitas: Eternitas)(implicit ctx: ExecutionContext,
                                      $ : JQueryWrapper,
-                                     feedback: UserFeedback) =
+                                     feedback: UserFeedback) = {
       onDrop(
         (file: File) =>
           handleDrop(eternitas, file)
       ).onDragOverNothing()
+
+      jq.click((e:Event)=>{
+        println("TODO: Implement  click in Drob Zone!" )
+
+      })
+    }
 
 
 
@@ -213,7 +219,6 @@ object Upload {
     }
 
     def generate(webKey: JsonWebKey,
-                 signKey: JsonWebKey,
                  pinDataNative: PinDataListNative,
                  d1: PinDataNative) =
       Eternitas.stringify(
@@ -223,7 +228,6 @@ object Upload {
             l(
               "data" -> pd,
               "pubkey" -> webKey,
-              "sign" -> signKey,
               "purpose" -> "box"
             )
           })
@@ -245,10 +249,9 @@ object Upload {
                  "timestamp" -> new js.Date()).asInstanceOf[PinDataNative]
 
       createFuturePindata(eternitas, pinDataNative, d1)
-      //generate(null,null,pinDataNative,d1)
     }
 
-    private def createFuturePindata(
+     def createFuturePindata(
         eternitas: Eternitas,
         pinDataNative: PinDataListNative,
         d1: PinDataNative)(implicit ctx: ExecutionContext) = {
@@ -257,20 +260,11 @@ object Upload {
           AsymCrypto
             .eexportKey(kp.publicKey)
             .map(
-              webKey =>
-                eternitas.config.signKeyOpt
-                  .map(signKey =>
-                    SymCrypto
-                      .eexportKey(signKey)
-                      .map(signKeyJS =>
-                        generate(webKey, signKeyJS, pinDataNative, d1)))
-                  .getOrElse(
-                    Future { generate(webKey, null, pinDataNative, d1) }
-                ))
-            .flatten)
+              webKey =>generate(webKey,  pinDataNative, d1))
+            )
 
       t.getOrElse(Future {
-        generate(null, null, pinDataNative, d1)
+        generate(null,  pinDataNative, d1)
       })
     }
   }
