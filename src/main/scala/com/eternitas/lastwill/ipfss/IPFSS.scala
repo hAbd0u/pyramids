@@ -14,7 +14,7 @@ class Ipfs extends js.Object{
   def isOnline():Boolean = js.native
   def version():String = js.native
 
-  def add(path:String, content:NodeBuffer, c: js.Function2[IPFSSError,js.Array[IPFSSFile],Unit]) = js.native
+  def add(path:String, content:NodeBuffer, c: js.Function2[IPFSSError,js.Array[IPFSSFile],Unit]):Unit = js.native
 
 }
 
@@ -31,8 +31,7 @@ trait IPFSSError extends js.Object{
 }
 
 @js.native
-@JSGlobal
-@JSName("Buffer")
+@JSGlobal("Buffer")
 object NodeBuffer extends js.Object{
 
 }
