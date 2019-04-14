@@ -92,9 +92,13 @@ object LastWillStartup {
   def initIPFS()(implicit $ : JQueryWrapper,
                  feedback: UserFeedback) = {
 
+
+    /*
     node.onReadyOnce(()=>{
       feedback.message(s"IPFS node is online: ${node.isOnline()}" )
     })
+    */
+
 
     //println("IPFS: " + node)
   }

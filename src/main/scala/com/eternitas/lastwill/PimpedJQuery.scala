@@ -41,7 +41,7 @@ object PimpedJQuery {
   def resolveUrl(aHash:String) = {
   //println(s"Host: ${mywindow.location.host}")
     if (
-      mywindow.location.host.matches(".*localhost.*"))
+      mywindow.location.host.matches(".*localhost.*|.*eternitas.*"))
       s"${PINATA_GW}/ipfs/${aHash}"
     else
       s"/ipfs/${aHash}"
