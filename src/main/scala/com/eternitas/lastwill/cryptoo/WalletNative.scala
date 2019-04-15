@@ -53,6 +53,7 @@ trait SignatureNative extends js.Object {
 
 
 
+
 object WalletNative{
   implicit class PimpedPinDataListNative(p:PinDataListNative){
 
@@ -73,9 +74,23 @@ trait Credentials extends js.Object {
   val pinataApiSecret: js.UndefOr[String] = js.native
   val stampdApi: js.UndefOr[String] = js.native
   val stampdApiSecret: js.UndefOr[String] = js.native
-
+  val infura: js.UndefOr[InfuraNative] = js.native
+}
+@js.native
+trait InfuraNative extends js.Object {
+  val project:js.UndefOr[String] = js.native
+  val secret:js.UndefOr[String] = js.native
+  val mainnet:js.UndefOr[String] = js.native
+  val ropsten:js.UndefOr[String] = js.native
+  val kovan:js.UndefOr[String] = js.native
+  val rinkeby:js.UndefOr[String] = js.native
+  val görli:js.UndefOr[String] =js.native
 
 }
+
+
+
+
 
 @js.native
 trait TitleNative extends js.Object {
