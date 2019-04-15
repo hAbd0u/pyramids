@@ -12,7 +12,9 @@ case class AllCredentials(
                            pinataApi: Option[String],
                            pinataApiSecret: Option[String],
                            stampdApi: Option[String],
-                           stampdApiSecret: Option[String])
+                           stampdApiSecret: Option[String],
+                           infuraOpt:Option[InfuraCredentials]
+                         )
 
 
 case class InfuraCredentials(project: Option[String],
@@ -21,20 +23,28 @@ case class InfuraCredentials(project: Option[String],
                               ropsten: Option[String],
                               kovan: Option[String],
                               rinkeby: Option[String],
-                              görli: Option[String])
+                              görli: Option[String]){
 
-object InfuraCredentials{
-  def apply(c:InfuraNative)=new InfuraCredentials(
-    c.project.toOption,
-    c.secret.toOption,
-    c.mainnet.toOption,
-    c.ropsten.toOption,
-    c.kovan.toOption,
-    c.rinkeby.toOption,
-    c.görli.toOption
+  def toNative(n:InfuraNative)= {
+    import js.JSConverters._
+    l(
+      "project" -> project.orUndefined,
+      "secret"  -> secret.orUndefined,
+      "mainnet"  -> mainnet.orUndefined,
+      "ropsten"  -> ropsten.orUndefined,
+      "kovan"  -> kovan.orUndefined,
+      "rinkeby"  -> rinkeby.orUndefined,
+      "görli"  -> görli.orUndefined
 
-  )
+    ).asInstanceOf[InfuraNative]
+  }
+
+
+
 }
+
+
+
 
 object ETConfig {
   def empty() = ETConfig(NamedKeyPair(None, None), None, None, None, None, None, NamedKeyPair(None, None), None)

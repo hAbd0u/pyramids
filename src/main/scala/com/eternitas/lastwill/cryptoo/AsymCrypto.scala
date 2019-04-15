@@ -1,6 +1,6 @@
 package com.eternitas.lastwill.cryptoo
 
-import com.eternitas.lastwill.{Eternitas, AllCredentials, UserFeedback}
+import com.eternitas.lastwill.{AllCredentials, Eternitas, InfuraCredentials, UserFeedback}
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 import org.scalajs.dom.raw.File
 
@@ -97,13 +97,15 @@ object AsymCrypto {
 
   def importCredentials(eternitas: Eternitas,
                         walletNative: WalletNative): Eternitas ={
+    import WalletNative._
 
     walletNative.credentials.map(p=>new Eternitas(eternitas.config.copy(allAuth = Some(
       AllCredentials(
         pinataApi = p.pinataApi.map(s=>Some(s)).getOrElse(None),
         pinataApiSecret = p.pinataApiSecret.map(s=>Some(s)).getOrElse(None),
         stampdApi = p.stampdApi.map(s=>Some(s)).getOrElse(None),
-        stampdApiSecret = p.stampdApiSecret.map(s=>Some(s)).getOrElse(None)
+        stampdApiSecret = p.stampdApiSecret.map(s=>Some(s)).getOrElse(None),
+        infuraOpt = p.infura.map(n=>Some(n.toCaseClass())).getOrElse(None)
       ))))).getOrElse(eternitas)
   }
 

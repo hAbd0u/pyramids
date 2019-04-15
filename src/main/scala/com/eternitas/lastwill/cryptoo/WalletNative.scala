@@ -1,5 +1,6 @@
 package com.eternitas.lastwill.cryptoo
 
+import com.eternitas.lastwill.InfuraCredentials
 import com.eternitas.lastwill.axioss.PinataData
 import org.scalajs.dom.crypto.JsonWebKey
 
@@ -60,8 +61,22 @@ object WalletNative{
     def withPinData(n:PinDataNative) = {
            l("data" -> (p.data.getOrElse(js.Array[PinDataNative]()) :+ n)).asInstanceOf[PinDataListNative]
     }
-
   }
+
+
+  implicit class PimpedInfuraNative(c:InfuraNative){
+    def toCaseClass()=new InfuraCredentials(
+      c.project.toOption,
+      c.secret.toOption,
+      c.mainnet.toOption,
+      c.ropsten.toOption,
+      c.kovan.toOption,
+      c.rinkeby.toOption,
+      c.görli.toOption
+    )
+  }
+
+
 }
 
 
