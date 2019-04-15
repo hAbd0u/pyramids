@@ -25,7 +25,7 @@ case class InfuraCredentials(project: Option[String],
                               rinkeby: Option[String],
                               görli: Option[String]){
 
-  def toNative(n:InfuraNative)= {
+  def toNative()= {
     import js.JSConverters._
     l(
       "project" -> project.orUndefined,

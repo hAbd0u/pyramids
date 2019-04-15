@@ -44,7 +44,8 @@ class Pinata(auth: AllCredentials) {
       "pinataApi" -> auth.pinataApi.getOrElse(null),
       "pinataApiSecret" -> auth.pinataApiSecret.getOrElse(null),
       "stampdApi" -> auth.stampdApi.getOrElse(null),
-      "stampdApiSecret" -> auth.stampdApiSecret.getOrElse(null)
+      "stampdApiSecret" -> auth.stampdApiSecret.getOrElse(null),
+      "infura"   -> auth.infuraOpt.map(i=>i.toNative()).getOrElse(null)
     )
 
   def authenticate(c: (AxiosResponse) => Unit, ec: (AxiosError) => Unit) = {
