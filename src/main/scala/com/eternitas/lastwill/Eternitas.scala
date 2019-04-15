@@ -24,7 +24,16 @@ case class InfuraCredentials(project: Option[String],
                               görli: Option[String])
 
 object InfuraCredentials{
-  def apply(c:InfuraNative)={}
+  def apply(c:InfuraNative)=new InfuraCredentials(
+    c.project.toOption,
+    c.secret.toOption,
+    c.mainnet.toOption,
+    c.ropsten.toOption,
+    c.kovan.toOption,
+    c.rinkeby.toOption,
+    c.görli.toOption
+
+  )
 }
 
 object ETConfig {
