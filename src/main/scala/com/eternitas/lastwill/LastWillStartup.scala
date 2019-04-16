@@ -7,7 +7,7 @@ import com.eternitas.lastwill.Loading.PLoading
 import com.eternitas.lastwill.Stampd.PStampd
 import com.eternitas.lastwill.axioss.Pinata
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, HashSum, SymCrypto}
-import com.eternitas.lastwill.ipfss.IPFSS
+import com.eternitas.lastwill.services.IPFSS
 import com.eternitas.lastwill.{Buffers, ETConfig, Eternitas, NamedKeyPair, PimpedJQuery, UserFeedback}
 import com.eternitas.wizard.JQueryWrapper
 import org.scalajs.dom.document
@@ -18,7 +18,7 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.util.Try
 
-import com.eternitas.lastwill.ipfss.IPFSS._
+import com.eternitas.lastwill.services.IPFSS._
 
 object LastWillStartup {
   implicit val ec = ExecutionContext.global;

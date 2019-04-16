@@ -1,4 +1,4 @@
-package com.eternitas.lastwill.ipfss
+package com.eternitas.lastwill.services
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSGlobal, JSName}
@@ -44,6 +44,7 @@ trait  NodeBuffer extends js.Object{
 
 
 
+
 object IPFSS {
 
   implicit class PimpedIpfs(ipfs:Ipfs){
@@ -53,11 +54,9 @@ object IPFSS {
 
     lazy val node = instance()
 
-  private def instantiate[C <: js.Any](args:js.Dynamic)(implicit tag: js.ConstructorTag[C]): C =
-    (js.Dynamic.newInstance(tag.constructor)(args)).asInstanceOf[C]
 
   private def instance()={
-    instantiate[Ipfs](l("repo"  -> s"ipfs-${Math.random().toString()}" ))
+    Instances.instantiate[Ipfs](l("repo"  -> s"ipfs-${Math.random().toString()}" ))
    // js.Dynamic.newInstance(js.constructorOf[IPFS].constructor)().asInstanceOf[IPFS]
   }
 
