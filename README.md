@@ -4,14 +4,12 @@
 
 ## Summary ##
 
-This article is inspired by the  proof of concept application  
-[Eternitas](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/).
+This  is  the  proof of concept application  
+[Pyramids](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/).
 It demonstrates a  new way of storing, encrypting and signing 
-documents. Both this article and the 
-[application](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/).
-present these concepts.
+documents. 
 
-The first part of the article is about general reflections and topics related
+The first part of this Readme is about general reflections and topics related
 to the subject. The second part describes the
 [application](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/).
 (You may
@@ -23,7 +21,7 @@ ready and bullet proof application.)
 There are some striking benefits coming with the concept: Your data will never get lost and
 can be shared among different parties without today's restrictions and
 stupid obstacles.  All sorts of businesses can be based upon
-[Eternitas](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/),
+[Pyramids](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/),
 also many, many use cases in legal tech.
 
 How does that work? 
@@ -55,7 +53,7 @@ down the complete network.
 
 ## Pinata ##
 
-Eternitas uses [Pinata](https://pinata.cloud/) as a pinning service,
+Pyramids uses [Pinata](https://pinata.cloud/) as a pinning service,
 and thus as a persistence layer.  This company is a storage provider
 specialized on IPFS. Their business concept is quite new: The company
 is staking success on a new technology, but their future is shining
@@ -194,7 +192,7 @@ enough to allow such well thought decisions.
 Today one can just do best effort. So I personally define a DApp in a
 slightly different way: **A DApp is a web application that tries to
 avoid centralization as far as possible.** In this modest sense,
-Eternitas is really a DApp, because everything possible has been done
+Pyramids is really a DApp, because everything possible has been done
 to avoid central servers.
 
 There is one huge advantage of DApps many people are not yet aware of:
@@ -321,7 +319,7 @@ a somehow ethical legal system. But what about other countries?
 ## Encryption Once Again! ##
 
 So how does encryption work in 
-[Eternitas](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/)?
+[Pyramids](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/)?
 
 Saving the credentials is the tricky part, as usual. Every time the page is loaded, three
 things happen:
@@ -336,7 +334,7 @@ download your credentials and save them somewhere. **You
 are the only person responsible for this sensitive data. You must
 keep them secret and never loose them.** 
 
-There is no conventional login process for Eternitas, as your credentials are
+There is no conventional login process for Pyramids, as your credentials are
 completely unknown to anybody but you. You can load credentials back into
 the page just by dragging and dropping the file (previously created
 by clicking on the golden key) onto the golden key again. Nothing will
