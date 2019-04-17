@@ -21,7 +21,7 @@ object Web3 {
 
 
 
-  private def instance()={
+   def instance()={
     Instances.instantiate[Web3]()
 
   }

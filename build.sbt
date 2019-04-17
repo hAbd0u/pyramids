@@ -14,9 +14,9 @@ scalaVersion := "2.12.8"
 scalaJSUseMainModuleInitializer := true
 
 libraryDependencies ++= Seq(
-  "com.lihaoyi" %%% "utest" % "0.6.3" % "test"
-  ,"org.scala-js" %%% "scalajs-dom" % "0.9.6"
-  ,"org.querki" %%% "jquery-facade" % "1.2"
+  "com.lihaoyi" % "utest_sjs1.0.0-M7_2.12" % "0.6.7" % "test",
+  "org.scala-js" %%% "scalajs-dom" % "0.9.6",
+  "org.querki" % "jquery-facade_sjs0.6_2.12" % "1.2"
 )
 testFrameworks += new TestFramework("utest.runner.Framework")
 jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
