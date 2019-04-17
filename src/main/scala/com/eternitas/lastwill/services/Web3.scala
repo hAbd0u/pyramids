@@ -1,10 +1,11 @@
 package com.eternitas.lastwill.services
 
+import com.eternitas.lastwill.Eternitas
+
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSGlobal, JSName}
-import scala.scalajs.js.Dynamic.{literal => l}
-import scala.scalajs.js.Math
-import scala.scalajs.js.typedarray.ArrayBuffer
+import scala.scalajs.js.annotation.JSGlobal
+import Instances.{instantiate => `new`}
+
 
 @js.native
 @JSGlobal
@@ -14,16 +15,44 @@ class Web3 extends js.Object{
 }
 
 
+@js.native
+@JSGlobal
+object Web3 extends js.Object{
+
+  val providers:Providers = js.native
+
+}
+
+@js.native
+trait Providers extends js.Object{
+  @js.native
+  class  HttpProvider extends js.Object{
 
 
-object Web3 {
-
-
-
-
-   def instance()={
-    Instances.instantiate[Web3]()
 
   }
+
+  val HttpProvider:HttpProvider = js.native
+
+}
+
+
+
+
+
+object Web3Instance {
+
+
+
+
+   def instance(et:Eternitas)= et.config.allAuth.
+       flatMap(_.infuraOpt.
+         flatMap(_.
+           project.map(
+           p=> //new Web3(new Web3.providers.HttpProvider("https://www.mainnet.infura.com/ID")
+             `new`[Web3](`new`[Web3.providers.HttpProvider](
+                 s"https://www.mainnet.infura.com/${p}")))))
+
+
 
 }
