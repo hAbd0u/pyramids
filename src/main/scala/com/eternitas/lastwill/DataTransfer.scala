@@ -1,7 +1,8 @@
 package com.eternitas.lastwill
 
-import org.querki.jquery.JQueryEventObject
+
 import org.scalajs.dom.raw.{Blob, EventTarget}
+import org.scalajs.jquery.JQueryEventObject
 
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr

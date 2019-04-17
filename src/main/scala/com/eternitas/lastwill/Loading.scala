@@ -3,10 +3,10 @@ package com.eternitas.lastwill
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SignatureNative}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
-import org.querki.jquery.JQuery
 import org.scalajs.dom.{Event, KeyboardEvent, crypto}
 import com.eternitas.lastwill.Buffers._
 import org.scalajs.dom.crypto.JsonWebKey
+import org.scalajs.jquery.JQuery
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

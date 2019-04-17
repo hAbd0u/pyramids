@@ -3,7 +3,6 @@ package com.eternitas.lastwill
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, WalletNative}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
-import org.querki.jquery.{JQuery, JQueryEventObject}
 import org.scalajs.dom.raw._
 
 import scala.concurrent.ExecutionContext
@@ -11,6 +10,7 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import com.eternitas.lastwill.Buffers._
 import org.scalajs.dom
+import org.scalajs.jquery.{JQuery, JQueryEventObject}
 
 import scala.scalajs.js.annotation.JSGlobal
 

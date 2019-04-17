@@ -5,10 +5,10 @@ import com.eternitas.lastwill.axioss.{AxiosImpl, Pinata, PinataMetaData, PinataP
 import com.eternitas.lastwill.cryptoo.{AsymCrypto, SymCrypto, WalletNative}
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
-import org.querki.jquery.JQuery
 import org.scalajs.dom.Event
 import org.scalajs.dom.crypto.CryptoKey
 import org.scalajs.dom.raw.{File, FileReader}
+import org.scalajs.jquery.JQuery
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

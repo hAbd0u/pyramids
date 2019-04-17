@@ -4,10 +4,10 @@ import com.eternitas.lastwill.axioss._
 import com.eternitas.lastwill.cryptoo._
 import com.eternitas.wizard.JQueryWrapper
 import com.lyrx.eternitas.lastwill.LastWillStartup
-import org.querki.jquery.JQuery
 import org.scalajs.dom.raw.{Event, File, FileReader}
 import com.eternitas.lastwill.Buffers._
 import org.scalajs.dom.crypto.{CryptoKey, JsonWebKey}
+import org.scalajs.jquery.JQuery
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

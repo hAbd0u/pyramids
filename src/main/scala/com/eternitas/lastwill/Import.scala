@@ -1,9 +1,9 @@
 package com.eternitas.lastwill
 
 import com.eternitas.wizard.JQueryWrapper
-import org.querki.jquery.JQuery
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag, File, FileReader}
 import com.eternitas.lastwill.Buffers._
+import org.scalajs.jquery.JQuery
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

@@ -2,9 +2,9 @@ package com.eternitas.lastwill
 
 import com.eternitas.lastwill.cryptoo.{PinDataListNative, PinDataNative, SymCrypto}
 import com.eternitas.wizard.JQueryWrapper
-import org.querki.jquery.JQuery
 import org.scalajs.dom
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag, Event}
+import org.scalajs.jquery.JQuery
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

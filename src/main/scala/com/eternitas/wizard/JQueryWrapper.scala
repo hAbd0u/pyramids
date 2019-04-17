@@ -1,8 +1,8 @@
 package com.eternitas.wizard
 
-import org.querki.jquery.{ElementDesc, JQuery, JQueryXHR}
 import org.scalajs.dom
 import org.scalajs.dom.Element
+import org.scalajs.jquery.{JQuery, JQueryXHR}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
@@ -14,7 +14,7 @@ import scala.scalajs.js.|
 @JSGlobal
 class JQueryWrapper extends js.Object {
   def apply(): JQuery = js.native
-  def apply(selector: ElementDesc): JQuery = js.native
+  def apply(selector: String): JQuery = js.native
   def apply(selector: String, context: Element | JQuery): JQuery = js.native
 
   /**
