@@ -16,7 +16,7 @@ class Web3 extends js.Object{
 
 
 @js.native
-@JSImport("Web3", "web3")
+@JSGlobal
 object Web3 extends js.Object{
 
   val providers:Providers = js.native

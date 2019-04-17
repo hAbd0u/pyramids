@@ -20,5 +20,5 @@ libraryDependencies ++= Seq(
 )
 testFrameworks += new TestFramework("utest.runner.Framework")
 jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
-scalaJSLinkerConfig ~= (_.withModuleKind(ModuleKind.CommonJSModule))
+
 
