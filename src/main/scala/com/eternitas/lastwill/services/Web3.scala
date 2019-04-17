@@ -3,7 +3,7 @@ package com.eternitas.lastwill.services
 import com.eternitas.lastwill.Eternitas
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSGlobal
+import scala.scalajs.js.annotation.{JSGlobal, JSImport}
 import Instances.{instantiate => `new`}
 
 
@@ -16,7 +16,7 @@ class Web3 extends js.Object{
 
 
 @js.native
-@JSGlobal
+@JSImport("Web3", "web3")
 object Web3 extends js.Object{
 
   val providers:Providers = js.native
