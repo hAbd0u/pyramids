@@ -78,7 +78,11 @@ object PimpedJQuery {
 
   implicit class PJQuery(jq: JQuery) {
 
-    def onDrop(h: (File => Unit)): JQuery =
+    def onDrop(h: (File => Unit)): JQuery = {
+
+
+
+
       jq.on(
         "drop",
         (evt: JQueryEventObject) => {
@@ -92,10 +96,11 @@ object PimpedJQuery {
               h(blob.asInstanceOf[File])))))
         }
       )
+    }
 
     def onDragOverNothing(): JQuery = {
       jq.on("dragover",
-        (e: Element, evt: JQueryEventObject, t2: Any, t3: Any) => {
+        ( evt: JQueryEventObject) => {
           evt.stopPropagation();
           evt.preventDefault();
         })
