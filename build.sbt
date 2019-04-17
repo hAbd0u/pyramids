@@ -6,6 +6,10 @@ version := "0.1"
 
 scalaVersion := "2.12.8"
 
+
+
+
+
 // This is an application with a main method
 scalaJSUseMainModuleInitializer := true
 
