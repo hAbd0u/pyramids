@@ -1,11 +1,11 @@
 # Some basic installation instructions #
 
 This is a webapp meant to run
-**serverless**. It should
+**serverless**. So it should
 not be necessary to maintain or set up
 any backend infrastructure.
 
-The application can then be server by 
+The application can then be served by 
 [public IFS gateways](https://ipfs.github.io/public-gateway-checker/),
 as demonstrated 
 [here](https://gateway.pinata.cloud/ipfs/Qmf2Cnz214u5vQgaMqaE7BE93KKuWr6HZ162Y9YyjowWmG/).
