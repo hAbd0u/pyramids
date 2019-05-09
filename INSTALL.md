@@ -40,8 +40,46 @@ and then ...
 Navigate to `http://localhost:8080` and test the application!
     
     
-    
+# First steps #
 
+Click on the golden arrow at the top left and download the file. Open the file in a text editor, 
+and you will find the following section:
+
+    "credentials": {
+        "pinataApi": "",
+        "pinataApiSecret": "",
+        "stampdApi": "",
+        "stampdApiSecret": ""
+    }
+    
+Now you visit the pinning service
+[Pinata](https://pinata.cloud/)
+and register for three. This will give
+you 1 GB of space for uploads to IPFS, and
+you are not charged for it!
+
+When you finished the registration, you will
+have 
+`PINATA API KEY`
+and
+`PINATA SECRET API KEY`
+as described in there documentation. Those two values
+you add into the section of your credentials listed above.
+
+**Save the file in your text editor!**  Then you drag and
+drop the edited file back onto the key. You are now ready to upload files.
+
+Find a small and unimportant file and drag and drop it onto the area
+marked *Drop Zone.* See what happens: The file is uploaded into IPFS, and
+it is encrypted!
+
+
+ 
+
+
+
+    
+    
 
 
 
