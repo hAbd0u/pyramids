@@ -63,7 +63,7 @@ have
 `PINATA API KEY`
 and
 `PINATA SECRET API KEY`
-as described in there documentation. Those two values
+as described in their documentation. Those two values
 you add into the section of your credentials listed above.
 
 **Save the file in your text editor!**  Then you drag and
