@@ -17,6 +17,9 @@ class JQueryWrapper extends js.Object {
   def apply(selector: String): JQuery = js.native
   def apply(selector: String, context: Element | JQuery): JQuery = js.native
 
+
+
+  // Add a comment
   /**
     * Creates DOM elements on the fly from the provided string of raw HTML.
     *
