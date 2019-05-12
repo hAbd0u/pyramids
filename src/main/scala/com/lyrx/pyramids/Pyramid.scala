@@ -15,7 +15,9 @@ object  Pyramid{
 class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with AsymetricCrypto{
 
 
-  //type FutureJSKeyPairOpt = Future[Option[(JsonWebKey,JsonWebKey)]]
+  type JSKeyPairOpt = Option[(JsonWebKey,JsonWebKey)]
+  type JSKeyOpt = Option[JsonWebKey]
+  type FutureAllJSKeysOpt = Future[(JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)]
 
   def createSymKey()(implicit ctx:ExecutionContext) = generateSymmetricKey().
       map(key=> new Pyramid(
@@ -51,9 +53,9 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
     signKeyOpt)
 
 
-  def exportAllKeys()(implicit ctx:ExecutionContext) = exportSymKey().
-    flatMap(symKeyOpt=>exportASymKeys().map(keysOpt=>(symKeyOpt,keysOpt)))
-
+  def exportAllKeys()(implicit ctx:ExecutionContext):FutureAllJSKeysOpt = exportSymKey().
+    flatMap(symKeyOpt=>exportASymKeys().map(keysOpt=>(symKeyOpt,keysOpt))).
+    flatMap(keysOpt=>exportSignKeys().map(keysOpt2=>(keysOpt._1,keysOpt._2,keysOpt2)))
 
 
 
