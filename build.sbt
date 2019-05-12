@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
 )
 jsDependencies +=
   "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js"
-
+jsDependencies +=  ProvidedJS / "js/web3.min.js"
 
 testFrameworks += new TestFramework("utest.runner.Framework")
 jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
