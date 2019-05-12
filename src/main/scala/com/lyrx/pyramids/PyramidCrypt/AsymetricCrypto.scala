@@ -6,7 +6,7 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.Uint8Array
 import js.Dynamic.{literal => l}
 import scala.concurrent.{ExecutionContext, Future}
-trait AsymetricCrypto {
+trait AsymetricCrypto extends Crypto {
   val aKeyFormat =  KeyFormat.jwk
   val aHashAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
     publicExponent = new Uint8Array( js.Array(1,0,1)),
