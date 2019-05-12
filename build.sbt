@@ -19,9 +19,10 @@ libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.9.6",
   "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
 )
-jsDependencies +=
-  "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js"
-jsDependencies +=  ProvidedJS / "js/web3.min.js"
+jsDependencies ++= Seq(
+  "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js",
+  ProvidedJS / "js/web3.min.js"
+)
 
 testFrameworks += new TestFramework("utest.runner.Framework")
 jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
@@ -29,6 +30,6 @@ jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
 val genDirPath = new java.io.File("src/main/webapp/js")
 
 
-crossTarget in (Compile,fastOptJS) :=  genDirPath
-crossTarget in (Compile,fullOptJS) := genDirPath
-crossTarget in (Compile,packageJSDependencies)  := genDirPath
+crossTarget in(Compile, fastOptJS) := genDirPath
+crossTarget in(Compile, fullOptJS) := genDirPath
+crossTarget in(Compile, packageJSDependencies) := genDirPath
