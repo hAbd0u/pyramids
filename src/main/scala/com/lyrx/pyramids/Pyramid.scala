@@ -3,7 +3,7 @@ package com.lyrx.pyramids
 import java.security.KeyPair
 
 import com.lyrx.pyramids.PyramidCrypt.{AsymetricCrypto, SymetricCrypto}
-import org.scalajs.dom.crypto.CryptoKeyPair
+import org.scalajs.dom.crypto.{CryptoKeyPair, JsonWebKey}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -13,6 +13,9 @@ object  Pyramid{
 
 }
 class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with AsymetricCrypto{
+
+
+  //type FutureJSKeyPairOpt = Future[Option[(JsonWebKey,JsonWebKey)]]
 
   def createSymKey()(implicit ctx:ExecutionContext) = generateSymmetricKey().
       map(key=> new Pyramid(
@@ -43,6 +46,16 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
 
   def exportASymKeys()(implicit ctx:ExecutionContext)=exportKeys(pyramidConfig.
     asymKeyOpt)
+
+  def exportSignKeys()(implicit ctx:ExecutionContext)=exportKeys(pyramidConfig.
+    signKeyOpt)
+
+
+  def exportAllKeys()(implicit ctx:ExecutionContext) = exportSymKey().
+    flatMap(symKeyOpt=>exportASymKeys().map(keysOpt=>(symKeyOpt,keysOpt)))
+
+
+
 
   def exportKeys(keyPairOpt:Option[CryptoKeyPair])(implicit ctx:ExecutionContext)=keyPairOpt.
     map(keys=>exportCryptoKey(keys.publicKey).
