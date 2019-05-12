@@ -16,7 +16,8 @@ trait SymetricCrypto {
       "iv" -> iv ).asInstanceOf[AlgorithmIdentifier]
   }
   val keyAlgorithmIdentifier:KeyAlgorithmIdentifier= l(
-    "name" -> ALGORITHM).asInstanceOf[KeyAlgorithmIdentifier]
+    "name" -> ALGORITHM,
+    "length" -> 256).asInstanceOf[KeyAlgorithmIdentifier]
 
 
   def generateSymmetricKey()(implicit ctx:ExecutionContext)= crypto.

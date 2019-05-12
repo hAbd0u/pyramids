@@ -27,8 +27,8 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
         copy(signKeyOpt = Some(keyPair))))
 
   def generateKeys()(implicit ctx:ExecutionContext) = createSymKey().
-    flatMap(p=>createASymKeys()).
-    flatMap(p=>createSignKeys())
+    flatMap(_.createASymKeys()).
+    flatMap(_.createSignKeys())
 
 
 
