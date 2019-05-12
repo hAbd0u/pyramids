@@ -1,6 +1,7 @@
 enablePlugins(ScalaJSPlugin)
+enablePlugins(JSDependenciesPlugin)
 
-name := "eternitas-wordpress"
+name := "pyramids"
 
 version := "0.1"
 
@@ -18,14 +19,16 @@ libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.9.6",
   "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
 )
+jsDependencies +=
+  "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js"
+
+
 testFrameworks += new TestFramework("utest.runner.Framework")
 jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
-
-
-
 
 val genDirPath = new java.io.File("src/main/webapp/js")
 
 
 crossTarget in (Compile,fastOptJS) :=  genDirPath
 crossTarget in (Compile,fullOptJS) := genDirPath
+crossTarget in (Compile,packageJSDependencies)  := genDirPath
