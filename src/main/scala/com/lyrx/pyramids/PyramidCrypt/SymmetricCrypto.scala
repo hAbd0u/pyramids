@@ -1,10 +1,10 @@
 package com.lyrx.pyramids.PyramidCrypt
 
-import org.scalajs.dom.crypto.{AlgorithmIdentifier, KeyAlgorithmIdentifier}
+import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, KeyAlgorithmIdentifier, KeyUsage, crypto}
 
 import scala.scalajs.js
-
 import js.Dynamic.{literal => l}
+import scala.concurrent.ExecutionContext
 import scala.scalajs.js.typedarray.ArrayBufferView
 
 trait SymmetricCrypto {
@@ -18,6 +18,17 @@ trait SymmetricCrypto {
   val keyAlgorithmIdentifier:KeyAlgorithmIdentifier= l(
     "name" -> ALGORITHM).asInstanceOf[KeyAlgorithmIdentifier]
 
+
+  def generateSymmetricKey()(implicit ctx:ExecutionContext)= crypto.
+    subtle.
+    generateKey(
+      keyAlgorithmIdentifier,
+      true,
+      js.Array(
+      KeyUsage.encrypt,
+      KeyUsage.decrypt)).
+    toFuture.
+    map(_.asInstanceOf[CryptoKey])
 
 
 }
