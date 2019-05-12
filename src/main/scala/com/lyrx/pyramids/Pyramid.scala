@@ -6,8 +6,9 @@ import com.lyrx.pyramids.PyramidCrypt.{AsymetricCrypto, SymetricCrypto}
 import org.scalajs.dom.crypto.{CryptoKeyPair, JsonWebKey}
 
 import scala.concurrent.{ExecutionContext, Future}
-
-
+import scala.scalajs.js
+import scala.scalajs.js.Dynamic.literal
+import js.Dynamic.{literal => l}
 object  Pyramid{
   def apply()=new Pyramid(PyramidConfig(None,None,None))
 
@@ -17,7 +18,7 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
 
   type JSKeyPairOpt = Option[(JsonWebKey,JsonWebKey)]
   type JSKeyOpt = Option[JsonWebKey]
-  type FutureAllJSKeysOpt = Future[(JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)]
+  type AllJSKeysOpt = (JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)
 
   def createSymKey()(implicit ctx:ExecutionContext) = generateSymmetricKey().
       map(key=> new Pyramid(
@@ -53,9 +54,13 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
     signKeyOpt)
 
 
-  def exportAllKeys()(implicit ctx:ExecutionContext):FutureAllJSKeysOpt = exportSymKey().
+  def exportAllKeys()(implicit ctx:ExecutionContext)//:FutureAllJSKeysOpt
+  = exportSymKey().
     flatMap(symKeyOpt=>exportASymKeys().map(keysOpt=>(symKeyOpt,keysOpt))).
-    flatMap(keysOpt=>exportSignKeys().map(keysOpt2=>(keysOpt._1,keysOpt._2,keysOpt2)))
+    flatMap(keysOpt=>exportSignKeys().map(keysOpt2=>(keysOpt._1,keysOpt._2,keysOpt2))).
+    map( (ko:AllJSKeysOpt)=>l(
+      "sym"->ko._1.getOrElse(null) //TODO: Finish here!
+    ))
 
 
 
