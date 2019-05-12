@@ -10,9 +10,14 @@ object Startup {
 
   def main(args: Array[String]): Unit ={
 
+    init(Pyramid())
 
+
+
+  }
+
+  def init(pyramid: Pyramid)={
     println("JQuery"+$("sdf"))
-
   }
 
 
