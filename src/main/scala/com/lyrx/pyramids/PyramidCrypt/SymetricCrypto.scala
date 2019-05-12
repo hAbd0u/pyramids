@@ -7,7 +7,7 @@ import js.Dynamic.{literal => l}
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js.typedarray.ArrayBufferView
 
-trait SymmetricCrypto {
+trait SymetricCrypto {
   val ALGORITHM = "AES-GCM"
 
 
