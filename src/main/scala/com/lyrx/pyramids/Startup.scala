@@ -2,14 +2,14 @@ package com.lyrx.pyramids
 
 
 
-import org.scalajs.jquery._
+import org.scalajs.jquery.{jQuery => $}
 
 
 object Startup {
 
 
   def main(args: Array[String]): Unit ={
-    val $ = jQuery
+
 
     println("JQuery"+$("sdf"))
 

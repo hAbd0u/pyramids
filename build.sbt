@@ -16,7 +16,7 @@ scalaJSUseMainModuleInitializer := true
 
 libraryDependencies ++= Seq(
   "com.lihaoyi" % "utest_sjs1.0.0-M7_2.12" % "0.6.7" % "test",
-  "org.scala-js" %%% "scalajs-dom" % "0.9.6",
+  "org.scala-js" %%% "scalajs-dom" % "0.9.6" ,
   "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
 )
 jsDependencies ++= Seq(
