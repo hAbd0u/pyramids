@@ -59,7 +59,9 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
     flatMap(symKeyOpt=>exportASymKeys().map(keysOpt=>(symKeyOpt,keysOpt))).
     flatMap(keysOpt=>exportSignKeys().map(keysOpt2=>(keysOpt._1,keysOpt._2,keysOpt2))).
     map( (ko:AllJSKeysOpt)=>l(
-      "sym"->ko._1.getOrElse(null) //TODO: Finish here!
+      "sym"->ko._1.getOrElse(null),
+      "asym" -> ko._2.map(kp=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null),
+      "sign" -> ko._3.map(kp=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null)
     ))
 
 
