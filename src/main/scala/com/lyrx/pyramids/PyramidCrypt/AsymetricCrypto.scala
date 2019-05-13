@@ -66,7 +66,7 @@ trait AsymetricCrypto extends Crypto {
       importKey(aJSPublicKey, publicUsage).
         map(publicKeyOpt=>
         toKeyPair(privateKeyOpt,publicKeyOpt))).
-      getOrElse(Future{toKeyPair(None,None)}))
+      getOrElse(Future{toKeyPair(privateKeyOpt,None)}))
 
 
 
