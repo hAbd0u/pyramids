@@ -23,6 +23,12 @@ trait AsymetricCrypto extends Crypto {
 
 
 
+  val usageDecrypt=js.Array(KeyUsage.decrypt)
+  val usageEncrypt=js.Array(KeyUsage.encrypt)
+  val usageSign=js.Array(KeyUsage.sign)
+  val usageVerify=js.Array(KeyUsage.verify)
+
+
 
   def generateASymetricEncryptionKeys()(implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = generateKeysFor( js.Array(KeyUsage.encrypt, KeyUsage.decrypt),aHashAlgorithm)
@@ -42,12 +48,6 @@ trait AsymetricCrypto extends Crypto {
     extractable = true,
     keyUsages = aUsage).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
-
-
-  val usageDecrypt=js.Array(KeyUsage.decrypt)
-  val usageEncrypt=js.Array(KeyUsage.encrypt)
-  val usageSign=js.Array(KeyUsage.sign)
-  val usageVerify=js.Array(KeyUsage.verify)
 
 
   def importKeyPair(
