@@ -7,7 +7,7 @@ import scala.scalajs.js.typedarray.Uint8Array
 import js.Dynamic.{literal => l}
 import scala.concurrent.{ExecutionContext, Future}
 trait AsymetricCrypto extends Crypto {
-  val aKeyFormat =  KeyFormat.jwk
+
   val aHashAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
     publicExponent = new Uint8Array( js.Array(1,0,1)),
     hash = HashAlgorithm.`SHA-256`)
@@ -78,10 +78,10 @@ trait AsymetricCrypto extends Crypto {
 
 
 
-  private def importKey(apublicKey: JsonWebKey,usages: js.Array[KeyUsage])(
+  private def importKey(jsonWebKey: JsonWebKey,usages: js.Array[KeyUsage])(
     implicit executionContext: ExecutionContext) = crypto.subtle.importKey(
-      aKeyFormat,
-      apublicKey,
+    KeyFormat.jwk,
+      jsonWebKey,
       aHashAlgorithm,
       true,
       usages).toFuture.
