@@ -2,7 +2,7 @@ package com.lyrx.pyramids
 
 import java.security.KeyPair
 
-import com.lyrx.pyramids.PyramidCrypt.{AsymetricCrypto, SymetricCrypto}
+import com.lyrx.pyramids.PyramidCrypt.{AsymetricCrypto, SymetricCrypto, WalletNative}
 import org.scalajs.dom.crypto.{CryptoKeyPair, JsonWebKey}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -62,9 +62,7 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
       "sym"->ko._1.getOrElse(null),
       "asym" -> ko._2.map((kp:(JsonWebKey,JsonWebKey))=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null),
       "sign" -> ko._3.map((kp:(JsonWebKey,JsonWebKey))=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null)
-    ))
-
-
+    ).asInstanceOf[WalletNative])
 
   def exportKeys(keyPairOpt:Option[CryptoKeyPair])(implicit ctx:ExecutionContext)=keyPairOpt.
     map(keys=>exportCryptoKey(keys.publicKey).
@@ -75,6 +73,10 @@ class Pyramid(val pyramidConfig: PyramidConfig) extends SymetricCrypto with Asym
     ).
     getOrElse(Future{None})
 
+
+  def importKeys(walletNative:WalletNative)={
+    //walletNative.sym.map(webKey => )
+  }
 
 
 

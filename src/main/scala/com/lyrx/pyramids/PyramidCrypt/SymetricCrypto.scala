@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.PyramidCrypt
 
-import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, KeyAlgorithmIdentifier, KeyUsage, crypto}
+import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
@@ -30,6 +30,19 @@ trait SymetricCrypto extends Crypto {
       KeyUsage.decrypt)).
     toFuture.
     map(_.asInstanceOf[CryptoKey])
+
+  def importSymetricKey(jsonWebKey: JsonWebKey)(
+    implicit executionContext: ExecutionContext)=crypto.subtle.importKey(
+    KeyFormat.jwk,
+    jsonWebKey,
+    keyAlgorithmIdentifier,
+    true,
+    js.Array(
+      KeyUsage.encrypt,
+      KeyUsage.decrypt)).
+    toFuture.
+    map(_.asInstanceOf[CryptoKey])
+
 
 
 }
