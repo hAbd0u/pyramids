@@ -51,16 +51,16 @@ trait AsymetricCrypto extends Crypto {
 
 
   def importKeyPair(
-                     keypairNative: KeypairNative,
+                     keyPairNative: KeypairNative,
                      privateUsage:js.Array[KeyUsage],
                      publicUsage:js.Array[KeyUsage]
                    )(
-                     implicit executionContext: ExecutionContext)=keypairNative.
+                     implicit executionContext: ExecutionContext)=keyPairNative.
     `private`.map(aJSPrivateKey=>
     importKey(
       aJSPrivateKey, privateUsage)).
     getOrElse(Future{None}).
-    flatMap( (privateKeyOpt:Option[CryptoKey])=>keypairNative.
+    flatMap( (privateKeyOpt:Option[CryptoKey])=>keyPairNative.
       `public`.map(
       aJSPublicKey=>
       importKey(aJSPublicKey, publicUsage).
