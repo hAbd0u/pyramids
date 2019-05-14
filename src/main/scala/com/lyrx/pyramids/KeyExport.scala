@@ -31,7 +31,7 @@ trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
     signKeyOpt)
 
 
-  def exportAllKeys()(implicit ctx:ExecutionContext)//:FutureAllJSKeysOpt
+  def exportAllKeys()(implicit ctx:ExecutionContext)
   = exportSymKey().
     flatMap(symKeyOpt=>exportASymKeys().map(keysOpt=>(symKeyOpt,keysOpt))).
     flatMap(keysOpt=>exportSignKeys().map(keysOpt2=>(keysOpt._1,keysOpt._2,keysOpt2))).
