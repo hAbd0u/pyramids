@@ -9,6 +9,7 @@ import scala.concurrent.ExecutionContext
 
 object Startup {
 
+//test suggested by Alex.
 
   def main(args: Array[String]): Unit ={
     implicit val ec = ExecutionContext.global;
