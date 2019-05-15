@@ -7,7 +7,7 @@ import org.scalajs.jquery.{JQuery, JQueryEventObject}
 import scala.concurrent.Future
 
 trait DragAndDrop {
-  def onDrop(jq:JQuery,h: ((File) => Future[Any])): JQuery = onDragOverNothing(jq.on(
+  def onDrop(jq:JQuery,h: ((File) => Future[Any])): JQuery = jq.on(
     "drop",
     (evt: JQueryEventObject) => {
       evt.stopPropagation();
@@ -19,7 +19,7 @@ trait DragAndDrop {
         .map(_.map(_.map(_.headOption.map((blob) =>
           h(blob.asInstanceOf[File])))))
     }
-  ))
+  )
 
   def onDragOverNothing(jq:JQuery): JQuery = {
     jq.on("dragover",
