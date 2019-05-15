@@ -2,9 +2,10 @@ package com.lyrx.pyramids
 import org.scalajs.jquery.{jQuery => $}
 import scala.concurrent.ExecutionContext
 
-// This file same as LastWillStartup.scala of master branch.
+// This file is same as LastWillStartup.scala of master branch.
 
 object Startup {
+
   //test suggested by Alex.
   def main(args: Array[String]): Unit ={
     implicit val ec = ExecutionContext.global;
@@ -18,9 +19,5 @@ object Startup {
   def init(pyramid: Pyramid)={
     println(s"Pyramid: ${pyramid.pyramidConfig}")
   }
-
-
-
-
 
 }

@@ -1,7 +1,5 @@
 package com.lyrx.pyramids
 
-
-
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js.typedarray.ArrayBuffer
 

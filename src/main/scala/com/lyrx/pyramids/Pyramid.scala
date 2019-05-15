@@ -11,14 +11,6 @@ import scala.scalajs.js.Dynamic.literal
 
 object  Pyramid{
   def apply()=new Pyramid(PyramidConfig(None,None,None))
-
 }
-class Pyramid(override val pyramidConfig: PyramidConfig)
-  extends KeyCreation
-    with KeyExport
-    with KeyImport {
 
-
-
-
-}
+class Pyramid(override val pyramidConfig: PyramidConfig) extends KeyCreation with KeyExport with KeyImport {}
