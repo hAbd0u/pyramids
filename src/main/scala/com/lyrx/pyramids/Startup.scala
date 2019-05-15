@@ -24,10 +24,10 @@ object Startup {
     def handle(f:Future[PyramidConfig]) = f.map(config=>init(config))
 
 
-    def action(selector:String,c:()=>Future[PyramidConfig]) =
-      $(selector).off().click((e:Event)=>handle(c()))
+    def action(selector:String,c:(Event)=>Future[PyramidConfig]) =
+      $(selector).off().click((e:Event)=>handle(c(e)))
 
-    action("#logo", pyramid.downloadKey _ )
+    action("#logo", pyramid.downloadKey _  )
 
 
 
