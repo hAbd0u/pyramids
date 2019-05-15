@@ -1,6 +1,6 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.actions.{DownloadWallet, KeyCreation, KeyExport, KeyImport}
+import com.lyrx.pyramids.actions.{DownloadWallet, KeyCreation, KeyExport, KeyImport, UploadWallet}
 
 
 object  Pyramid{
@@ -11,7 +11,9 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   extends KeyCreation
     with KeyExport
     with KeyImport
-  with DownloadWallet  {
+  with DownloadWallet
+  with UploadWallet
+{
 
 
 

@@ -1,4 +1,5 @@
 package com.lyrx.pyramids
+import com.lyrx.pyramids.actions.DragAndDrop
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import org.scalajs.dom.{Event, File, document}
 
@@ -6,7 +7,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 // This file is same as LastWillStartup.scala of master branch. for push 1
 
-object Startup {
+object Startup extends DragAndDrop {
 
   //test suggested by Alex.
   def main(args: Array[String]): Unit ={
@@ -26,14 +27,13 @@ object Startup {
 
     def click(selector:String,c:(Event)=>Future[PyramidConfig]) =
       $(selector).off().click((e:Event)=>handle(c(e)))
-
-    def onNode(selector:String,c: (JQuery)=>Future[PyramidConfig]) = c($(selector))
-
-
-
-
+    def onNode(selector:String,c: (JQuery)=>Future[PyramidConfig]) =
+      c($(selector))
+    def onDragDrop(selector:String,h: (File) =>Future[PyramidConfig] ) =
+      onDrop($(selector), (f)=>Future{pyramidConfig})
 
     onNode("#logo", pyramid.downloadWallet _  )
+    onDragDrop("#logo",pyramid.uploadWallet _ )
 
 
 

@@ -1,9 +1,11 @@
 package com.lyrx.pyramids.actions
 
+import com.lyrx.pyramids.PyramidConfig
 import org.scalajs.dom.File
 import org.scalajs.dom.raw.{Blob, EventTarget}
 import org.scalajs.jquery.{JQuery, JQueryEventObject}
 
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 
@@ -29,20 +31,18 @@ trait DataTransferEvent extends JQueryEventObject {
 
 trait UploadWallet {
 
-  def onDrop(jq:JQuery,h: (File => Unit)): JQuery = jq.on(
-      "drop",
-      (evt: JQueryEventObject) => {
-        evt.stopPropagation();
-        evt.preventDefault();
-        evt
-          .asInstanceOf[DataTransferEvent]
-          .originalEvent
-          .map(_.dataTransfer.map(_.files))
-          .map(_.map(_.map(_.headOption.map((blob) =>
-            h(blob.asInstanceOf[File])))))
-      }
-    )
+  val pyramidConfig:PyramidConfig
 
+
+
+
+  def uploadWallet(f:File)(implicit executionContext: ExecutionContext):Future[PyramidConfig] = {
+
+    println(s"Dropped: ${f.name}")
+
+    Future {pyramidConfig}
+
+  }
 
 
 }
