@@ -7,23 +7,19 @@ import org.scalajs.jquery.{JQuery, JQueryEventObject}
 import scala.concurrent.Future
 
 trait DragAndDrop {
-  def onDrop(jq:JQuery,h: ((File) => Future[PyramidConfig])): JQuery = jq.on(
+  def onDrop(jq:JQuery,h: ((File) => Future[Any])): JQuery = onDragOverNothing(jq.on(
     "drop",
     (evt: JQueryEventObject) => {
       evt.stopPropagation();
       evt.preventDefault();
-      println("Year:" + evt)
-      /*
       evt
         .asInstanceOf[DataTransferEvent]
         .originalEvent
         .map(_.dataTransfer.map(_.files))
         .map(_.map(_.map(_.headOption.map((blob) =>
           h(blob.asInstanceOf[File])))))
-
-       */
     }
-  )
+  ))
 
   def onDragOverNothing(jq:JQuery): JQuery = {
     jq.on("dragover",

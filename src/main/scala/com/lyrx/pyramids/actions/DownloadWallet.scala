@@ -40,13 +40,12 @@ trait DownloadWallet {
 
 
 
-  def downloadWallet(n:JQuery)(implicit executionContext: ExecutionContext):Future[PyramidConfig]=new Pyramid(pyramidConfig).
+  def downloadWallet(n:JQuery)(implicit executionContext: ExecutionContext):Future[JQuery]=new Pyramid(pyramidConfig).
       exportAllKeys().
       map(walletNative=>stringify(walletNative)).
       map(s=>n.attr("href",createObjectURL(
         new Blob(js.Array(s), BlobPropertyBag("application/json")
-        )))).
-      map( (n2:JQuery)=> pyramidConfig)
+        ))))
 
 
 

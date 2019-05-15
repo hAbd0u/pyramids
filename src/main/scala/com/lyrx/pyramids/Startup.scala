@@ -27,13 +27,21 @@ object Startup extends DragAndDrop {
 
     def click(selector:String,c:(Event)=>Future[PyramidConfig]) =
       $(selector).off().click((e:Event)=>handle(c(e)))
+
+    /*
     def onNode(selector:String,c: (JQuery)=>Future[PyramidConfig]) =
       c($(selector))
+    */
+
     def onDragDrop(selector:String,h: (File) =>Future[PyramidConfig] ) =
       onDrop($(selector), (f)=>Future{pyramidConfig})
 
-    onNode("#logo", pyramid.downloadWallet _  )
-    onDragDrop("#logo",pyramid.uploadWallet _ )
+
+
+
+    pyramid.downloadWallet($("#logo").off()).
+      map((q2:JQuery)=>onDrop(q2,(f)=> handle(pyramid.uploadWallet(f))))
+
 
 
 
