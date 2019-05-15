@@ -1,20 +1,15 @@
 package com.lyrx.pyramids
-
-
-
 import org.scalajs.jquery.{jQuery => $}
-
 import scala.concurrent.ExecutionContext
 
+// This file same as LastWillStartup.scala of master branch.
 
 object Startup {
-
-//test suggested by Alex.
-
+  //test suggested by Alex.
   def main(args: Array[String]): Unit ={
     implicit val ec = ExecutionContext.global;
     Pyramid().generateKeys().
-      onComplete(t=>{
+      onComplete(t => {
         t.failed.map(thr=>println(s"Error: ${thr.getMessage}"))
         t.map(p=>init(p))
       })
