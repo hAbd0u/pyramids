@@ -18,7 +18,7 @@ object Startup {
       })
   }
 // Newly added code by Alex
-  def init(pyramidConfig: PyramidConfig)(implicit executionContext: ExecutionContext):JQuery={
+  def init(pyramidConfig: PyramidConfig)(implicit executionContext: ExecutionContext):Any={
 
     val pyramid = new Pyramid(pyramidConfig)
     def handle(f:Future[PyramidConfig]) = f.map(config=>init(config))
@@ -27,7 +27,10 @@ object Startup {
     def click(selector:String,c:(Event)=>Future[PyramidConfig]) =
       $(selector).off().click((e:Event)=>handle(c(e)))
 
-    click("#logo", pyramid.downloadKey _  )
+    def onNode(selector:String,c: (JQuery)=>Future[PyramidConfig]) = c($(selector))
+
+
+    onNode("#logo", pyramid.downloadWallet _  )
 
 
 
