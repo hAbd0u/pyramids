@@ -20,10 +20,16 @@ object Startup {
 
   def init(pyramidConfig: PyramidConfig)(implicit executionContext: ExecutionContext):JQuery={
 
+    val pyramid = new Pyramid(pyramidConfig)
     def handle(f:Future[PyramidConfig]) = f.map(config=>init(config))
 
-    val pyramid = new Pyramid(pyramidConfig)
-    $("#logo").off().click((e:Event)=>handle(pyramid.downloadKey()))
+
+    def action(selector:String,c:()=>Future[PyramidConfig]) =
+      $(selector).off().click((e:Event)=>handle(c()))
+
+    action("#logo", pyramid.downloadKey _ )
+
+
 
   }
 
