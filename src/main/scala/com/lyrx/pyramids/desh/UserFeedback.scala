@@ -1,4 +1,4 @@
-package com.lyrx.pyramids
+package com.lyrx.pyramids.desh
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js.typedarray.ArrayBuffer
