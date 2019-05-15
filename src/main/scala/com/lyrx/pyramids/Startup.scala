@@ -17,7 +17,7 @@ object Startup {
         t.map(p=>init(p.pyramidConfig))
       })
   }
-
+// Newly added code by Alex
   def init(pyramidConfig: PyramidConfig)(implicit executionContext: ExecutionContext):JQuery={
 
     val pyramid = new Pyramid(pyramidConfig)
