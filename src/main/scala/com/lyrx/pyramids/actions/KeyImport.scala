@@ -1,6 +1,8 @@
-package com.lyrx.pyramids
+package com.lyrx.pyramids.actions
 
 import com.lyrx.pyramids.PyramidCrypt.{AsymetricCrypto, SymetricCrypto, WalletNative}
+import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
