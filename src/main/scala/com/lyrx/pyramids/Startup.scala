@@ -28,10 +28,9 @@ object Startup extends DragAndDrop {
     def click(selector:String,c:(Event)=>Future[PyramidConfig]) =
       $(selector).off().click((e:Event)=>handle(c(e)))
 
-    /*
-    def onNode(selector:String,c: (JQuery)=>Future[PyramidConfig]) =
-      c($(selector))
-    */
+
+    onDragOverNothing($(".front-page"))
+    $(".front-page").on("drop",(e:Event) => e.preventDefault())
 
     def onDragDrop(selector:String,h: (File) =>Future[PyramidConfig] ) =
       onDrop($(selector), (f)=>Future{pyramidConfig})
