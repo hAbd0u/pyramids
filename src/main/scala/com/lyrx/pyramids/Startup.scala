@@ -10,44 +10,32 @@ import scala.concurrent.{ExecutionContext, Future}
 object Startup extends DragAndDrop {
 
   //test suggested by Alex.
-  def main(args: Array[String]): Unit ={
+  def main(args: Array[String]): Unit = {
     implicit val ec = ExecutionContext.global;
-    Pyramid().generateKeys().
-      onComplete(t => {
-        t.failed.map(thr=>println(s"Error: ${thr.getMessage}"))
-        t.map(p=>init(p.pyramidConfig))
+    Pyramid()
+      .generateKeys()
+      .onComplete(t => {
+        t.failed.map(thr => println(s"Error: ${thr.getMessage}"))
+        t.map(p => init(p.pyramidConfig))
       })
   }
 // Newly added code by Alex
-  def init(pyramidConfig: PyramidConfig)(implicit executionContext: ExecutionContext):Any={
+  def init(pyramidConfig: PyramidConfig)(
+      implicit executionContext: ExecutionContext): Any = {
 
     val pyramid = new Pyramid(pyramidConfig)
-    def handle(f:Future[PyramidConfig]) = f.map(config=>init(config))
+    def handle(f: Future[PyramidConfig]) = f.map(config => init(config))
 
-
-    def click(selector:String,c:(Event)=>Future[PyramidConfig]) =
-      $(selector).off().click((e:Event)=>handle(c(e)))
-
+    def click(selector: String, c: (Event) => Future[PyramidConfig]) =
+      $(selector).off().click((e: Event) => handle(c(e)))
 
     onDragOverNothing($(".front-page"))
-    $(".front-page").on("drop",(e:Event) => e.preventDefault())
+    $(".front-page").on("drop", (e: Event) => e.preventDefault())
 
-    def onDragDrop(selector:String,h: (File) =>Future[PyramidConfig] ) =
-      onDrop($(selector), (f)=>Future{pyramidConfig})
-
-
-
-
-    pyramid.downloadWallet($("#logo").off()).
-      map((q2:JQuery)=>onDrop(q2,(f)=> handle(pyramid.uploadWallet(f))))
-
-
-
+    pyramid
+      .downloadWallet($("#logo").off())
+      .map((q2: JQuery) => onDrop(q2, (f) => handle(pyramid.uploadWallet(f))))
 
   }
-
-
-
-
 
 }
