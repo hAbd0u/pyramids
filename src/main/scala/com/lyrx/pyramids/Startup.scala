@@ -1,5 +1,8 @@
 package com.lyrx.pyramids
 import org.scalajs.jquery.{jQuery => $}
+
+
+import org.scalajs.dom.document
 import scala.concurrent.ExecutionContext
 
 // This file is same as LastWillStartup.scala of master branch.
@@ -17,7 +20,8 @@ object Startup {
   }
 
   def init(pyramid: Pyramid)={
-    println(s"Pyramid: ${pyramid.pyramidConfig}")
+    //document.getElementById("#time").addEventListener()
+    println(s"Pyramid: ${pyramid.pyramidConfig}: ${$("#time")}")
   }
 
 }
