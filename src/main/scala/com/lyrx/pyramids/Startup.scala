@@ -5,7 +5,7 @@ import org.scalajs.jquery.{jQuery => $}
 import org.scalajs.dom.document
 import scala.concurrent.ExecutionContext
 
-// This file is same as LastWillStartup.scala of master branch.
+// This file is same as LastWillStartup.scala of master branch. for push 1
 
 object Startup {
 
