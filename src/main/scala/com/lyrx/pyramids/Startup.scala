@@ -21,7 +21,7 @@ object Startup {
   }
 
   def init(pyramid: Pyramid)={
-    println(s"Pyramid: ${pyramid.pyramidConfig}")
+    println(s"Pyramid: ${pyramid.pyramidConfig}: ${$}")
   }
 
 
