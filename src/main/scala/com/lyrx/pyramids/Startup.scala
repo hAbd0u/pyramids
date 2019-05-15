@@ -1,6 +1,6 @@
 package com.lyrx.pyramids
-import org.scalajs.jquery.{JQuery, jQuery => $}
-import org.scalajs.dom.{Event, document}
+import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
+import org.scalajs.dom.{Event, File, document}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -28,6 +28,9 @@ object Startup {
       $(selector).off().click((e:Event)=>handle(c(e)))
 
     def onNode(selector:String,c: (JQuery)=>Future[PyramidConfig]) = c($(selector))
+
+
+
 
 
     onNode("#logo", pyramid.downloadWallet _  )
