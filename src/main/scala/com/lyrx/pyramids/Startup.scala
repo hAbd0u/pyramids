@@ -21,7 +21,7 @@ object Startup extends DragAndDrop with UserFeedback{
 
   def startup()={
     implicit val ec = ExecutionContext.global;
-    message("Welcome, Pharao! Please wait ...")
+    message("Welcome, Pharao! Initialzing ...")
     Pyramid()
       .generateKeys()
       .onComplete(t => {
