@@ -15,6 +15,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with UploadWallet
 {
 
+def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 }

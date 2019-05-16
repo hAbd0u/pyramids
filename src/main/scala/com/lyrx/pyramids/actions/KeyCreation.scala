@@ -26,7 +26,8 @@ trait KeyCreation extends  SymetricCrypto with AsymetricCrypto {
 
   def generateKeys()(implicit ctx:ExecutionContext) = createSymKey().
     flatMap(_.createASymKeys()).
-    flatMap(_.createSignKeys())
+    flatMap(_.createSignKeys()).
+    map(_.msg("Your pyramid keys have been generated."))
 
 
 }
