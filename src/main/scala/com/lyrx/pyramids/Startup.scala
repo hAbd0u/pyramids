@@ -29,8 +29,8 @@ object Startup extends DragAndDrop {
     def click(selector: String, c: (Event) => Future[PyramidConfig]) =
       $(selector).off().click((e: Event) => handle(c(e)))
 
-    onDragOverNothing($(".front-page"))
-    $(".front-page").on("drop", (e: Event) => e.preventDefault())
+    onDragOverNothing($(".front-page").off()).on("drop", (e: Event) => e.preventDefault())
+
 
     pyramid
       .downloadWallet($("#logo").off())
