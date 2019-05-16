@@ -4,7 +4,7 @@ import com.lyrx.pyramids.actions.{DownloadWallet, KeyCreation, KeyExport, KeyImp
 
 
 object  Pyramid{
-  def apply()=new Pyramid(PyramidConfig(None,None,None))
+  def apply()=new Pyramid(PyramidConfig(None,None,None,Messages(Some("Welcome to your Pyramid!"),None)))
 }
 
 class Pyramid(override val pyramidConfig: PyramidConfig)
