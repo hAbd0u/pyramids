@@ -1,10 +1,8 @@
-package com.lyrx.pyramids.messages
+package com.lyrx.pyramids.actions
 
 import org.scalajs.jquery.JQuery
 
-import scala.concurrent.ExecutionContext
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.ArrayBuffer
 
 trait UserFeedback {
 

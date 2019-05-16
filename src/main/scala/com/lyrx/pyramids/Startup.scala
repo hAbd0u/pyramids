@@ -1,6 +1,5 @@
 package com.lyrx.pyramids
-import com.lyrx.pyramids.actions.DragAndDrop
-import com.lyrx.pyramids.messages.UserFeedback
+import com.lyrx.pyramids.actions.{DragAndDrop, UserFeedback}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import org.scalajs.dom.{Event, File, document}
 
