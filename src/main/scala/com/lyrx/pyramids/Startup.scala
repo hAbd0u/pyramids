@@ -1,5 +1,6 @@
 package com.lyrx.pyramids
 import com.lyrx.pyramids.actions.DragAndDrop
+import com.lyrx.pyramids.messages.UserFeedback
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import org.scalajs.dom.{Event, File, document}
 
@@ -7,7 +8,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 // This file is same as LastWillStartup.scala of master branch. for push 1
 
-object Startup extends DragAndDrop {
+object Startup extends DragAndDrop with UserFeedback{
+
+  override def msgField():JQuery= $("#message")
+  def timeField():JQuery = $("#time")
+
 
   //test suggested by Alex.
   def main(args: Array[String]): Unit = {
@@ -25,6 +30,9 @@ object Startup extends DragAndDrop {
 
     val pyramid = new Pyramid(pyramidConfig)
     def handle(f: Future[PyramidConfig]) = f.map(config => init(config))
+
+    pyramidConfig.messages.messageOpt.map(s=>message(s))
+    showTime()
 
     def click(selector: String, c: (Event) => Future[PyramidConfig]) =
       $(selector).off().click((e: Event) => handle(c(e)))
