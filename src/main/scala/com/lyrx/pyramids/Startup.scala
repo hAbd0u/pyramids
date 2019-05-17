@@ -31,10 +31,6 @@ object Startup extends DragAndDrop with UserFeedback{
   }
 
 
-
-
-
-
 // Newly added code by Alex
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): PyramidConfig = {
