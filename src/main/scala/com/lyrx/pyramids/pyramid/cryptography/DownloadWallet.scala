@@ -1,6 +1,7 @@
-package com.lyrx.pyramids.cryptography
+package com.lyrx.pyramids.pyramid.cryptography
 
-import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+import com.lyrx.pyramids.Pyramid
+import com.lyrx.pyramids.pyramid.PyramidConfig
 import org.scalajs.dom
 import org.scalajs.dom.Event
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag}

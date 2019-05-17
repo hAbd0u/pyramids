@@ -1,4 +1,4 @@
-package com.lyrx.pyramids
+package com.lyrx.pyramids.pyramid
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair}
 
