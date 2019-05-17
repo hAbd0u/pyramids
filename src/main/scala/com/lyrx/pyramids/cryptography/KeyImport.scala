@@ -30,8 +30,7 @@ It is the same as for the asymetric key. Try!
     getOrElse(Future{None}).
     map(e=>new Pyramid(pyramidConfig.copy(asymKeyOpt = e)))
 
-  def importSignKey(walletNative: WalletNative)(implicit  executionContext: ExecutionContext) = walletNative.
-    asym.
+  def importSignKey(walletNative: WalletNative)(implicit  executionContext: ExecutionContext) = walletNative.sign.
     map(kp=>
       importKeyPair(
         keyPairNative = kp,
