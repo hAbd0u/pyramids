@@ -26,6 +26,9 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
         map(e=>Some(e))).
     getOrElse(Future{None}).
     map(e=>new Pyramid(pyramidConfig.copy(asymKeyOpt = e)))
+
+
+
   /*
   class KeyImport: function importAsymKey, do the same for the signature keys: "importSignKey"
   It is the same as for the asymetric key. Try!
@@ -34,8 +37,8 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
     map(kp=>
       importKeyPair(
         keyPairNative = kp,
-        privateUsage = usageDecrypt,
-        publicUsage = usageEncrypt).
+        privateUsage = usageSign,
+        publicUsage = usageVerify).
         map(e=>Some(e))).
     getOrElse(Future{None}).
     map(e=>new Pyramid(pyramidConfig.copy(signKeyOpt = e)))
