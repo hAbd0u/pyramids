@@ -1,6 +1,6 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.cryptography.{DownloadWallet, KeyCreation, KeyExport, KeyImport, UploadWallet}
+import com.lyrx.pyramids.actions.{DownloadWallet, KeyCreation, KeyExport, KeyImport, UploadWallet}
 
 
 object  Pyramid{

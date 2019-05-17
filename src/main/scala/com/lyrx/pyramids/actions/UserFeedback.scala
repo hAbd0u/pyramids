@@ -1,4 +1,4 @@
-package com.lyrx.pyramids.frontend
+package com.lyrx.pyramids.actions
 
 import org.scalajs.jquery.JQuery
 

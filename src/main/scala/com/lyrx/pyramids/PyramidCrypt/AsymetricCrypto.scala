@@ -1,11 +1,11 @@
-package com.lyrx.pyramids.cryptography
+package com.lyrx.pyramids.PyramidCrypt
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.Uint8Array
-import js.Dynamic.{literal=>l}
+import js.Dynamic.{literal => l}
+import scala.concurrent.{ExecutionContext, Future}
 trait AsymetricCrypto extends Crypto {
 
   val aHashAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
