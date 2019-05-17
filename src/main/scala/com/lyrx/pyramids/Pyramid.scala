@@ -1,7 +1,6 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.pyramid.{Messages, PyramidConfig}
-import com.lyrx.pyramids.pyramid.cryptography._
+import com.lyrx.pyramids.cryptography._
 
 
 object  Pyramid{
