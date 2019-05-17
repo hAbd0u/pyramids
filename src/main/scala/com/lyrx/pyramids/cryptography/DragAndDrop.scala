@@ -1,6 +1,6 @@
-package com.lyrx.pyramids.pyramid.cryptography
+package com.lyrx.pyramids.cryptography
 
-import com.lyrx.pyramids.pyramid.PyramidConfig
+import com.lyrx.pyramids.PyramidConfig
 import org.scalajs.dom.File
 import org.scalajs.jquery.{JQuery, JQueryEventObject}
 
