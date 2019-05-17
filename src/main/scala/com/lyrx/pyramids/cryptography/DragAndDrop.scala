@@ -1,4 +1,4 @@
-package com.lyrx.pyramids.actions
+package com.lyrx.pyramids.cryptography
 
 import com.lyrx.pyramids.PyramidConfig
 import org.scalajs.dom.File

@@ -1,6 +1,5 @@
-package com.lyrx.pyramids.actions
+package com.lyrx.pyramids.cryptography
 
-import com.lyrx.pyramids.PyramidCrypt.{AsymetricCrypto, SymetricCrypto}
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 
 import scala.concurrent.ExecutionContext

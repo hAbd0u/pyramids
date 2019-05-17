@@ -1,12 +1,11 @@
-package com.lyrx.pyramids.actions
+package com.lyrx.pyramids.cryptography
 
 import com.lyrx.pyramids.PyramidConfig
-import com.lyrx.pyramids.PyramidCrypt.{AsymetricCrypto, SymetricCrypto, WalletNative}
 import org.scalajs.dom.crypto.{CryptoKeyPair, JsonWebKey}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import js.Dynamic.{literal => l}
+import scala.scalajs.js.Dynamic.{literal => l}
 
 
 
