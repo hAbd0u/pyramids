@@ -15,4 +15,11 @@ case class PyramidConfig(symKeyOpt:Option[CryptoKey],
                          signKeyOpt:Option[CryptoKeyPair],
                          messages:Messages  ) {
 
+  def msg(s:String) = this.
+    copy(
+      messages=
+        this.
+          messages.
+          copy(messageOpt = Some(s)))
+
 }
