@@ -7,9 +7,6 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 
 trait UserFeedback {
-
-
-
   def msgField():JQuery
   def timeField():JQuery
 
@@ -33,10 +30,5 @@ trait UserFeedback {
     showTime();
   }
 
-
-
    def logString(msg: String): Unit = println(msg)
-
-
-
 }
