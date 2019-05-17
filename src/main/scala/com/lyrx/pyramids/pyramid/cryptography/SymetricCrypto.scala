@@ -1,12 +1,11 @@
-package com.lyrx.pyramids.PyramidCrypt
+package com.lyrx.pyramids.pyramid.cryptography
 
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 
-import scala.scalajs.js
-import js.Dynamic.{literal => l}
 import scala.concurrent.ExecutionContext
+import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBufferView
-
+import js.Dynamic.{literal=>l}
 trait SymetricCrypto extends Crypto {
   val ALGORITHM = "AES-GCM"
 
