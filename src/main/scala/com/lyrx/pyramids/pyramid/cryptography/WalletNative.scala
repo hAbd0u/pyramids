@@ -1,4 +1,4 @@
-package com.lyrx.pyramids.cryptography
+package com.lyrx.pyramids.pyramid.cryptography
 
 import org.scalajs.dom.crypto.JsonWebKey
 
