@@ -13,7 +13,6 @@ trait Encryption extends  SymetricCrypto  {
 
   def symEncrypt()(implicit ctx:ExecutionContext) = {
     val iv = crypto.getRandomValues(new Uint8Array(12))
-
     pyramidConfig.distributedData.unencryptedOpt.
       flatMap( (arrayBuffer:ArrayBuffer) => pyramidConfig.
         symKeyOpt.map(symKey=>
@@ -29,15 +28,13 @@ trait Encryption extends  SymetricCrypto  {
             distributedData = pyramidConfig.
             distributedData.
             copy(bufferOpt = Some(b),
-              ivOpt = Some(iv.buffer)))))
+              ivOpt = Some(iv.buffer))).
+            msg("Data encrypted, oh Pharao!")))
         )
-      )//.getOrElse(Future.failed(new Throwable("No data found")))
-
-
-
-
-
-
+      ).
+      getOrElse(
+        Future{ new Pyramid(pyramidConfig.msg("Oh Pharao, no data found for encryption found!"))}
+      )
   }
 
 }
