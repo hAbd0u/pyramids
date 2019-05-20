@@ -7,7 +7,7 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 
 
 case class DistributedData(
-                            fileOpt:Option[File],
+                            unencryptedOpt:Option[ArrayBuffer],
                            bufferOpt:Option[ArrayBuffer],
                             ivOpt:Option[ArrayBuffer]
                           )
