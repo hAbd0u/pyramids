@@ -8,14 +8,16 @@ object  Pyramid{
 }
 
 class Pyramid(override val pyramidConfig: PyramidConfig)
-  extends KeyCreation
+  extends KeyCreation[Pyramid]
     with KeyExport
-    with KeyImport
-  with DownloadWallet
+    with KeyImport[Pyramid]
+  with DownloadWallet[Pyramid]
   with UploadWallet
 {
 
-def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
+
+
+  override def createInstance(config: PyramidConfig): Pyramid = new Pyramid(config)
 }

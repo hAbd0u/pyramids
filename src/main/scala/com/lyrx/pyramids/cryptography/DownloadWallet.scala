@@ -24,7 +24,7 @@ trait URL extends js.Any {
 
 }
 
-trait DownloadWallet {
+trait DownloadWallet[T <: KeyExport] extends CanInstance[T] {
 
 
 
@@ -40,7 +40,7 @@ trait DownloadWallet {
 
 
 
-  def downloadWallet(n:JQuery)(implicit executionContext: ExecutionContext):Future[JQuery]=new Pyramid(pyramidConfig).
+  def downloadWallet(n:JQuery)(implicit executionContext: ExecutionContext):Future[JQuery]=createInstance(pyramidConfig).
       exportAllKeys().
       map(walletNative=>stringify(walletNative)).
       map(s=>n.attr("href",createObjectURL(

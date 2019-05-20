@@ -13,6 +13,10 @@ trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
 
   val pyramidConfig: PyramidConfig
 
+
+
+
+
   type JSKeyPairOpt = Option[(JsonWebKey,JsonWebKey)]
   type JSKeyOpt = Option[JsonWebKey]
   type AllJSKeysOpt = (JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)

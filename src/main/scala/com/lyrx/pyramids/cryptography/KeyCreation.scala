@@ -4,29 +4,29 @@ import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 
 import scala.concurrent.ExecutionContext
 
-trait KeyCreation extends  SymetricCrypto with AsymetricCrypto {
+trait KeyCreation[T <: KeyCreation[T]] extends  SymetricCrypto with AsymetricCrypto with CanInstance[T] {
 
   val pyramidConfig: PyramidConfig
 
   def createSymKey()(implicit ctx:ExecutionContext) = generateSymmetricKey().
-    map(key=> new Pyramid(
+    map(key=> createInstance(
       pyramidConfig.
         copy(symKeyOpt = Some(key))))
 
   def createASymKeys()(implicit ctx:ExecutionContext) = generateASymetricEncryptionKeys().
-    map(keyPair=> new Pyramid(
+    map(keyPair=> createInstance(
       pyramidConfig.
         copy(asymKeyOpt = Some(keyPair))))
 
   def createSignKeys()(implicit ctx:ExecutionContext) = generateSignKeys().
-    map(keyPair=> new Pyramid(
+    map(keyPair=>createInstance(
       pyramidConfig.
         copy(signKeyOpt = Some(keyPair))))
 
   def generateKeys()(implicit ctx:ExecutionContext) = createSymKey().
     flatMap(_.createASymKeys()).
-    flatMap(_.createSignKeys()).
-    map(_.msg("Oh Pharao, you have new keys!"))
+    flatMap(_.createSignKeys())//.
+    //map(_.msg("Oh Pharao, you have new keys!"))
 
 
 }

@@ -4,16 +4,19 @@ import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
+trait KeyImport[T<: KeyImport[T]] extends  SymetricCrypto with AsymetricCrypto with CanInstance[T] {
 
   val pyramidConfig: PyramidConfig
+
+
+
 
   def importSymKey(walletNative:WalletNative)
                 (implicit ctx:ExecutionContext)= walletNative.
     sym.
     map(webKey => importSymetricKey(webKey).
       map(k=>Some(k))).getOrElse(Future{None}).
-    map(ko=> new Pyramid(pyramidConfig.copy(symKeyOpt = ko)))
+    map(ko=> createInstance(pyramidConfig.copy(symKeyOpt = ko)))
 
 
   def importAsymKey(walletNative: WalletNative)(implicit  executionContext: ExecutionContext) = walletNative.
@@ -25,7 +28,7 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
         publicUsage = usageEncrypt).
         map(e=>Some(e))).
     getOrElse(Future{None}).
-    map(e=>new Pyramid(pyramidConfig.copy(asymKeyOpt = e)))
+    map(e=>createInstance(pyramidConfig.copy(asymKeyOpt = e)))
 
 
 
@@ -41,7 +44,7 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
         publicUsage = usageVerify).
         map(e=>Some(e))).
     getOrElse(Future{None}).
-    map(e=>new Pyramid(pyramidConfig.copy(signKeyOpt = e)))
+    map(e=>createInstance(pyramidConfig.copy(signKeyOpt = e)))
 
   def importAllKeys(walletNative: WalletNative)(implicit  executionContext: ExecutionContext)=
     importSymKey(walletNative).
