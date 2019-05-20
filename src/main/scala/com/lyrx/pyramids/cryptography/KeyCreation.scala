@@ -11,7 +11,7 @@ trait KeyCreation[T <: KeyCreation[T]] extends  SymetricCrypto with AsymetricCry
   def createSymKey()(implicit ctx:ExecutionContext) = generateSymmetricKey().
     map(key=> createInstance(
       pyramidConfig.
-        copy(symKeyOpt = Some(key))))
+        copy(symKeyOpt = Some(key)).msg("Oh Pharao, you have new keys!")))
 
   def createASymKeys()(implicit ctx:ExecutionContext) = generateASymetricEncryptionKeys().
     map(keyPair=> createInstance(
@@ -25,8 +25,7 @@ trait KeyCreation[T <: KeyCreation[T]] extends  SymetricCrypto with AsymetricCry
 
   def generateKeys()(implicit ctx:ExecutionContext) = createSymKey().
     flatMap(_.createASymKeys()).
-    flatMap(_.createSignKeys())//.
-    //map(_.msg("Oh Pharao, you have new keys!"))
+    flatMap(_.createSignKeys())
 
 
 }
