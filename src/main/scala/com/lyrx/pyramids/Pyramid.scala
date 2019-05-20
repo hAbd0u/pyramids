@@ -4,7 +4,12 @@ import com.lyrx.pyramids.cryptography._
 
 
 object  Pyramid{
-  def apply()=new Pyramid(PyramidConfig(None,None,None,Messages(Some("Welcome to your Pyramid!"),None)))
+  def apply()=new Pyramid(PyramidConfig(DistributedData(None,None,None),
+    None,
+    None,
+    None,
+    Messages(Some("Welcome to your Pyramid!"),
+      None)))
 }
 
 class Pyramid(override val pyramidConfig: PyramidConfig)
