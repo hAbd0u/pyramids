@@ -9,6 +9,6 @@ trait Decryption  extends  SymetricCrypto  {
 
   val pyramidConfig: PyramidConfig
 
-  def symDecrypt(file:File)(implicit ctx:ExecutionContext):Future[Pyramid]
+  def symDecrypt()(implicit ctx:ExecutionContext):Future[Pyramid]
 
 }

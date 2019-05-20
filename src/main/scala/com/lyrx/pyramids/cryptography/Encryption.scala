@@ -9,6 +9,6 @@ trait Encryption extends  SymetricCrypto  {
 
   val pyramidConfig: PyramidConfig
 
-  def symEncrypt(file:File)(implicit ctx:ExecutionContext):Future[Pyramid]
+  def symEncrypt()(implicit ctx:ExecutionContext):Future[Pyramid]
 
 }
