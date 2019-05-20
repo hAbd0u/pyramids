@@ -39,6 +39,19 @@ trait SymetricCrypto extends Crypto {
 
 
 
+  def decrypt(key:CryptoKey,distributedData: DistributedData)
+             (implicit executionContext: ExecutionContext)= distributedData.
+    bufferOpt.flatMap(data => distributedData.ivOpt.
+  map(iv =>  crypto.
+    subtle.
+    decrypt(algorithmIdentifier(new Uint8Array(iv,0,12)),
+      key,
+      data
+    ).toFuture.
+    map(aAny=>aAny.asInstanceOf[ArrayBuffer]).
+  map(b=>distributedData.copy(unencryptedOpt = Some(b)))
+  )).getOrElse(Future{distributedData})
+
 
 
 
