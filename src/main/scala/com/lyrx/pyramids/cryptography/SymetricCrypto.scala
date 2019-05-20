@@ -1,11 +1,12 @@
 package com.lyrx.pyramids.cryptography
 
+import com.lyrx.pyramids.DistributedData
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.ArrayBufferView
-import js.Dynamic.{literal=>l}
+import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
+import js.Dynamic.{literal => l}
 trait SymetricCrypto extends Crypto {
   val ALGORITHM = "AES-GCM"
 
@@ -17,6 +18,29 @@ trait SymetricCrypto extends Crypto {
   val keyAlgorithmIdentifier:KeyAlgorithmIdentifier= l(
     "name" -> ALGORITHM,
     "length" -> 256).asInstanceOf[KeyAlgorithmIdentifier]
+
+
+
+  def encrypt(symKey:CryptoKey,distributedData: DistributedData)(implicit ctx:ExecutionContext)=
+    distributedData.unencryptedOpt.
+      map(arrayBuffer => {
+        val iv = crypto.getRandomValues(new Uint8Array(12))
+        crypto.
+          subtle.
+          encrypt(algorithmIdentifier(iv),
+            symKey,
+            arrayBuffer
+          ).
+          toFuture.
+          map(_.asInstanceOf[ArrayBuffer]).map(b=>distributedData.copy(
+          bufferOpt = Some(b),
+          ivOpt = Some(iv.buffer)))
+      }).getOrElse(Future{distributedData})
+
+
+
+
+
 
 
   def generateSymmetricKey()(implicit ctx:ExecutionContext)= crypto.
