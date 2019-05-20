@@ -20,4 +20,6 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
 
 
   override def createInstance(config: PyramidConfig): Pyramid = new Pyramid(config)
+
+  override def config(): PyramidConfig = config
 }
