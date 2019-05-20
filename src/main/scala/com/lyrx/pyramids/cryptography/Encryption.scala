@@ -9,6 +9,15 @@ trait Encryption extends  SymetricCrypto  {
 
   val pyramidConfig: PyramidConfig
 
-  def symEncrypt()(implicit ctx:ExecutionContext):Future[Pyramid]
+  def symEncrypt()(implicit ctx:ExecutionContext):Future[Pyramid] = {
+
+    pyramidConfig.distributedData.unencryptedOpt.
+      map( arrayBuffer => {})
+
+
+    Future{
+      new Pyramid(pyramidConfig)
+    }
+  }
 
 }
