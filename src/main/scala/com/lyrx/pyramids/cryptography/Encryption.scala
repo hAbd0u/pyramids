@@ -11,30 +11,13 @@ trait Encryption extends  SymetricCrypto  {
 
   val pyramidConfig: PyramidConfig
 
-  def symEncrypt()(implicit ctx:ExecutionContext) = {
-    val iv = crypto.getRandomValues(new Uint8Array(12))
-    pyramidConfig.distributedData.unencryptedOpt.
-      flatMap( (arrayBuffer:ArrayBuffer) => pyramidConfig.
-        symKeyOpt.map(symKey=>
-          crypto.
-            subtle.
-            encrypt(algorithmIdentifier(iv),
-              symKey,
-              arrayBuffer
-            ).
-          toFuture.
-          map(_.asInstanceOf[ArrayBuffer]).
-          map(b=>new Pyramid(pyramidConfig.copy(
-            distributedData = pyramidConfig.
-            distributedData.
-            copy(bufferOpt = Some(b),
-              ivOpt = Some(iv.buffer))).
-            msg("Data encrypted, oh Pharao!")))
-        )
-      ).
-      getOrElse(
-        Future{ new Pyramid(pyramidConfig.msg("Oh Pharao, no data found for encryption found!"))}
-      )
-  }
+  def symEncrypt()(implicit ctx:ExecutionContext) =  pyramidConfig.
+        symKeyOpt.map(symKey=> encrypt(symKey,pyramidConfig.distributedData)).
+    map(_.map(d=>new Pyramid(
+      pyramidConfig.copy(distributedData = d).
+        msg("Your data has been encryted, oh Pharao!")
+    ))).
+    getOrElse(Future{new Pyramid(pyramidConfig.msg("Oh pharao, we have not found your encryption key!"))})
+
 
 }
