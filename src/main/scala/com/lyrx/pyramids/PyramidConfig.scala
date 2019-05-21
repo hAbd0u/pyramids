@@ -9,8 +9,11 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 case class DistributedData(
                             unencryptedOpt:Option[ArrayBuffer],
                            bufferOpt:Option[ArrayBuffer],
-                            ivOpt:Option[ArrayBuffer]
-                          )
+                            ivOpt:Option[ArrayBuffer],
+                          signatures: Seq[ArrayBuffer]
+                          ){
+  def withSignature(b:ArrayBuffer) = this.copy(signatures = (signatures :+ b))
+}
 
 
 case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
@@ -30,5 +33,7 @@ case class PyramidConfig(distributedData: DistributedData,
         this.
           messages.
           copy(messageOpt = Some(s)))
+
+  def withSignature(b:ArrayBuffer)=this.copy(distributedData=distributedData.withSignature(b))
 
 }

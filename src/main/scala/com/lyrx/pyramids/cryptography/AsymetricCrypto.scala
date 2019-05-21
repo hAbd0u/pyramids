@@ -4,8 +4,8 @@ import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebK
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.Uint8Array
-import js.Dynamic.{literal=>l}
+import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import js.Dynamic.{literal => l}
 trait AsymetricCrypto extends Crypto {
 
   val aHashAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
@@ -86,5 +86,29 @@ trait AsymetricCrypto extends Crypto {
       true,
       usages).toFuture.
       map(k=>Some(k.asInstanceOf[CryptoKey]))
+
+
+
+  def sign(keys:CryptoKeyPair,data:ArrayBuffer)
+          (implicit executionContext: ExecutionContext)= crypto.subtle.sign(
+    l(
+      "name" -> "ECDSA",
+      "hash" -> l("name" -> "SHA-384"),
+    ).asInstanceOf[KeyAlgorithmIdentifier],
+    keys.privateKey,
+    data
+  ).toFuture.map(_.asInstanceOf[ArrayBuffer])
+
+
+  def verify(key:CryptoKey,signature:ArrayBuffer,data:ArrayBuffer)
+            (implicit executionContext: ExecutionContext)= crypto.subtle.verify(
+    l(
+      "name" -> "ECDSA",
+      "hash" -> l("name" -> "SHA-384"),
+    ).asInstanceOf[KeyAlgorithmIdentifier],
+    key,
+    signature,
+    data
+  ).toFuture.map(_.asInstanceOf[Boolean])
 
 }
