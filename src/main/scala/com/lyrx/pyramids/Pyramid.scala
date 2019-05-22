@@ -4,7 +4,7 @@ import com.lyrx.pyramids.cryptography._
 
 
 object  Pyramid{
-  def apply()=new Pyramid(PyramidConfig(DistributedDir(Nil,""),
+  def apply()=new Pyramid(PyramidConfig(DistributedData(None,None,None,Nil),
     None,
     None,
     None,
