@@ -7,17 +7,10 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 
 
 
-object PyramidConfig{
-
-  type EitherData = Either[DistributedData,DistributedDir]
-
-}
 
 
 
-
-
-case class DistributedDir(data:Seq[PyramidConfig.EitherData],name:String)
+case class DistributedDir(data:Seq[EitherData],name:String)
 
 case class DistributedData(
                             unencryptedOpt:Option[ArrayBuffer],
