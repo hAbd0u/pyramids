@@ -47,4 +47,9 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
     getOrElse(Future{None}).
     map(e=>new Pyramid(pyramidConfig.copy(signKeyOpt = e)))
 
+  def importAllKeys(walletNative: WalletNative)(implicit  executionContext: ExecutionContext)=
+    importSymKey(walletNative).
+      flatMap(_.importAsymKey(walletNative)).
+      flatMap(_.importSignKey(walletNative))
+
 }

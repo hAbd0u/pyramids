@@ -33,25 +33,19 @@ trait DataTransferEvent extends JQueryEventObject {
 trait UploadWallet extends KeyImport {
 
 
-
-
-
-
-  def uploadWallet(f:File)(implicit executionContext: ExecutionContext) = {
-
-    //if (f.`type` == "application/json")
-
+  def uploadWallet(f:File)(implicit executionContext: ExecutionContext) = if (
+    f.`type` == "application/json")
       new FileReader().futureReadArrayBuffer(f).
-        map(arrayBuffer =>js.JSON.parse(arrayBuffer).asInstanceOf[WalletNative])
-
-    //else
-      //Future{None}
-
-
+        map(arrayBuffer =>js.JSON.parse(arrayBuffer.toNormalString()).asInstanceOf[WalletNative]).
+        flatMap(walletNative => importAllKeys(walletNative).map(_.pyramidConfig.msg("Oh Pharao, we have imported your keys!")))
+    else
+      Future{pyramidConfig.error("Oh Pharao, sorry, we cannot import this data format!")}
 
 
 
-  }
+
+
+
 
 
 }

@@ -22,7 +22,7 @@ package object cryptography {
     def futureReadArrayBuffer(b:Blob) = {
       val promise = Promise[ArrayBuffer]
       f.readAsArrayBuffer(b)
-      f.onloadend  = (e:ProgressEvent) => promise.success(f.result.asInstanceOf[ArrayBuffer)
+      f.onloadend  = (e:ProgressEvent) => promise.success(f.result.asInstanceOf[ArrayBuffer])
       f.onerror = (e) => promise.failure(new Throwable(e.toString))
       f.onabort = (e) => promise.failure(new Throwable(e.toString))
       promise.future

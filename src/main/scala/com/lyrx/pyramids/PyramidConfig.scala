@@ -54,5 +54,11 @@ case class PyramidConfig(distributedDir: DistributedDir,
           copy(messageOpt = Some(s)))
 
 
+  def error(s:String) = copy(
+    messages=
+      this.
+        messages.
+        copy(errorOpt = Some(s)))
+
 
 }
