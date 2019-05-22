@@ -6,6 +6,19 @@ import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair}
 import scala.scalajs.js.typedarray.ArrayBuffer
 
 
+
+object PyramidConfig{
+
+  type EitherData = Either[DistributedData,DistributedDir]
+
+}
+
+
+
+
+
+case class DistributedDir(data:Seq[PyramidConfig.EitherData],name:String)
+
 case class DistributedData(
                             unencryptedOpt:Option[ArrayBuffer],
                            bufferOpt:Option[ArrayBuffer],
