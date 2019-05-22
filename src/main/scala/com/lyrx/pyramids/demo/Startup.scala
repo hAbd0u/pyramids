@@ -1,12 +1,11 @@
-package com.lyrx.pyramids
+package com.lyrx.pyramids.demo
+
 import com.lyrx.pyramids.cryptography.DragAndDrop
 import com.lyrx.pyramids.frontend.UserFeedback
+import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+import org.scalajs.dom.{Event, document}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
-import org.scalajs.dom.{Event, File, document}
-
 import scala.concurrent.{ExecutionContext, Future}
-
-// This file is same as LastWillStartup.scala of master branch. for push 1
 
 object Startup extends DragAndDrop with UserFeedback{
 
