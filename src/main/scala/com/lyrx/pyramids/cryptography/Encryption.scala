@@ -12,9 +12,9 @@ trait Encryption extends  SymetricCrypto  {
   val pyramidConfig: PyramidConfig
 
   def symEncrypt()(implicit ctx:ExecutionContext) =  pyramidConfig.
-        symKeyOpt.map(symKey=> encrypt(symKey,pyramidConfig.distributedData)).
+        symKeyOpt.map(symKey=> encryptDir(symKey,pyramidConfig.distributedDir)).
     map(_.map(d=>new Pyramid(
-      pyramidConfig.copy(distributedData = d).
+      pyramidConfig.copy(distributedDir = d).
         msg("Your data has been encryted, oh Pharao!")
     ))).
     getOrElse(Future{new Pyramid(pyramidConfig.msg("Oh pharao, we have not found your encryption key!"))})

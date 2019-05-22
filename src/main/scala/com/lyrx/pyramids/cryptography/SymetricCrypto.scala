@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.cryptography
 
-import com.lyrx.pyramids.{DistributedData, DistributedDir}
+import com.lyrx.pyramids.{DistributedData, DistributedDir, EitherData}
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -21,6 +21,14 @@ trait SymetricCrypto extends Crypto {
 
 
 
+  def encryptDir(key:CryptoKey,distributedDir:DistributedDir) (implicit executionContext: ExecutionContext) = Future.
+    sequence(
+      distributedDir.
+        data.
+        map( encryptEither(key,_))).
+    map(DistributedDir(_,distributedDir.name))
+
+
   def encrypt(symKey:CryptoKey,distributedData: DistributedData)(implicit ctx:ExecutionContext)=
     distributedData.unencryptedOpt.
       map(arrayBuffer => {
@@ -37,13 +45,28 @@ trait SymetricCrypto extends Crypto {
           ivOpt = Some(iv.buffer)))
       }).getOrElse(Future{distributedData})
 
+  def encryptEither(key:CryptoKey,
+                    eitherData: EitherData)(implicit executionContext: ExecutionContext):Future[EitherData] = eitherData match {
+    case Left(data:DistributedData) => encrypt(key,data).map(f=>Left(f))
+    case Right(dir:DistributedDir) => encryptEither(key,eitherData)
+  }
 
 
-  def decryptDir(key:CryptoKey,distributedDir:DistributedDir) (implicit executionContext: ExecutionContext) = distributedDir.data.map( datum => datum  match {
-    case Left(adata) => decrypt(key,adata)
-    case Right(adir) => datum
 
-  })
+  def decryptDir(key:CryptoKey,distributedDir:DistributedDir) (implicit executionContext: ExecutionContext) = Future.
+    sequence(
+    distributedDir.
+    data.
+    map( decryptEither(key,_))).
+    map(DistributedDir(_,distributedDir.name))
+
+
+
+  def decryptEither(key:CryptoKey,
+                    eitherData: EitherData)(implicit executionContext: ExecutionContext):Future[EitherData] = eitherData match {
+    case Left(data:DistributedData) => decrypt(key,data).map(f=>Left(f))
+    case Right(dir:DistributedDir) => decryptEither(key,eitherData)
+  }
 
   def decrypt(key:CryptoKey,distributedData: DistributedData)
              (implicit executionContext: ExecutionContext)= distributedData.
