@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.cryptography
 
-import com.lyrx.pyramids.DistributedData
+import com.lyrx.pyramids.{DistributedData, DistributedDir}
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,6 +38,12 @@ trait SymetricCrypto extends Crypto {
       }).getOrElse(Future{distributedData})
 
 
+
+  def decryptDir(key:CryptoKey,distributedDir:DistributedDir) (implicit executionContext: ExecutionContext) = distributedDir.data.map( datum => datum  match {
+    case Left(adata) => decrypt(key,adata)
+    case Right(adir) => datum
+
+  })
 
   def decrypt(key:CryptoKey,distributedData: DistributedData)
              (implicit executionContext: ExecutionContext)= distributedData.

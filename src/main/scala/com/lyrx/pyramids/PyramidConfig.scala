@@ -20,6 +20,10 @@ case class DistributedDir(data:Seq[EitherData],name:String){
     copy(data =
       this.data :+ Right(distributedDir))
 
+  def withSignature(b:ArrayBuffer):DistributedDir =this.copy(data = this.data.map( (data:EitherData) => data match {
+    case Right(adir:DistributedDir) => data
+    case Left(adata:DistributedData) => Left(adata.withSignature(b))
+  }))
 
 }
 
@@ -40,7 +44,7 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 }
 
 
-case class PyramidConfig(distributedData: DistributedData,
+case class PyramidConfig(distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoKey],
                          asymKeyOpt:Option[CryptoKeyPair],
                          signKeyOpt:Option[CryptoKeyPair],
@@ -53,6 +57,6 @@ case class PyramidConfig(distributedData: DistributedData,
           messages.
           copy(messageOpt = Some(s)))
 
-  def withSignature(b:ArrayBuffer)=this.copy(distributedData=distributedData.withSignature(b))
+  def withSignature(b:ArrayBuffer)=this.copy(distributedDir=distributedDir.withSignature(b))
 
 }
