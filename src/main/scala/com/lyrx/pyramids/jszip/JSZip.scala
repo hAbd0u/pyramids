@@ -1,9 +1,12 @@
 package com.lyrx.pyramids.jszip
 
+
+import org.scalajs.dom.raw.Blob
+
 import scala.scalajs.js
-import scala.scalajs.js.Promise
+import scala.scalajs.js.{Promise, |}
 import scala.scalajs.js.annotation.{JSGlobal, JSGlobalScope}
-import scala.scalajs.js.typedarray.ArrayBuffer
+import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
 
@@ -12,26 +15,21 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 class JSZip extends js.Object{
 
 
-  def loadsy():String = js.native
+  def file(name:String,data:JSData):String = js.native
 }
 
-@JSGlobal("JSZip")
+@JSGlobal()
 @js.native
-class JSZipp extends js.Object{
-
+object JSZip extends js.Object{
 
   def loadAsync(b:ArrayBuffer):Promise[Unit] = js.native
 }
 
 
-@js.native
-trait JSPromise extends js.Any{
-
-
-   def `then`(f:js.Function0[Unit])
-}
 
 
 trait Zipping{
+
+  //def zip()
 
 }
