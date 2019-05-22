@@ -22,7 +22,7 @@ class JSZip extends js.Object{
 @js.native
 object JSZip extends js.Object{
 
-  def loadAsync(b:ArrayBuffer):Promise[Unit] = js.native
+//  def loadAsync(b:ArrayBuffer):Promise[Unit] = js.native
 }
 
 
@@ -30,6 +30,6 @@ object JSZip extends js.Object{
 
 trait Zipping{
 
-  //def zip()
+
 
 }
