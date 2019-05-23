@@ -26,7 +26,7 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
       importKeyPair(
         keyPairNative = kp,
         privateUsage = usageDecrypt,
-        publicUsage = usageEncrypt).
+        publicUsage = usageEncrypt,aHashAlgorithm).
         map(e=>Some(e))).
     getOrElse(Future{None}).
     map(e=>new Pyramid(pyramidConfig.copy(asymKeyOpt = e)))
@@ -42,7 +42,9 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
       importKeyPair(
         keyPairNative = kp,
         privateUsage = usageSign,
-        publicUsage = usageVerify).
+        publicUsage = usageVerify,
+        aSignAlgorithm
+      ).
         map(e=>Some(e))).
     getOrElse(Future{None}).
     map(e=>new Pyramid(pyramidConfig.copy(signKeyOpt = e)))

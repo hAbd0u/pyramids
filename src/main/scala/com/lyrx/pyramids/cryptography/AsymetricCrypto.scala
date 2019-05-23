@@ -8,11 +8,11 @@ import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 import js.Dynamic.{literal => l}
 trait AsymetricCrypto extends Crypto {
 
-  val aHashAlgorithm =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
+  val aHashAlgorithm:KeyAlgorithmIdentifier =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
     publicExponent = new Uint8Array( js.Array(1,0,1)),
     hash = HashAlgorithm.`SHA-256`)
 
-  val aSignAlgorithm = l(
+  val aSignAlgorithm:KeyAlgorithmIdentifier  = l(
     "name" ->"ECDSA",
     "namedCurve" -> "P-384"
   ).asInstanceOf[KeyAlgorithmIdentifier]
@@ -53,17 +53,18 @@ trait AsymetricCrypto extends Crypto {
   def importKeyPair(
                      keyPairNative: KeypairNative,
                      privateUsage:js.Array[KeyUsage],
-                     publicUsage:js.Array[KeyUsage]
+                     publicUsage:js.Array[KeyUsage],
+                     algo:KeyAlgorithmIdentifier
                    )(
                      implicit executionContext: ExecutionContext)=keyPairNative.
     `private`.map(aJSPrivateKey=>
     importKey(
-      aJSPrivateKey, privateUsage)).
+      aJSPrivateKey, privateUsage,algo)).
     getOrElse(Future{None}).
     flatMap( (privateKeyOpt:Option[CryptoKey])=>keyPairNative.
       `public`.map(
       aJSPublicKey=>
-      importKey(aJSPublicKey, publicUsage).
+      importKey(aJSPublicKey, publicUsage,algo).
         map(publicKeyOpt=>
         toKeyPair(privateKeyOpt,publicKeyOpt))).
       getOrElse(Future{toKeyPair(privateKeyOpt,None)}))
@@ -78,11 +79,11 @@ trait AsymetricCrypto extends Crypto {
 
 
 
-  private def importKey(jsonWebKey: JsonWebKey,usages: js.Array[KeyUsage])(
+  private def importKey(jsonWebKey: JsonWebKey,usages: js.Array[KeyUsage],algo:KeyAlgorithmIdentifier)(
     implicit executionContext: ExecutionContext) = crypto.subtle.importKey(
     KeyFormat.jwk,
       jsonWebKey,
-      aHashAlgorithm,
+      algo,
       true,
       usages).toFuture.
       map(k=>Some(k.asInstanceOf[CryptoKey]))
