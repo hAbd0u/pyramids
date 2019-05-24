@@ -37,9 +37,10 @@ object Startup extends DragAndDrop with UserFeedback{
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): PyramidConfig = {
 
-    //println("jSZip: " + new JSZip())
-
     val pyramid = new Pyramid(pyramidConfig)
+
+    //pyramid.initIpfs()
+
     def handle(f: Future[PyramidConfig]) = {
       f.onComplete(t=>t.failed.map(thr=>error(thr.getMessage)))
       f.map(config => init(config))

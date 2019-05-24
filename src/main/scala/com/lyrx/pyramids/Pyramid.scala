@@ -1,6 +1,7 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.cryptography._
+import com.lyrx.pyramids.ipfs.CanIpfs
 
 
 object  Pyramid{
@@ -18,6 +19,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
     with KeyImport
   with DownloadWallet
   with UploadWallet
+  with CanIpfs
 {
 
 def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
