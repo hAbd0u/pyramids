@@ -21,8 +21,8 @@ libraryDependencies ++= Seq(
 )
 jsDependencies ++= Seq(
   "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js",
-ProvidedJS / "js/web3/web3.min.js",
-  "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js",
+  ProvidedJS / "js/web3/web3.min.js",
+  ProvidedJS / "js/ipfs/index.js",
   ProvidedJS / "js/jszip/jszip.min.js"
 )
 

@@ -39,7 +39,7 @@ object Startup extends DragAndDrop with UserFeedback{
 
     val pyramid = new Pyramid(pyramidConfig)
 
-    //pyramid.initIpfs()
+    pyramid.initIpfs()
 
     def handle(f: Future[PyramidConfig]) = {
       f.onComplete(t=>t.failed.map(thr=>error(thr.getMessage)))

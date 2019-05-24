@@ -11,8 +11,11 @@ trait CanIpfs //extends CanInstantiate
 
 
   def initIpfs() ={
-    //instantiate[Ipfs](l("repo"  -> s"ipfs-${Math.random().toString()}" ))
-    new Ipfs(l("repo"  -> s"ipfs-${Math.random().toString()}" ))
+    //instantiate[Ipfs](l("repo"  -> s"ipfs-${Math.random().toString()}" )).
+    new Ipfs(l("repo"  -> s"ipfs-${Math.random().toString()}" )).
+      onReadyOnce(()=>
+      println("IPFS object initialized: ")
+    )
   }
 
 }
