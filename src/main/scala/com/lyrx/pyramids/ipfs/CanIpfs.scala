@@ -1,21 +1,23 @@
 package com.lyrx.pyramids.ipfs
 
-import com.lyrx.pyramids.{CanInstantiate, PyramidConfig}
+import com.lyrx.pyramids.{CanInstantiate, Pyramid, PyramidConfig}
 
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
+import scala.concurrent.{ExecutionContext, Promise}
 import scala.scalajs.js.Math
-trait CanIpfs //extends CanInstantiate
+trait CanIpfs
 {
   val pyramidConfig:PyramidConfig
 
 
-  def initIpfs() ={
-    //instantiate[Ipfs](l("repo"  -> s"ipfs-${Math.random().toString()}" )).
-    new Ipfs(l("repo"  -> s"ipfs-${Math.random().toString()}" )).
-      onReadyOnce(()=>
-      println("IPFS object initialized: ")
+  def initIpfs()(implicit executionContext: ExecutionContext) ={
+    val promise:Promise[Ipfs] = Promise[Ipfs]
+    val ipfs =new Ipfs(l("repo"  -> s"ipfs-${Math.random().toString()}" ))
+    ipfs.
+      onReadyOnce(()=>promise.success(ipfs)
     )
+    promise.future.map(i=>new Pyramid(pyramidConfig.copy(ipfsOpt = Some(ipfs))))
   }
 
 }

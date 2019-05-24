@@ -8,6 +8,7 @@ import org.scalajs.dom.{Event, document}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 object Startup extends DragAndDrop with UserFeedback{
 
@@ -26,9 +27,10 @@ object Startup extends DragAndDrop with UserFeedback{
     message("Welcome, Pharao! Initialzing ...")
     Pyramid()
       .generateKeys()
-      .onComplete(t => {
+      .flatMap(p=>p.initIpfs())
+      .onComplete( (t:Try[Pyramid]) => {
         t.failed.map(thr => error(s"Error generating keys: ${thr.getMessage}"))
-        t.map(p => init(p.pyramidConfig))
+        t.map((p:Pyramid) => init(p.pyramidConfig))
       })
   }
 
@@ -38,8 +40,6 @@ object Startup extends DragAndDrop with UserFeedback{
       implicit executionContext: ExecutionContext): PyramidConfig = {
 
     val pyramid = new Pyramid(pyramidConfig)
-
-    pyramid.initIpfs()
 
     def handle(f: Future[PyramidConfig]) = {
       f.onComplete(t=>t.failed.map(thr=>error(thr.getMessage)))

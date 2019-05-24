@@ -1,5 +1,6 @@
 package com.lyrx.pyramids
 
+import com.lyrx.pyramids.ipfs.Ipfs
 import org.scalajs.dom.File
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair}
 
@@ -44,7 +45,9 @@ case class PyramidConfig(distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoKey],
                          asymKeyOpt:Option[CryptoKeyPair],
                          signKeyOpt:Option[CryptoKeyPair],
-                         messages:Messages  ) {
+                         messages:Messages ,
+                         ipfsOpt:Option[ Ipfs]
+                        ) {
 
   def msg(s:String) = this.
     copy(

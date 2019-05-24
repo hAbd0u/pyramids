@@ -10,7 +10,8 @@ object  Pyramid{
     None,
     None,
     Messages(Some("Welcome to your Pyramid!"),
-      None)))
+      None),
+    None))
 }
 
 class Pyramid(override val pyramidConfig: PyramidConfig)
