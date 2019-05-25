@@ -24,35 +24,36 @@ object Startup extends DragAndDrop with UserFeedback{
 
   def startup()={
     implicit val ec = ExecutionContext.global;
-    message("Welcome, Pharao! Initialzing ...")
+
 
     Pyramid()
-      .generateKeys().map(p=>init(p.pyramidConfig))
+      .generateKeys().map(p=>ipfsInit(p.pyramidConfig))
 
 
   }
 
 
-  def init(pyramidConfig: PyramidConfig)(
+  def ipfsInit(pyramidConfig: PyramidConfig)(
     implicit executionContext: ExecutionContext)= {
+    message("Welcome, Pharao! Entering the world of P2P-Networks ...")
     val f =
     new Pyramid(
       pyramidConfig
     ).initIpfs()
 
     f.failed.map(thr => error(s"Initialization Error: ${thr.getMessage}"))
-    f.map((p:Pyramid) => internalInit(p.pyramidConfig))
+    f.map((p:Pyramid) => init(p.pyramidConfig))
 
   }
 
-  def internalInit(pyramidConfig: PyramidConfig)(
+  def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
     val pyramid = new Pyramid(pyramidConfig)
 
     def handle(f: Future[PyramidConfig]) = {
       f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
-      f.map(config => init(config))
+      f.map(config => ipfsInit(config))
     }
 
     def click(selector: String, c: (Event) => Future[PyramidConfig]) =
