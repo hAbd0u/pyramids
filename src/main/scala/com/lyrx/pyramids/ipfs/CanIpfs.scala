@@ -52,6 +52,7 @@ trait CanIpfs extends Crypto with PyramidJSON
         map(ipfs=>ipfs.
           futureAdd(n).map(Some(_)
         )).
-        getOrElse(Future{None}))
+        getOrElse(Future{None})).
+    map(_.flatMap(_.headOption.map(_.hash)))
 
 }
