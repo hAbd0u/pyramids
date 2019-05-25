@@ -37,6 +37,8 @@ trait CanIpfs extends Crypto with PyramidJSON
       "asym" -> l("public" -> kp._1.getOrElse(null)),
       "sign" -> l("public" -> kp._2.getOrElse(null))
 
-    ).asInstanceOf[WalletNative])
+    ).asInstanceOf[WalletNative]).map(
+      w=>stringify(w)
+    )
 
 }

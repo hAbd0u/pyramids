@@ -45,8 +45,6 @@ package object keyhandling {
 
   implicit class PimpedArrayBuffer(b:ArrayBuffer){
 
-
-
     def toHexString() = new Uint8Array(b).
       map(c=>c.toHexString).foldLeft("")((a:String,b:String)=>a + b)
 
