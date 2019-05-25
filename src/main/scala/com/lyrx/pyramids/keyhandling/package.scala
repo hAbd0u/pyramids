@@ -35,13 +35,6 @@ package object keyhandling {
   }
 
 
-  implicit class PimpedString(s:String){
-    def toUInt8Array():Uint8Array = new Uint8Array(s.getBytes().toJSArray)
-
-    def toArrayBuffer() = toUInt8Array().buffer
-
-    def toDynamic[T <: js.Dynamic]():T = js.JSON.parse(s).asInstanceOf[T]
-  }
 
   implicit class PimpedArrayBuffer(b:ArrayBuffer){
 
