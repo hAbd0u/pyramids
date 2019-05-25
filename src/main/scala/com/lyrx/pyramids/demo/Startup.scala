@@ -7,7 +7,7 @@ import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 import org.scalajs.dom.{Event, document}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.Try
 
 object Startup extends DragAndDrop with UserFeedback{
@@ -34,29 +34,34 @@ object Startup extends DragAndDrop with UserFeedback{
 
 
   def init(pyramidConfig: PyramidConfig)(
-    implicit executionContext: ExecutionContext)= new Pyramid(
-    pyramidConfig
-  ).initIpfs().onComplete( (t:Try[Pyramid]) => {
-    t.failed.map(thr => error(s"Initialization Error: ${thr.getMessage}"))
-    t.map((p:Pyramid) => internalInit(p.pyramidConfig))
-  })
+    implicit executionContext: ExecutionContext)= {
+    val f =
+    new Pyramid(
+      pyramidConfig
+    ).initIpfs()
+
+    f.failed.map(thr => error(s"Initialization Error: ${thr.getMessage}"))
+    f.map((p:Pyramid) => internalInit(p.pyramidConfig))
+
+  }
 
   def internalInit(pyramidConfig: PyramidConfig)(
-      implicit executionContext: ExecutionContext): PyramidConfig = {
+      implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
     val pyramid = new Pyramid(pyramidConfig)
 
     def handle(f: Future[PyramidConfig]) = {
-      f.onComplete(t=>t.failed.map(thr=>error(thr.getMessage)))
+      f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
       f.map(config => init(config))
     }
+
     def click(selector: String, c: (Event) => Future[PyramidConfig]) =
       $(selector).off().click((e: Event) => handle(c(e)))
 
 
     //show message and error
-    pyramidConfig.messages.messageOpt.map(s=>message(s))
-    pyramidConfig.messages.errorOpt.map(s=>error(s))
+    pyramidConfig.messages.messageOpt.map(s => message(s))
+    pyramidConfig.messages.errorOpt.map(s => error(s))
 
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off()).on("drop", (e: Event) => e.preventDefault())
@@ -67,7 +72,10 @@ object Startup extends DragAndDrop with UserFeedback{
       .downloadWallet($("#logo").off())
       .map((q2: JQuery) => onDrop(q2, (f) => handle(pyramid.uploadWallet(f))))
 
-    pyramidConfig
+    Future {
+      pyramidConfig
+    }
   }
+
 
 }
