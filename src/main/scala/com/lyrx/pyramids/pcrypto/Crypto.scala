@@ -36,6 +36,12 @@ trait Crypto {
     ).
     getOrElse(Future{None})
 
+  def exportPublicKey(keyPairOpt:Option[CryptoKeyPair])(implicit ctx:ExecutionContext)=keyPairOpt.
+    map(keys=>exportCryptoKey(keys.publicKey).map((k:JsonWebKey)=>Some(k))).getOrElse(Future{None})
+
+
+    //.getOrElse(Future{None})
+
 
 
 
