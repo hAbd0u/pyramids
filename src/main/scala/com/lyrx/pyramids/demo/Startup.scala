@@ -25,7 +25,7 @@ object Startup extends DragAndDrop with UserFeedback{
   def startup()={
     implicit val ec = ExecutionContext.global;
 
-
+    message("Generating keys ...")
     Pyramid()
       .generateKeys().map(p=>ipfsInit(p.pyramidConfig))
 
@@ -35,7 +35,7 @@ object Startup extends DragAndDrop with UserFeedback{
 
   def ipfsInit(pyramidConfig: PyramidConfig)(
     implicit executionContext: ExecutionContext)= {
-    message("Connecting P2P networks ...")
+    message("Connecting IPFS network ...")
     val f =
     new Pyramid(
       pyramidConfig
