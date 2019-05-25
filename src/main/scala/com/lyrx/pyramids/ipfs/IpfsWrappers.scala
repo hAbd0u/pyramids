@@ -18,10 +18,9 @@ class Ipfs(args:js.Dynamic) extends js.Object{
 
 @js.native
 trait IPFSSFile extends js.Object{
-
-  val content:NodeBuffer = js.native
   val path:String = js.native
-  val size:js.UndefOr[Int] = js.native
+  val hash:String = js.native
+  val size:Int = js.native
 }
 @js.native
 trait IPFSSError extends js.Object{
