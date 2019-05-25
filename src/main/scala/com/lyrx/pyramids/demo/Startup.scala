@@ -11,6 +11,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.Try
 
 object Startup extends DragAndDrop with UserFeedback{
+  implicit val ec = ExecutionContext.global
 
   override def msgField():JQuery= $("#message")
   def timeField():JQuery = $("#time")
@@ -23,7 +24,7 @@ object Startup extends DragAndDrop with UserFeedback{
 
 
   def startup()={
-    implicit val ec = ExecutionContext.global;
+
 
     message("Generating keys ...")
     Pyramid()
@@ -46,20 +47,20 @@ object Startup extends DragAndDrop with UserFeedback{
 
   }
 
+  def handle(f: Future[PyramidConfig],msgOpt:Option[String]=None) = {
+    msgOpt.map(message(_))
+    f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
+    f.map(config => ipfsInit(config))
+  }
+
+  def click(selector: String, c: (Event) => Future[PyramidConfig]) =
+    $(selector).off().click((e: Event) => handle(c(e)))
+
+
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
     val pyramid = new Pyramid(pyramidConfig)
-
-    def handle(f: Future[PyramidConfig],msgOpt:Option[String]=None) = {
-      msgOpt.map(message(_))
-      f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
-      f.map(config => ipfsInit(config))
-    }
-
-    def click(selector: String, c: (Event) => Future[PyramidConfig]) =
-      $(selector).off().click((e: Event) => handle(c(e)))
-
 
     //show message and error
     pyramidConfig.messages.messageOpt.map(s => message(s))
@@ -67,7 +68,6 @@ object Startup extends DragAndDrop with UserFeedback{
 
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off()).on("drop", (e: Event) => e.preventDefault())
-
 
     //Download/upload wallet:
     pyramid
