@@ -51,7 +51,8 @@ object Startup extends DragAndDrop with UserFeedback{
 
     val pyramid = new Pyramid(pyramidConfig)
 
-    def handle(f: Future[PyramidConfig]) = {
+    def handle(f: Future[PyramidConfig],msgOpt:Option[String]=None) = {
+      msgOpt.map(message(_))
       f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
       f.map(config => ipfsInit(config))
     }
@@ -71,7 +72,9 @@ object Startup extends DragAndDrop with UserFeedback{
     //Download/upload wallet:
     pyramid
       .downloadWallet($("#logo").off())
-      .map((q2: JQuery) => onDrop(q2, (f) => handle(pyramid.uploadWallet(f))))
+      .map((q2: JQuery) => onDrop(q2, (f) => handle(
+        pyramid.uploadWallet(f),
+        Some(s"Importing keys from ${f.name}"))))
 
     Future {
       pyramidConfig
