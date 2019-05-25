@@ -12,7 +12,7 @@ class Ipfs(args:js.Dynamic) extends js.Object{
   def isOnline():Boolean = js.native
   def version():String = js.native
 
-  def add(path:String, content:NodeBuffer, c: js.Function2[IPFSSError,js.Array[IPFSSFile],Unit]):Unit = js.native
+  def add(content:NodeBuffer, option:js.Dynamic, c: js.Function2[IPFSSError,js.Array[IPFSSFile],Unit]):Unit = js.native
 
 }
 
