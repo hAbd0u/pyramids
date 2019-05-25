@@ -11,7 +11,7 @@ object CryptoTypes{
   type JSKeyPairOpt = Option[JsonKeyPair]
   type JSKeyOpt = Option[JsonWebKey]
   type AllJSKeysOpt = (JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)
-
+  type JsonWebKeyOptPair  = (Option[JsonWebKey],Option[JsonWebKey])
 }
 
 
