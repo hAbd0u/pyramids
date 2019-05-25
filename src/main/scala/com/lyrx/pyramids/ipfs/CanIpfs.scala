@@ -19,7 +19,11 @@ trait CanIpfs extends Crypto with PyramidJSON
     ipfs.
       onReadyOnce(()=>promise.success(ipfs)
     )
-    promise.future.map(i=>new Pyramid(pyramidConfig.copy(ipfsOpt = Some(ipfs))))
+    promise.future.map(i=>new Pyramid(
+      pyramidConfig.
+        copy(
+          ipfsOpt = Some(ipfs)
+        ).msg("Oh Pharao, public keys are published!")))
   }
 
 

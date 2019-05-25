@@ -25,18 +25,23 @@ object Startup extends DragAndDrop with UserFeedback{
   def startup()={
     implicit val ec = ExecutionContext.global;
     message("Welcome, Pharao! Initialzing ...")
+
     Pyramid()
-      .generateKeys()
-      .flatMap(p=>p.initIpfs())
-      .onComplete( (t:Try[Pyramid]) => {
-        t.failed.map(thr => error(s"Error generating keys: ${thr.getMessage}"))
-        t.map((p:Pyramid) => init(p.pyramidConfig))
-      })
+      .generateKeys().map(p=>init(p.pyramidConfig))
+
+
   }
 
 
-// Newly added code by Alex
   def init(pyramidConfig: PyramidConfig)(
+    implicit executionContext: ExecutionContext)= new Pyramid(
+    pyramidConfig
+  ).initIpfs().onComplete( (t:Try[Pyramid]) => {
+    t.failed.map(thr => error(s"Initialization Error: ${thr.getMessage}"))
+    t.map((p:Pyramid) => internalInit(p.pyramidConfig))
+  })
+
+  def internalInit(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): PyramidConfig = {
 
     val pyramid = new Pyramid(pyramidConfig)
