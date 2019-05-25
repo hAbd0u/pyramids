@@ -2,7 +2,7 @@ package com.lyrx.pyramids.ipfs
 
 import com.lyrx.pyramids.pcrypto.CryptoTypes.{AllJSKeysOpt, JsonKeyPair, JsonWebKeyOptPair}
 import com.lyrx.pyramids.pcrypto.{Crypto, WalletNative}
-import com.lyrx.pyramids.{CanInstantiate, Pyramid, PyramidConfig, PyramidJSON}
+import com.lyrx.pyramids.{CanInstantiate, PimpedString, Pyramid, PyramidConfig, PyramidJSON}
 
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
@@ -32,13 +32,13 @@ trait CanIpfs extends Crypto with PyramidJSON
 
 
 
-  def publishPublicKey()(implicit ctx:ExecutionContext) =
+  def publicKeyToBuffer()(implicit ctx:ExecutionContext) =
     exportAllPublicKeys().map(kp=>l(
       "asym" -> l("public" -> kp._1.getOrElse(null)),
       "sign" -> l("public" -> kp._2.getOrElse(null))
 
     ).asInstanceOf[WalletNative]).map(
-      w=>stringify(w)
+      w=>new PimpedString(stringify(w)).toArrayBuffer().asInstanceOf[NodeBuffer]
     )
 
 }

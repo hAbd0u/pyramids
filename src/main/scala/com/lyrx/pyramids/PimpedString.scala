@@ -1,3 +1,6 @@
+package com.lyrx.pyramids
+
+
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.Uint8Array
 import scala.scalajs.js.JSConverters._
