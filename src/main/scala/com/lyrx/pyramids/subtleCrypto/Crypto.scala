@@ -7,6 +7,10 @@ import scala.concurrent.{ExecutionContext, Future}
 object CryptoTypes{
   type PyramidCryptoKey = CryptoKey
   type PyramidCryptoKeyPair = CryptoKeyPair
+  type JsonKeyPair = (JsonWebKey,JsonWebKey)
+  type JSKeyPairOpt = Option[JsonKeyPair]
+  type JSKeyOpt = Option[JsonWebKey]
+  type AllJSKeysOpt = (JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)
 
 }
 
@@ -14,10 +18,6 @@ object CryptoTypes{
 
 trait Crypto {
 
-  type JsonKeyPair = (JsonWebKey,JsonWebKey)
-  type JSKeyPairOpt = Option[JsonKeyPair]
-  type JSKeyOpt = Option[JsonWebKey]
-  type AllJSKeysOpt = (JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)
 
 
   def exportCryptoKey(key: CryptoKey)

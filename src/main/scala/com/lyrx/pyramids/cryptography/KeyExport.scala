@@ -1,15 +1,15 @@
 package com.lyrx.pyramids.cryptography
 
 import com.lyrx.pyramids.PyramidConfig
+import com.lyrx.pyramids.subtleCrypto.CryptoTypes.{AllJSKeysOpt, JsonKeyPair}
 import com.lyrx.pyramids.subtleCrypto.{AsymetricCrypto, Crypto, SymetricCrypto, WalletNative}
-
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
 
 
 
-trait KeyExport extends  SymetricCrypto with AsymetricCrypto with Crypto {
+trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
 
   val pyramidConfig: PyramidConfig
 
