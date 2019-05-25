@@ -1,5 +1,6 @@
 package com.lyrx.pyramids.cryptography
 
+import com.lyrx.pyramids.subtleCrypto.SymetricCrypto
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 import org.scalajs.dom.File
 

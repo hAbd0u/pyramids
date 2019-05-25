@@ -1,11 +1,9 @@
 package com.lyrx.pyramids.cryptography
 
+import com.lyrx.pyramids.subtleCrypto.SymetricCrypto
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
-import org.scalajs.dom.File
-import org.scalajs.dom.crypto.crypto
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
 
 trait Encryption extends  SymetricCrypto  {
 

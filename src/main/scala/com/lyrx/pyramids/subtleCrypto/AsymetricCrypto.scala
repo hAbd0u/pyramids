@@ -1,4 +1,4 @@
-package com.lyrx.pyramids.cryptography
+package com.lyrx.pyramids.subtleCrypto
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 

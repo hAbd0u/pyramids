@@ -1,21 +1,18 @@
 package com.lyrx.pyramids.cryptography
 
 import com.lyrx.pyramids.PyramidConfig
-import org.scalajs.dom.crypto.{CryptoKeyPair, JsonWebKey}
+import com.lyrx.pyramids.subtleCrypto.{AsymetricCrypto, Crypto, SymetricCrypto, WalletNative}
+
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => l}
 
 
 
-trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
+trait KeyExport extends  SymetricCrypto with AsymetricCrypto with Crypto {
 
   val pyramidConfig: PyramidConfig
 
-  type JSKeyPairOpt = Option[(JsonWebKey,JsonWebKey)]
-  type JSKeyOpt = Option[JsonWebKey]
-  type AllJSKeysOpt = (JSKeyOpt,JSKeyPairOpt,JSKeyPairOpt)
 
 
   def exportSymKey()(implicit ctx:ExecutionContext)=pyramidConfig.
@@ -38,18 +35,10 @@ trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
     flatMap(keysOpt=>exportSignKeys().map(keysOpt2=>(keysOpt._1,keysOpt._2,keysOpt2))).
     map( (ko:AllJSKeysOpt)=>l(
       "sym"->ko._1.getOrElse(null),
-      "asym" -> ko._2.map((kp:(JsonWebKey,JsonWebKey))=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null),
-      "sign" -> ko._3.map((kp:(JsonWebKey,JsonWebKey))=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null)
+      "asym" -> ko._2.map((kp:JsonKeyPair)=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null),
+      "sign" -> ko._3.map((kp:JsonKeyPair)=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null)
     ).asInstanceOf[WalletNative])
 
-  def exportKeys(keyPairOpt:Option[CryptoKeyPair])(implicit ctx:ExecutionContext)=keyPairOpt.
-    map(keys=>exportCryptoKey(keys.publicKey).
-      flatMap(pubKeyJsonWeb=>exportCryptoKey(
-        keys.privateKey
-      ).flatMap(privKeyJsonWeb=>Future{Some((privKeyJsonWeb,pubKeyJsonWeb))})
-      )
-    ).
-    getOrElse(Future{None})
 
 
 

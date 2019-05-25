@@ -1,8 +1,7 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.ipfs.Ipfs
-import org.scalajs.dom.File
-import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair}
+import com.lyrx.pyramids.subtleCrypto.{Crypto, CryptoTypes}
 
 import scala.scalajs.js.typedarray.ArrayBuffer
 
@@ -42,9 +41,9 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 
 
 case class PyramidConfig(distributedDir: DistributedDir,
-                          symKeyOpt:Option[CryptoKey],
-                         asymKeyOpt:Option[CryptoKeyPair],
-                         signKeyOpt:Option[CryptoKeyPair],
+                          symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
+                         asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
+                         signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          messages:Messages ,
                          ipfsOpt:Option[ Ipfs]
                         ) {
