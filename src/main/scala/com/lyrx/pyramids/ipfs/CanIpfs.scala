@@ -32,7 +32,7 @@ trait CanIpfs extends Crypto with PyramidJSON
 
 
 
-  def publicKeyToBuffer()(implicit ctx:ExecutionContext) =
+  def publicKeysToBuffer()(implicit ctx:ExecutionContext) =
     exportAllPublicKeys().map(kp=>l(
       "asym" -> l("public" -> kp._1.getOrElse(null)),
       "sign" -> l("public" -> kp._2.getOrElse(null))
@@ -40,5 +40,8 @@ trait CanIpfs extends Crypto with PyramidJSON
     ).asInstanceOf[WalletNative]).map(
       w=>new PimpedString(stringify(w)).toArrayBuffer().asInstanceOf[NodeBuffer]
     )
+
+  def publicKeysToIpfs()(implicit ctx:ExecutionContext) = publicKeysToBuffer().
+    map(n=>())
 
 }
