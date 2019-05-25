@@ -20,4 +20,9 @@ trait CanIpfs
     promise.future.map(i=>new Pyramid(pyramidConfig.copy(ipfsOpt = Some(ipfs))))
   }
 
+  def publishPublicKey() = {
+    pyramidConfig.asymKeyOpt.
+      map(pubkey=>{})
+  }
+
 }
