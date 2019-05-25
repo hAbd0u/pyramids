@@ -23,7 +23,7 @@ trait CanIpfs extends Crypto with PyramidJSON
       pyramidConfig.
         copy(
           ipfsOpt = Some(ipfs)
-        ).msg("Oh Pharao, public keys are published!")))
+        ).msg("Connected all P2P networks ...")))
   }
 
 

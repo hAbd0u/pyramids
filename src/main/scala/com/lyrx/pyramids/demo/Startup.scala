@@ -35,7 +35,7 @@ object Startup extends DragAndDrop with UserFeedback{
 
   def ipfsInit(pyramidConfig: PyramidConfig)(
     implicit executionContext: ExecutionContext)= {
-    message("Welcome, Pharao! Entering the world of P2P-Networks ...")
+    message("Connecting P2P networks ...")
     val f =
     new Pyramid(
       pyramidConfig
