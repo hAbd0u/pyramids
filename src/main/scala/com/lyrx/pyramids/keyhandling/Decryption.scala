@@ -1,4 +1,4 @@
-package com.lyrx.pyramids.cryptography
+package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.subtleCrypto.SymetricCrypto
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}

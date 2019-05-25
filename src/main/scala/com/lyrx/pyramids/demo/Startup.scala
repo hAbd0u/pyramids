@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.demo
 
-import com.lyrx.pyramids.cryptography.DragAndDrop
+import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.frontend.UserFeedback
 import com.lyrx.pyramids.jszip.JSZip
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}

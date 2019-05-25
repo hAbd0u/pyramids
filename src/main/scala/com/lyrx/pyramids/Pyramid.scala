@@ -1,6 +1,6 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.cryptography._
+import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.ipfs.CanIpfs
 
 

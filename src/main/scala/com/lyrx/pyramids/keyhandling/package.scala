@@ -7,7 +7,7 @@ import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
-package object cryptography {
+package object keyhandling {
 
 
 
