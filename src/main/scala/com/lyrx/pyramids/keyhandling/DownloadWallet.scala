@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.keyhandling
 
-import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
 import org.scalajs.dom
 import org.scalajs.dom.Event
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag}
@@ -24,14 +24,14 @@ trait URL extends js.Any {
 
 }
 
-trait DownloadWallet {
+trait DownloadWallet extends PyramidJSON{
 
 
 
 
   val pyramidConfig: PyramidConfig
 
-  def stringify(aAny: js.Any) = js.JSON.stringify(aAny: js.Any, null: js.Array[js.Any], 1: js.Any)
+
 
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
