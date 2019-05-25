@@ -1,7 +1,7 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.ipfs.Ipfs
-import com.lyrx.pyramids.subtleCrypto.{Crypto, CryptoTypes}
+import com.lyrx.pyramids.pcrypto.{Crypto, CryptoTypes}
 
 import scala.scalajs.js.typedarray.ArrayBuffer
 

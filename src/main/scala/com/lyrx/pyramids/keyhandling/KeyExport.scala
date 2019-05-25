@@ -1,8 +1,8 @@
 package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.PyramidConfig
-import com.lyrx.pyramids.subtleCrypto.CryptoTypes.{AllJSKeysOpt, JsonKeyPair}
-import com.lyrx.pyramids.subtleCrypto.{AsymetricCrypto, Crypto, SymetricCrypto, WalletNative}
+import com.lyrx.pyramids.pcrypto.CryptoTypes.{AllJSKeysOpt, JsonKeyPair}
+import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, Crypto, SymetricCrypto, WalletNative}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}

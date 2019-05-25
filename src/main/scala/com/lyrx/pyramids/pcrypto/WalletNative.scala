@@ -1,4 +1,4 @@
-package com.lyrx.pyramids.subtleCrypto
+package com.lyrx.pyramids.pcrypto
 
 import org.scalajs.dom.crypto.JsonWebKey
 

@@ -1,4 +1,4 @@
-package com.lyrx.pyramids.subtleCrypto
+package com.lyrx.pyramids.pcrypto
 
 import com.lyrx.pyramids.{DistributedData, DistributedDir, EitherData}
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}

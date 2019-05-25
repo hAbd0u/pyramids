@@ -6,7 +6,7 @@ import org.scalajs.dom.crypto.BufferSource
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.typedarray.ArrayBuffer
 
-package object subtleCrypto {
+package object pcrypto {
 
 
   def hash(b: BufferSource)(implicit excecutionContext:ExecutionContext): Future[ArrayBuffer] =

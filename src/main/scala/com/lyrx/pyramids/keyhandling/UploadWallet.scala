@@ -1,7 +1,7 @@
 package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.PyramidConfig
-import com.lyrx.pyramids.subtleCrypto.WalletNative
+import com.lyrx.pyramids.pcrypto.WalletNative
 import org.scalajs.dom.File
 import org.scalajs.dom.raw.{Blob, EventTarget, FileReader}
 import org.scalajs.jquery.{JQuery, JQueryEventObject}

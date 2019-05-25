@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.keyhandling
 
-import com.lyrx.pyramids.subtleCrypto.{AsymetricCrypto, SymetricCrypto, WalletNative}
+import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, SymetricCrypto, WalletNative}
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 
 import scala.concurrent.{ExecutionContext, Future}
