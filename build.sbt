@@ -29,11 +29,10 @@ libraryDependencies ++= Seq(
 
 
 npmDependencies in Compile ++= Seq(
-   "jquery" -> "2.2.1",
-     "web3"  -> "1.0.0-beta.55",
-  "ipfs" -> "0.36.2",
-  "jszip"  -> "3.2.1"
-
+   "jquery" -> "3.4.1",
+   "web3"  -> "1.0.0-beta.55",
+   "ipfs" -> "0.36.2",
+   "jszip"  -> "3.2.1"
 )
 
 
@@ -42,9 +41,9 @@ npmDependencies in Compile ++= Seq(
 testFrameworks += new TestFramework("utest.runner.Framework")
 
 
+/*
 val genDirPath = new java.io.File("src/main/webapp/js")
-
-
 crossTarget in(Compile, fastOptJS) := genDirPath
 crossTarget in(Compile, fullOptJS) := genDirPath
+*/
 
