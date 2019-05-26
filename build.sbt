@@ -54,7 +54,7 @@ copyjs := {
   ) map { p =>   (inDir / p, outDir / p) }
   IO.copy(files, true)
 }
-addCommandAlias("myFullOptJS",";fullOptJS;copyjs")
+addCommandAlias("mywebpack",";fullOptJS::webpack;copyjs")
 
 
 

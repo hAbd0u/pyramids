@@ -12,14 +12,14 @@ trait DragAndDrop {
       evt.stopPropagation();
       evt.preventDefault();
 
+      //println("Hiiiiier: "+ evt.originalEvent.asInstanceOf[DataTransferEvent].dataTransfer)
       evt.originalEvent.asInstanceOf[DataTransferEvent].
-        dataTransfer.map(dt=>dt.
+        dataTransfer.flatMap(dt=>dt.
         files.
         map(fs=>
           fs.
             headOption.
-            map(blob=>blob.
-              asInstanceOf[File])))
+            map(blob=>h(blob.asInstanceOf[File]))))
       ()
 
     }
