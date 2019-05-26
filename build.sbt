@@ -42,6 +42,23 @@ npmDependencies in Compile ++= Seq(
 testFrameworks += new TestFramework("utest.runner.Framework")
 
 
+
+lazy val copyjs = TaskKey[Unit]("copyjs",
+  "Copy bundle files to websapp")
+copyjs := {
+  val outDir = new File("src/main/webapp/js")
+  val inDir = new File(s"target/scala-2.12/scalajs-bundler/main")
+  val files = Seq(
+    "pyramids-opt-bundle.js",
+    "pyramids-opt-bundle.js.map"
+  ) map { p =>   (inDir / p, outDir / p) }
+  IO.copy(files, true)
+}
+addCommandAlias("myFullOptJS",";fullOptJS;copyjs")
+
+
+
+
 /*
 val genDirPath = new java.io.File("src/main/webapp/js")
 crossTarget in(Compile, fastOptJS) := genDirPath
