@@ -26,6 +26,9 @@ trait CanIpfs extends Crypto with PyramidJSON
         ).msg("Connected to IPFS network!")))
   }
 
+  def initIpfsAndPublishPublicKeys ()(implicit executionContext: ExecutionContext) = initIpfs().
+    flatMap(_.publicKeysToIpfs())
+
 
 
 

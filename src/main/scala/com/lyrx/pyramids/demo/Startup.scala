@@ -40,7 +40,7 @@ object Startup extends DragAndDrop with UserFeedback{
     val f =
     new Pyramid(
       pyramidConfig
-    ).initIpfs()
+    ).initIpfsAndPublishPublicKeys()
 
     f.failed.map(thr => error(s"Initialization Error: ${thr.getMessage}"))
     f.map((p:Pyramid) => init(p.pyramidConfig))
