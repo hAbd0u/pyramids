@@ -44,7 +44,7 @@ trait CanIpfs extends Crypto with PyramidJSON
       "asym" -> l("public" -> kp._1.getOrElse(null)),
       "sign" -> l("public" -> kp._2.getOrElse(null))
     ).asInstanceOf[WalletNative]).map(
-      w=>new PimpedString(stringify(w)).toArrayBuffer().asInstanceOf[NodeBuffer]
+      w=>  BufferObject.from(stringify(w))
     )
 
   def publicKeysToIpfs()(implicit ctx:ExecutionContext) = publicKeysToBuffer().

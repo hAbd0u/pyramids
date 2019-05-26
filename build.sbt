@@ -24,6 +24,9 @@ jsDependencies ++= Seq(
   ProvidedJS / "js/web3/web3.min.js",
   ProvidedJS / "js/ipfs/index.js",
   ProvidedJS / "js/jszip/jszip.min.js"
+  //ProvidedJS / "js/buffer/index.js" ,
+ // ProvidedJS / "js/ieee754/index.js",
+ // ProvidedJS / "js/base64-js/base64js.min.js"
 )
 
 testFrameworks += new TestFramework("utest.runner.Framework")
