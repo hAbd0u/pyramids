@@ -13,18 +13,24 @@ trait CanIpfs extends Crypto with PyramidJSON
   val pyramidConfig:PyramidConfig
 
 
-  def initIpfs()(implicit executionContext: ExecutionContext) ={
-    val promise:Promise[Ipfs] = Promise[Ipfs]
-    val ipfs =new Ipfs(l("repo"  -> s"ipfs-${Math.random().toString()}" ))
-    ipfs.
-      onReadyOnce(()=>promise.success(ipfs)
-    )
-    promise.future.map(i=>new Pyramid(
-      pyramidConfig.
-        copy(
-          ipfsOpt = Some(ipfs)
-        ).msg("Connected to IPFS network!")))
-  }
+
+
+  def initIpfs()(implicit executionContext: ExecutionContext) =Future {
+      new Pyramid(
+
+        pyramidConfig.
+          copy(
+            ipfsOpt = Some(IpfsHttpClient(l(
+              "host" -> "ipfs.infura.io",
+              "port" -> 5001,
+              "protocol" -> "https"
+            )))
+          ).msg("Connected to IPFS network!"))
+
+    }
+
+
+
 
   def initIpfsAndPublishPublicKeys ()(implicit executionContext: ExecutionContext) = initIpfs().
     flatMap(_.publicKeysToIpfs())
@@ -56,7 +62,7 @@ trait CanIpfs extends Crypto with PyramidJSON
         )).
         getOrElse(Future{None})).
     map(_.flatMap(_.headOption.map(_.hash))).
-    map(_.map(s=>new Pyramid(pyramidConfig.msg(s"Published public keys: ${s}"))).
+    map(_.map(s=>new Pyramid(pyramidConfig.msg(s"PPublished public keys: ${s}"))).
       getOrElse(new Pyramid(pyramidConfig)))
 
 }

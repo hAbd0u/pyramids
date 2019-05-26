@@ -7,22 +7,26 @@ import scala.scalajs.js.typedarray.Uint8Array
 package object ipfs {
 
 
-  implicit class PimpedIpfs(ipfs:Ipfs){
 
-    def onReadyOnce(c:js.Function0[Unit]) = ipfs.once("ready",c)
+
+
+  implicit class PimpedIpfsClient(ipfsClient:IpfsClient){
 
 
     def futureAdd(content:Buffer) = {
       val promise = Promise[js.Array[IPFSSFile]]
 
-      ipfs.add(content,l(),(e,r)=>if(e != null )
-          promise.failure(new Throwable(e.toString))
-          else
-          promise.success(r)
+      ipfsClient.add(content,l(),(e,r)=>if(e != null )
+        promise.failure(new Throwable(e.toString))
+      else
+        promise.success(r)
       )
-       promise.future
+      promise.future
     }
 
   }
+
+
+
 
 }

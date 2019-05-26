@@ -1,6 +1,6 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.ipfs.Ipfs
+import com.lyrx.pyramids.ipfs.{ IpfsClient}
 import com.lyrx.pyramids.pcrypto.{Crypto, CryptoTypes}
 
 import scala.scalajs.js.typedarray.ArrayBuffer
@@ -45,7 +45,7 @@ case class PyramidConfig(distributedDir: DistributedDir,
                          asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          messages:Messages ,
-                         ipfsOpt:Option[ Ipfs]
+                         ipfsOpt:Option[ IpfsClient]
                         ) {
 
   def msg(s:String) = this.
