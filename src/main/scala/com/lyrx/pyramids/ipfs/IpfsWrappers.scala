@@ -1,7 +1,7 @@
 package com.lyrx.pyramids.ipfs
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSGlobal
+import scala.scalajs.js.annotation.{JSGlobal, JSImport}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
@@ -41,7 +41,8 @@ class TextDecoder(utfLabel: js.UndefOr[String]) extends js.Object {
 }
 
 @js.native
-@JSGlobal("Buffer")
+//@JSGlobal("Buffer")
+@JSImport("buffer/","Buffer")
 object BufferObject extends js.Object {
 
   def from(s:String):Buffer = js.native
