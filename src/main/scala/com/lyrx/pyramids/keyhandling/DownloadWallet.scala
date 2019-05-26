@@ -2,13 +2,14 @@ package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
 import org.scalajs.dom
-import org.scalajs.dom.Event
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag}
-import org.scalajs.jquery.JQuery
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
+import typings.jqueryLib.{JQuery}
+
+
 
 @js.native
 @JSGlobal
@@ -40,7 +41,7 @@ trait DownloadWallet extends PyramidJSON{
 
 
 
-  def downloadWallet(n:JQuery)(implicit executionContext: ExecutionContext):Future[JQuery]=new Pyramid(pyramidConfig).
+  def downloadWallet[T](n:JQuery[T])(implicit executionContext: ExecutionContext):Future[JQuery[T]]=new Pyramid(pyramidConfig).
       exportAllKeys().
       map(walletNative=>stringify(walletNative)).
       map(s=>n.attr("href",createObjectURL(

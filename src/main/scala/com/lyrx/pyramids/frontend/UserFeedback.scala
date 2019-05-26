@@ -1,14 +1,18 @@
 package com.lyrx.pyramids.frontend
+import typings.jqueryLib.JQuery
+import typings.jqueryLib.^.{jQuery => $}
 
-import org.scalajs.jquery.JQuery
 
 import scala.scalajs.js
 
 trait UserFeedback {
-  def msgField():JQuery
-  def timeField():JQuery
 
-   def showTime(): UserFeedback = {
+
+   def msgField[T]():JQuery[T]
+   def timeField[T]():JQuery[T]
+
+
+  def showTime(): UserFeedback = {
     timeField().html(new js.Date().toLocaleString())
     this;
   }

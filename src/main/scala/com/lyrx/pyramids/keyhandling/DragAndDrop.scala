@@ -1,27 +1,31 @@
 package com.lyrx.pyramids.keyhandling
 
-import com.lyrx.pyramids.PyramidConfig
 import org.scalajs.dom.File
-import org.scalajs.jquery.{JQuery, JQueryEventObject}
+import typings.jqueryLib.{JQuery, JQueryEventObject}
 
 import scala.concurrent.Future
 
 trait DragAndDrop {
-  def onDrop(jq:JQuery,h: ((File) => Future[Any])): JQuery = onDragOverNothing(jq.on(
+  def onDrop[T](jq:JQuery[T],h: ((File) => Future[Any])): JQuery[T] = onDragOverNothing(jq.on(
     "drop",
     (evt: JQueryEventObject) => {
       evt.stopPropagation();
       evt.preventDefault();
-      evt
-        .asInstanceOf[DataTransferEvent]
-        .originalEvent
-        .map(_.dataTransfer.map(_.files))
-        .map(_.map(_.map(_.headOption.map((blob) =>
-          h(blob.asInstanceOf[File])))))
+
+      evt.originalEvent.asInstanceOf[DataTransferEvent].
+        dataTransfer.map(dt=>dt.
+        files.
+        map(fs=>
+          fs.
+            headOption.
+            map(blob=>blob.
+              asInstanceOf[File])))
+      ()
+
     }
   ))
 
-  def onDragOverNothing(jq:JQuery): JQuery = {
+  def onDragOverNothing[T](jq:JQuery[T]): JQuery[T] = {
     jq.on("dragover",
       ( evt: JQueryEventObject) => {
         evt.stopPropagation();

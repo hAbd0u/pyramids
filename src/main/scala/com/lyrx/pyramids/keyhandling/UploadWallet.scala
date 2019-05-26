@@ -4,7 +4,7 @@ import com.lyrx.pyramids.PyramidConfig
 import com.lyrx.pyramids.pcrypto.WalletNative
 import org.scalajs.dom.File
 import org.scalajs.dom.raw.{Blob, EventTarget, FileReader}
-import org.scalajs.jquery.{JQuery, JQueryEventObject}
+import typings.jqueryLib.JQueryEventObject
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -26,7 +26,7 @@ trait DataTransferEvent extends JQueryEventObject {
 
   val dataTransfer:UndefOr[DataTransferTarget] = js.native
 
-  val originalEvent:UndefOr[DataTransferEvent]=js.native
+  //val originalEvent:UndefOr[DataTransferEvent]=js.native
 
 }
 

@@ -1,30 +1,26 @@
 package com.lyrx.pyramids.demo
 
-import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.frontend.UserFeedback
-import com.lyrx.pyramids.jszip.JSZip
+import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 import org.scalajs.dom.{Event, document}
-import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
+import typings.jqueryLib.{JQuery, JQueryEventObject, jqueryMod => $}
 
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.Try
+import scala.concurrent.{ExecutionContext, Future}
 
-object Startup{
-  def main(args: Array[String]): Unit = document.addEventListener(
-    "DOMContentLoaded",
-    (e: Event) =>new Startup().startup())
 
-}
-
-class Startup extends DragAndDrop with UserFeedback{
+object  Startup extends DragAndDrop with UserFeedback{
   implicit val ec = ExecutionContext.global
 
-  override def msgField():JQuery= $("#message")
-  def timeField():JQuery = $("#time")
+   override def msgField[T]():JQuery[T] = {
+     $("#message")
+   }
+  override  def timeField[T]():JQuery[T] = $("#time")
 
 
-  //test suggested by Alex.
+  def main(args: Array[String]): Unit = document.addEventListener(
+    "DOMContentLoaded",
+    (e: Event) =>startup())
 
 
   def startup()={
@@ -57,8 +53,6 @@ class Startup extends DragAndDrop with UserFeedback{
     f.map(config => ipfsInit(config))
   }
 
-  def click(selector: String, c: (Event) => Future[PyramidConfig]) =
-    $(selector).off().click((e: Event) => handle(c(e)))
 
 
   def init(pyramidConfig: PyramidConfig)(
@@ -71,12 +65,12 @@ class Startup extends DragAndDrop with UserFeedback{
     pyramidConfig.messages.errorOpt.map(s => error(s))
 
     // prevent default for drag and droo
-    onDragOverNothing($(".front-page").off()).on("drop", (e: Event) => e.preventDefault())
+    onDragOverNothing($(".front-page").off()).on("drop", (e: JQueryEventObject) => e.preventDefault())
 
     //Download/upload wallet:
     pyramid
       .downloadWallet($("#logo").off())
-      .map((q2: JQuery) => onDrop(q2, (f) => handle(
+      .map((q2:JQuery[_]) => onDrop(q2, (f) => handle(
         pyramid.uploadWallet(f),
         Some(s"Importing keys from ${f.name}"))))
 
