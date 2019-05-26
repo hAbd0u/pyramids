@@ -1,5 +1,5 @@
-enablePlugins(ScalaJSPlugin)
-enablePlugins(JSDependenciesPlugin)
+enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin)
+
 
 name := "pyramids"
 
@@ -19,22 +19,32 @@ libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.9.6" ,
   "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
 )
-jsDependencies ++= Seq(
-  "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js",
+
+
+
+npmDependencies in Compile ++= Seq(
+   "jquery" -> "2.2.1",
+     "web3"  -> "1.0.0-beta.55",
+  "ipfs" -> "0.36.2",
+  "jszip"  -> "3.2.1"
+  /* 
   ProvidedJS / "js/web3/web3.min.js",
   ProvidedJS / "js/ipfs/index.js",
   ProvidedJS / "js/jszip/jszip.min.js"
-  //ProvidedJS / "js/buffer/index.js" ,
- // ProvidedJS / "js/ieee754/index.js",
- // ProvidedJS / "js/base64-js/base64js.min.js"
+  */
+
+
 )
 
+
+
+
 testFrameworks += new TestFramework("utest.runner.Framework")
-jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+
 
 val genDirPath = new java.io.File("src/main/webapp/js")
 
 
 crossTarget in(Compile, fastOptJS) := genDirPath
 crossTarget in(Compile, fullOptJS) := genDirPath
-crossTarget in(Compile, packageJSDependencies) := genDirPath
+

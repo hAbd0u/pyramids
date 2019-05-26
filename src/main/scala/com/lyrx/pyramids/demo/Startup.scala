@@ -10,7 +10,14 @@ import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.Try
 
-object Startup extends DragAndDrop with UserFeedback{
+object Startup{
+  def main(args: Array[String]): Unit = document.addEventListener(
+    "DOMContentLoaded",
+    (e: Event) =>new Startup().startup())
+
+}
+
+class Startup extends DragAndDrop with UserFeedback{
   implicit val ec = ExecutionContext.global
 
   override def msgField():JQuery= $("#message")
@@ -18,9 +25,6 @@ object Startup extends DragAndDrop with UserFeedback{
 
 
   //test suggested by Alex.
-  def main(args: Array[String]): Unit = document.addEventListener(
-      "DOMContentLoaded",
-      (e: Event) =>startup())
 
 
   def startup()={
