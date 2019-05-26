@@ -31,7 +31,7 @@ libraryDependencies ++= Seq(
 npmDependencies in Compile ++= Seq(
    "jquery" -> "3.4.1",
    "web3"  -> "1.0.0-beta.55",
-   "ipfs" -> "0.36.2",
+   //"ipfs" -> "0.36.2",
    "jszip"  -> "3.2.1"
 )
 
