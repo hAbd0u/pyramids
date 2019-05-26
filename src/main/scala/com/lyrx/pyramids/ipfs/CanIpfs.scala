@@ -40,7 +40,6 @@ trait CanIpfs extends Crypto with PyramidJSON
     exportAllPublicKeys().map(kp=>l(
       "asym" -> l("public" -> kp._1.getOrElse(null)),
       "sign" -> l("public" -> kp._2.getOrElse(null))
-
     ).asInstanceOf[WalletNative]).map(
       w=>new PimpedString(stringify(w)).toArrayBuffer().asInstanceOf[NodeBuffer]
     )
@@ -53,6 +52,8 @@ trait CanIpfs extends Crypto with PyramidJSON
           futureAdd(n).map(Some(_)
         )).
         getOrElse(Future{None})).
-    map(_.flatMap(_.headOption.map(_.hash)))
+    map(_.flatMap(_.headOption.map(_.hash))).
+    map(_.map(s=>new Pyramid(pyramidConfig.msg(s"Published public keys: ${s}"))).
+      getOrElse(new Pyramid(pyramidConfig)))
 
 }
