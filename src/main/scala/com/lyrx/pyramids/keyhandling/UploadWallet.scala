@@ -9,8 +9,8 @@ import typings.jqueryLib.JQueryEventObject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
-import scala.scalajs.js.typedarray.ArrayBuffer
 
+import com.lyrx.pyramids.pcrypto.PCryptoImplicits._
 
 @js.native
 trait DataTransferTarget extends EventTarget {

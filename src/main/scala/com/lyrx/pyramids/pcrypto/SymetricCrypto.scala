@@ -2,11 +2,16 @@ package com.lyrx.pyramids.pcrypto
 
 import com.lyrx.pyramids.{DistributedData, DistributedDir, EitherData}
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
+import org.scalajs.dom.raw.{File, FileReader}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
 import js.Dynamic.{literal => l}
+import PCryptoImplicits._
+
+
+
 trait SymetricCrypto extends Crypto {
   val ALGORITHM = "AES-GCM"
 
@@ -50,6 +55,21 @@ trait SymetricCrypto extends Crypto {
     case Left(data:DistributedData) => encrypt(key,data).map(f=>Left(f))
     case Right(dir:DistributedDir) => encryptEither(key,eitherData)
   }
+
+  def symEncryptFile(key:CryptoKey,f:File)(implicit executionContext: ExecutionContext) = new FileReader().
+    futureReadArrayBuffer(f).
+    flatMap(b=>{
+      val iv = crypto.getRandomValues(new Uint8Array(12))
+      crypto.
+        subtle.
+        encrypt(algorithmIdentifier(iv),
+          key,
+          b
+        ).
+        toFuture.map(r=>(r.asInstanceOf[ArrayBuffer],
+        iv.buffer))
+    })
+
 
 
 

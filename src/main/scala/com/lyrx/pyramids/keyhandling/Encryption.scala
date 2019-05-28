@@ -3,6 +3,8 @@ package com.lyrx.pyramids.keyhandling
 import com.lyrx.pyramids.pcrypto.SymetricCrypto
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 
+import org.scalajs.dom.raw.{File,FileReader}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait Encryption extends  SymetricCrypto  {
@@ -17,5 +19,10 @@ trait Encryption extends  SymetricCrypto  {
     ))).
     getOrElse(Future{new Pyramid(pyramidConfig.msg("Oh pharao, we have not found your encryption key!"))})
 
+
+  def encryptFile(f:File) (implicit ctx:ExecutionContext)= pyramidConfig.
+    symKeyOpt.
+    map(k=>symEncryptFile(k,f).map(Some(_))).
+    getOrElse(Future{None})
 
 }

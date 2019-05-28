@@ -1,4 +1,4 @@
-enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin)
+enablePlugins(ScalaJSPlugin,ScalaJSBundlerPlugin,ScalablyTypedPlugin)
 
 
 
@@ -23,7 +23,8 @@ scalaJSUseMainModuleInitializer := true
 libraryDependencies ++= Seq(
   "com.lihaoyi" % "utest_sjs1.0.0-M7_2.12" % "0.6.7" % "test",
   "org.scala-js" %%% "scalajs-dom" % "0.9.6" ,
-  "org.scalablytyped" % "jquery_sjs0.6_2.12" % "3.3-dt-20190108Z-49ff4d"
+  ScalablyTyped.J.jquery,
+  ScalablyTyped.J.jszip
 )
 
 

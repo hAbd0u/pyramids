@@ -74,6 +74,13 @@ object  Startup extends DragAndDrop with UserFeedback{
         pyramid.uploadWallet(f),
         Some(s"Importing keys from ${f.name}"))))
 
+
+       onDrop($("#drop_zone").off(), (f) => {
+         message(s"Have file: ${f.name}")
+         Future{Nil}
+       })
+
+
     Future {
       pyramidConfig
     }
