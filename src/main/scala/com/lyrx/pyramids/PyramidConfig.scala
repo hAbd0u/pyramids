@@ -40,7 +40,7 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 }
 
 
-case class PyramidConfig(distributedDir: DistributedDir,
+case class PyramidConfig(//distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
                          asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],

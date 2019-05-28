@@ -10,6 +10,7 @@ trait Decryption  extends  SymetricCrypto  {
 
   val pyramidConfig: PyramidConfig
 
+  /*
   def symDecrypt()(implicit ctx:ExecutionContext):Future[Pyramid] =  pyramidConfig.
     symKeyOpt.map(symKey=> decryptDir(symKey,pyramidConfig.distributedDir)).
     map(_.map(d=>new Pyramid(
@@ -17,6 +18,8 @@ trait Decryption  extends  SymetricCrypto  {
         msg("Your data has been decryted, oh Pharao!")
     ))).
     getOrElse(Future{new Pyramid(pyramidConfig.msg("Oh pharao, we have not found your decryption key!"))})
+*/
+
 
 
 }

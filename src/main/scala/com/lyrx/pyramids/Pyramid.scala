@@ -5,7 +5,7 @@ import com.lyrx.pyramids.ipfs.CanIpfs
 
 
 object  Pyramid{
-  def apply()=new Pyramid(PyramidConfig(DistributedDir(Nil,""),
+  def apply()=new Pyramid(PyramidConfig(//DistributedDir(Nil,""),
     None,
     None,
     None,
