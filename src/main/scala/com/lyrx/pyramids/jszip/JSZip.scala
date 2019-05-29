@@ -2,16 +2,20 @@ package com.lyrx.pyramids.jszip
 
 
 
-import typings.jszipLib.jszipMod.{ ^ => JJSZip}
+import typings.jszipLib.jszipMod.{^ => JJSZip}
+import typings.stdLib.Uint8Array
+
+
 
 
 
 trait Zipping{
 
 
-  def zip()={
+  def zip(data:Uint8Array)={
 
-    JJSZip.file("")
+   // JJSZip.file("data.encr",data).
+
 
   }
 

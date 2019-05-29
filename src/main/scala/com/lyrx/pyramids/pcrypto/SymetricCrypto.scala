@@ -58,15 +58,15 @@ trait SymetricCrypto extends Crypto {
 
   def symEncryptFile(key:CryptoKey,f:File)(implicit executionContext: ExecutionContext) = new FileReader().
     futureReadArrayBuffer(f).
-    flatMap(b=>{
+    flatMap(unencryptedData=>{
       val iv = crypto.getRandomValues(new Uint8Array(12))
       crypto.
         subtle.
         encrypt(algorithmIdentifier(iv),
           key,
-          b
+          unencryptedData
         ).
-        toFuture.map(r=>(r.asInstanceOf[ArrayBuffer],
+        toFuture.map(r=>(unencryptedData,r.asInstanceOf[ArrayBuffer],
         iv.buffer))
     })
 
