@@ -28,6 +28,15 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
     map(k=>symEncryptFile(k,f).map(Some(_))).
     getOrElse(Future{None})
 
+
+  /*
+
+    ._1:  unencrypted
+    ._2: encrypted
+    ._3: random data
+    ._4 signature
+
+   */
   def encryptAndSignFile(f:File) (implicit ctx:ExecutionContext): Future[(Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer])] = {
      pyramidConfig.
       symKeyOpt.
@@ -43,7 +52,15 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
           Some(t._2),
           Some(t._3),
           None)})
-      )).getOrElse(Future{(None,None,None,None)})
+      )).getOrElse(
+       pyramidConfig.signKeyOpt.map(signKeys=>
+         signFile(signKeys,f).map(signatureTupel =>(
+           Some(signatureTupel._1),
+           None,
+           None,
+           Some(signatureTupel._2)))
+       ).
+         getOrElse(Future{(None,None,None,None)})   )
   }
 
 

@@ -1,10 +1,13 @@
 package com.lyrx.pyramids.pcrypto
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
+import org.scalajs.dom.raw.{File, FileReader}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import PCryptoImplicits._
+
 import js.Dynamic.{literal => l}
 trait AsymetricCrypto extends Crypto {
 
@@ -99,6 +102,10 @@ trait AsymetricCrypto extends Crypto {
     keys.privateKey,
     data
   ).toFuture.map(_.asInstanceOf[ArrayBuffer])
+
+  def signFile(keys:CryptoKeyPair,f:File)(implicit executionContext: ExecutionContext) = new FileReader().
+    futureReadArrayBuffer(f).flatMap(b=>sign(keys,b).map(signedB=>(b,signedB)))
+
 
 
   def verify(key:CryptoKey,signature:ArrayBuffer,data:ArrayBuffer)
