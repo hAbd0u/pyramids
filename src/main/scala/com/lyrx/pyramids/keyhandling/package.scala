@@ -2,8 +2,10 @@ package com.lyrx.pyramids
 
 
 
-import typings.jszipLib.jszipMod.JSZip
+import com.lyrx.pyramids.ipfs.BufferObject
+import typings.jszipLib.jszipMod.{JSZip, JSZipGeneratorOptions}
 
+import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSGlobal, JSImport}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
@@ -49,21 +51,24 @@ package object keyhandling {
   }
 
 
+implicit class PimpedZip(zip: JJSZip){
+
+  def dump()(implicit executionContext: ExecutionContext) = {
+    zip.generateAsync_uint8array(JSZipGeneratorOptions()).toFuture.map(BufferObject.from(_))
+
+  }
+}
+
+
+
+
+
 
 
 
 type EncryptionResult =  Encrypted//(Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer])
 
 
-  implicit class PimpedEncryptionResult(r:EncryptionResult){
-
-
-
-    //&new JSZip {}
-
-    def toZip() =  ??? //JJSZip.file("data.encr",data)
-
-  }
 
 
 

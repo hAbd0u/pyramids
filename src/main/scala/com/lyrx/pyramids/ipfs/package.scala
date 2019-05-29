@@ -1,13 +1,15 @@
 package com.lyrx.pyramids
 
+import typings.stdLib.{ArrayBuffer,Uint8Array}
+
 import scala.concurrent.Promise
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
-import scala.scalajs.js.typedarray.Uint8Array
+import scala.scalajs.js.|
 package object ipfs {
 
 
-
+  type CanBuffer = String | ArrayBuffer | Uint8Array
 
 
   implicit class PimpedIpfsClient(ipfsClient:IpfsClient){

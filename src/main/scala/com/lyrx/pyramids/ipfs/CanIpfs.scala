@@ -65,4 +65,8 @@ trait CanIpfs extends Crypto with PyramidJSON
     map(_.map(s=>new Pyramid(pyramidConfig.msg(s"Published public keys: ${s}"))).
       getOrElse(new Pyramid(pyramidConfig)))
 
+  def bufferToIpfs(buffer:Buffer)(implicit ctx:ExecutionContext) = pyramidConfig.
+    ipfsOpt.map(_.futureAdd(buffer).map(l=>Some(l.head.hash))).
+    getOrElse(Future{None})
+
 }

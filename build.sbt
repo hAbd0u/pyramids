@@ -24,7 +24,8 @@ libraryDependencies ++= Seq(
   "com.lihaoyi" % "utest_sjs1.0.0-M7_2.12" % "0.6.7" % "test",
   "org.scala-js" %%% "scalajs-dom" % "0.9.6" ,
   ScalablyTyped.J.jquery,
-  ScalablyTyped.J.jszip
+  ScalablyTyped.J.jszip,
+  ScalablyTyped.F.`file-saver`
 )
 
 
@@ -36,7 +37,8 @@ npmDependencies in Compile ++= Seq(
   //"ipfs-api" -> "26.1.2",
   "ipfs-http-client" -> "32.0.1",
   "buffer" -> "3.5.5"  ,
-   "jszip"  -> "3.2.1"
+   "jszip"  -> "3.2.1",
+  "file-saver" -> "2.0"
 )
 
 

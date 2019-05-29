@@ -31,11 +31,15 @@ class TextDecoder(utfLabel: js.UndefOr[String]) extends js.Object {
   def decode(buffer: Uint8Array): String = js.native
 }
 
+
+
+
+
 @js.native
 @JSImport("buffer/","Buffer")
 object BufferObject extends js.Object {
 
-  def from(s:String):Buffer = js.native
+  def from(s:CanBuffer):Buffer = js.native
 
 }
 
