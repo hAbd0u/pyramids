@@ -20,6 +20,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
     with KeyImport
   with DownloadWallet
   with UploadWallet
+  with Encryption
   with CanIpfs
 {
 

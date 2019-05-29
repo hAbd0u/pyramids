@@ -37,7 +37,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
     ._4 signature
 
    */
-  def encryptAndSignFile(f:File) (implicit ctx:ExecutionContext): Future[(Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer])] = {
+  def encryptAndSignFile(f:File) (implicit ctx:ExecutionContext): Future[EncryptionResult] = {
      pyramidConfig.
       symKeyOpt.
       map(k=>symEncryptFile(k,f).flatMap(
