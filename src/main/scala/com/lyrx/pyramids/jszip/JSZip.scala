@@ -14,7 +14,9 @@ trait Zipping{
 
   def zip(data:Uint8Array)={
 
-   // JJSZip.file("data.encr",data).
+
+   // new Uint8Array {}
+    JJSZip.file("data.encr",data)
 
 
   }
