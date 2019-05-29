@@ -43,24 +43,24 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
       map(k=>symEncryptFile(k,f).flatMap(
         t=> pyramidConfig.signKeyOpt.
             map(signKeys=> sign(signKeys,t._1).
-              map(signature=>(Some(t._1),
+              map(signature=>Encrypted(Some(t._1),
                 Some(t._2),
                 Some(t._3),
                 Some(signature)))
             ).getOrElse(Future{
-          (Some(t._1),
+          Encrypted(Some(t._1),
           Some(t._2),
           Some(t._3),
           None)})
       )).getOrElse(
        pyramidConfig.signKeyOpt.map(signKeys=>
-         signFile(signKeys,f).map(signatureTupel =>(
+         signFile(signKeys,f).map(signatureTupel =>Encrypted(
            Some(signatureTupel._1),
            None,
            None,
            Some(signatureTupel._2)))
        ).
-         getOrElse(Future{(None,None,None,None)})   )
+         getOrElse(Future{Encrypted(None,None,None,None)})   )
   }
 
 

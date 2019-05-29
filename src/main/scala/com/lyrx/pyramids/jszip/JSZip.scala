@@ -1,7 +1,6 @@
 package com.lyrx.pyramids.jszip
 
 
-
 import typings.jszipLib.jszipMod.{^ => JJSZip}
 import typings.stdLib.Uint8Array
 
