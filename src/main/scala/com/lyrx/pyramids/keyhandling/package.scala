@@ -5,12 +5,12 @@ package com.lyrx.pyramids
 import typings.jszipLib.jszipMod.JSZip
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSGlobal
+import scala.scalajs.js.annotation.{JSGlobal, JSImport}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
 
-@JSGlobal("JSZip")
+@JSImport("jszip", JSImport.Namespace)
 @js.native
 class JJSZip extends JSZip
 
@@ -58,6 +58,8 @@ type EncryptionResult =  Encrypted//(Option[ArrayBuffer], Option[ArrayBuffer], O
   implicit class PimpedEncryptionResult(r:EncryptionResult){
 
 
+
+    //&new JSZip {}
 
     def toZip() =  ??? //JJSZip.file("data.encr",data)
 
