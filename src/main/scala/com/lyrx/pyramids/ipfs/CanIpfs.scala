@@ -62,7 +62,7 @@ trait CanIpfs extends Crypto with PyramidJSON
         )).
         getOrElse(Future{None})).
     map(_.flatMap(_.headOption.map(_.hash))).
-    map(_.map(s=>new Pyramid(pyramidConfig.msg(s"PPublished public keys: ${s}"))).
+    map(_.map(s=>new Pyramid(pyramidConfig.msg(s"Published public keys: ${s}"))).
       getOrElse(new Pyramid(pyramidConfig)))
 
 }
