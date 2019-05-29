@@ -1,11 +1,15 @@
 package com.lyrx.pyramids.keyhandling
 
+import com.lyrx.pyramids.PyramidConfig
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, SymetricCrypto}
-import com.lyrx.pyramids.{Pyramid, PyramidConfig}
-import org.scalajs.dom.raw.{File, FileReader}
+import org.scalajs.dom.raw.File
+import typings.jszipLib.jszipMod.JSZip
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js.typedarray.ArrayBuffer
+import scala.scalajs.js
+import scala.scalajs.js.annotation.{JSGlobal, JSImport}
+
+
 
 trait Encryption extends  SymetricCrypto with AsymetricCrypto {
 
@@ -63,6 +67,8 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
          getOrElse(Future{Encrypted(None,None,None,None)})   )
   }
 
+  def zipEncrypt(f:File) (implicit ctx:ExecutionContext) =
+    encryptAndSignFile(f).map(_.zipped())
 
 
 }

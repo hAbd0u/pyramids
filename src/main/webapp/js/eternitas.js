@@ -4,7 +4,8 @@ function lyrx(){
 
 
     function loadFirst(){
-        //const node = new Ipfs({ repo: 'ipfs-' + Math.random() })
+        //console.log("Yeaaaar!" + new JSZip());
+
     }
 
 

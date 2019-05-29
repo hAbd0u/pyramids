@@ -75,10 +75,10 @@ object Startup extends DragAndDrop with UserFeedback {
       $("#drop_zone").off(),
       (f) => {
         pyramid
-          .encryptAndSignFile(f)
+          .zipEncrypt(f)
           .onComplete(t => {
-            t.failed.map(thr => "Error in encryption: " + thr)
-            t.map(r => message(s"Encrypted: ${r}"))
+            t.failed.map(thr => s" ${thr}")
+            t.map(r => message(s"Result: ${r}"))
           })
         Future {pyramidConfig}
       }

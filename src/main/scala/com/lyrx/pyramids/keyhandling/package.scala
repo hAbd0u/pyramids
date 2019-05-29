@@ -1,9 +1,18 @@
 package com.lyrx.pyramids
 
-import typings.jszipLib.jszipMod.{^ => JJSZip}
 
+
+import typings.jszipLib.jszipMod.JSZip
+
+import scala.scalajs.js
+import scala.scalajs.js.annotation.JSGlobal
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
+
+
+@JSGlobal("JSZip")
+@js.native
+class JJSZip extends JSZip
 
 
 package object keyhandling {
@@ -27,10 +36,10 @@ package object keyhandling {
     def zippedUnsigned() = orEncrypted().
       encrypted.
       map(
-        b=>JJSZip.
+        b=>new JJSZip().
           file("data.encr", convert(b)).
           file("data.random",convert(random.get))).
-      getOrElse(JJSZip.file("data.dat",convert(unencrypted.get)))
+      getOrElse(new JJSZip().file("data.dat",convert(unencrypted.get)))
 
 
     def zipped()=signature.map(

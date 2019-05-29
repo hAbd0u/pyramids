@@ -35,8 +35,8 @@ npmDependencies in Compile ++= Seq(
    //"ipfs" -> "0.36.2",
   //"ipfs-api" -> "26.1.2",
   "ipfs-http-client" -> "32.0.1",
-  "buffer" -> "3.5.5",
-   "jszip"  -> "3.2.1"
+  "buffer" -> "3.5.5"  //,
+ //  "jszip"  -> "3.2.1"
 )
 
 
