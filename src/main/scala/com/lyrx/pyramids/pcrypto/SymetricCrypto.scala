@@ -66,7 +66,9 @@ trait SymetricCrypto extends Crypto {
           key,
           unencryptedData
         ).
-        toFuture.map(r=>(unencryptedData,r.asInstanceOf[ArrayBuffer],
+        toFuture.map(r=>(
+        unencryptedData,
+        r.asInstanceOf[ArrayBuffer],
         iv.buffer))
     })
 

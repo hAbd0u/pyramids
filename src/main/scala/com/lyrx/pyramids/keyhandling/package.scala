@@ -3,6 +3,7 @@ package com.lyrx.pyramids
 
 
 import com.lyrx.pyramids.ipfs.BufferObject
+import com.lyrx.pyramids.pcrypto.Encrypted
 import typings.jszipLib.jszipMod.{JSZip, JSZipGeneratorOptions}
 
 import scala.concurrent.ExecutionContext
@@ -20,16 +21,16 @@ class JJSZip extends JSZip
 package object keyhandling {
 
 
-  case class Encrypted(unencrypted: Option[ArrayBuffer],
+  case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
                        encrypted:Option[ArrayBuffer],
                        random:Option[ArrayBuffer],
-                       signature:Option[ArrayBuffer]){
+                       signature:Option[ArrayBuffer]) extends Encrypted{
 
 
     def orEncrypted() = if(encrypted.isDefined)
       this
     else
-      Encrypted(this.unencrypted,None,None,signature)
+      ZippableEncrypt(this.unencrypted,None,None,signature)
 
 
     private def convert(b:ArrayBuffer) = new Uint8Array(b).asInstanceOf[typings.stdLib.Uint8Array]
@@ -51,6 +52,9 @@ package object keyhandling {
   }
 
 
+
+
+  $$
 implicit class PimpedZip(zip: JJSZip){
 
   def dump()(implicit executionContext: ExecutionContext) = {
@@ -61,12 +65,6 @@ implicit class PimpedZip(zip: JJSZip){
 
 
 
-
-
-
-
-
-type EncryptionResult =  Encrypted//(Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer], Option[ArrayBuffer])
 
 
 
