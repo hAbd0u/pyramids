@@ -1,6 +1,7 @@
 package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.PyramidConfig
+import com.lyrx.pyramids.jszip.ZippableEncrypt
 import com.lyrx.pyramids.pcrypto.CryptoTypes.EncryptionResult
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, SymetricCrypto}
 import org.scalajs.dom.raw.File
@@ -33,15 +34,15 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
       symKeyOpt.
       map(k=>symEncryptFile(k,f).flatMap(
         t=> pyramidConfig.signKeyOpt.
-            map(signKeys=> sign(signKeys,t._1).
-              map(signature=>ZippableEncrypt(Some(t._1),
-                Some(t._2),
-                Some(t._3),
+            map(signKeys=> sign(signKeys,t.unencrypted.get).
+              map(signature=>ZippableEncrypt(t.unencrypted,
+                t.encrypted,
+                t.random,
                 Some(signature)))
             ).getOrElse(Future{
-          ZippableEncrypt(Some(t._1),
-          Some(t._2),
-          Some(t._3),
+          ZippableEncrypt(t.unencrypted,
+          t.encrypted,
+          t.random,
           None)})
       )).getOrElse(
        pyramidConfig.signKeyOpt.map(signKeys=>

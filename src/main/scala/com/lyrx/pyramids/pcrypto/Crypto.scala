@@ -12,6 +12,15 @@ trait Encrypted {
   val signature: Option[ArrayBuffer]
 }
 
+case class EncryptedData(unencrypted: Option[ArrayBuffer],
+                         encrypted:Option[ArrayBuffer],
+                         random:Option[ArrayBuffer],
+                         signature:Option[ArrayBuffer])
+  extends Encrypted{
+
+}
+
+
 object CryptoTypes {
   type PyramidCryptoKey = CryptoKey
   type PyramidCryptoKeyPair = CryptoKeyPair

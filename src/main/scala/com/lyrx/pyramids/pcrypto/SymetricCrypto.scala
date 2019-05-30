@@ -56,7 +56,8 @@ trait SymetricCrypto extends Crypto {
     case Right(dir:DistributedDir) => encryptEither(key,eitherData)
   }
 
-  def symEncryptFile(key:CryptoKey,f:File)(implicit executionContext: ExecutionContext) = new FileReader().
+  def symEncryptFile(key:CryptoKey,f:File)(implicit executionContext: ExecutionContext):Future[Encrypted] =
+    new FileReader().
     futureReadArrayBuffer(f).
     flatMap(unencryptedData=>{
       val iv = crypto.getRandomValues(new Uint8Array(12))
@@ -66,10 +67,12 @@ trait SymetricCrypto extends Crypto {
           key,
           unencryptedData
         ).
-        toFuture.map(r=>(
-        unencryptedData,
-        r.asInstanceOf[ArrayBuffer],
-        iv.buffer))
+        toFuture.map(r=>EncryptedData(
+        Some(unencryptedData),
+        Some(r.asInstanceOf[ArrayBuffer]),
+        Some(iv.buffer),
+        None
+      ))
     })
 
 
