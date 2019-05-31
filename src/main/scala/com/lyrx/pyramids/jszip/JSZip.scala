@@ -21,8 +21,18 @@ class JJSZip extends JSZip
 case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
                            encrypted:Option[ArrayBuffer],
                            random:Option[ArrayBuffer],
-                           signature:Option[ArrayBuffer]) extends Encrypted{
+                           signature:Option[ArrayBuffer],
+                           metaData:Option[ArrayBuffer],
+                          ) extends Encrypted{
 
+
+  def fromEncrypted(e:Encrypted) = ZippableEncrypt(
+    e.unencrypted,
+    e.encrypted,
+    e.random,
+    e.signature,
+    e.metaData
+  )
 
   def zipped()=signature.map(
     s=>zippedUnsigned().file("data.signature",convert(s))).
@@ -42,7 +52,7 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
   def orEncrypted() = if(encrypted.isDefined)
     this
   else
-    ZippableEncrypt(this.unencrypted,None,None,signature)
+    ZippableEncrypt(this.unencrypted,None,None,signature,None)
 
 }
 

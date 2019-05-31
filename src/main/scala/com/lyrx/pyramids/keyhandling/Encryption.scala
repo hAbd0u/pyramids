@@ -2,7 +2,6 @@ package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.PyramidConfig
 import com.lyrx.pyramids.jszip.ZippableEncrypt
-import com.lyrx.pyramids.pcrypto.CryptoTypes.EncryptionResult
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, SymetricCrypto}
 import org.scalajs.dom.raw.File
 
@@ -29,7 +28,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
     ._4 signature
 
    */
-  def encryptAndSignFile(f:File) (implicit ctx:ExecutionContext): Future[ZippableEncrypt] = {
+  def encryptAndSignFile(f:File) (implicit ctx:ExecutionContext) = {
      pyramidConfig.
       symKeyOpt.
       map(k=>symEncryptFile(k,f).flatMap(
@@ -38,21 +37,25 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
               map(signature=>ZippableEncrypt(t.unencrypted,
                 t.encrypted,
                 t.random,
-                Some(signature)))
+                Some(signature),
+                t.metaData
+              ))
             ).getOrElse(Future{
           ZippableEncrypt(t.unencrypted,
           t.encrypted,
           t.random,
-          None)})
+          None,
+            t.metaData)})
       )).getOrElse(
        pyramidConfig.signKeyOpt.map(signKeys=>
          signFile(signKeys,f).map(signatureTupel =>ZippableEncrypt(
            Some(signatureTupel._1),
            None,
            None,
-           Some(signatureTupel._2)))
+           Some(signatureTupel._2),
+           None))
        ).
-         getOrElse(Future{ZippableEncrypt(None,None,None,None)})   )
+         getOrElse(Future{ZippableEncrypt(None,None,None,None,None)})   )
   }
 
   def zipEncrypt(f:File) (implicit ctx:ExecutionContext) =
