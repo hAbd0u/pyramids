@@ -91,6 +91,7 @@ trait SymetricCrypto extends Crypto {
         Some(r.asInstanceOf[ArrayBuffer]),
         Some(iv.buffer),
         None,
+        None,
         None
       ))
     })

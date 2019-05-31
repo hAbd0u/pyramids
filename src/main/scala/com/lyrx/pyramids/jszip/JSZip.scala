@@ -24,7 +24,9 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
                            random:Option[ArrayBuffer],
                            signature:Option[ArrayBuffer],
                            metaData:Option[ArrayBuffer],
-                          ) extends Encrypted{
+                           metaRandom:Option[ArrayBuffer]
+
+) extends Encrypted{
 
 
   def fromEncrypted(e:Encrypted) = ZippableEncrypt(
@@ -32,7 +34,8 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
     e.encrypted,
     e.random,
     e.signature,
-    e.metaData
+    e.metaData,
+    e.metaRandom
   )
 
   def zipped()=signature.map(
@@ -53,14 +56,17 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
 
 
   def withMetaData()=metaData.map(
-    md => zippedUnsigned().file("data.meta",convert(md))
+    md => zippedUnsigned().
+      file("data.meta",convert(md)).
+    file("meta.random",convert(metaRandom.get))
+
   ).getOrElse(zippedUnsigned())
 
 
   def orEncrypted() = if(encrypted.isDefined)
     this
   else
-    ZippableEncrypt(this.unencrypted,None,None,signature,None)
+    ZippableEncrypt(this.unencrypted,None,None,signature,None,None)
 
 }
 

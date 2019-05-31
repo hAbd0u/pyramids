@@ -11,13 +11,16 @@ trait Encrypted {
   val random: Option[ArrayBuffer]
   val signature: Option[ArrayBuffer]
   val metaData:Option[ArrayBuffer]
+  val metaRandom:Option[ArrayBuffer]
 }
 
 case class EncryptedData(unencrypted: Option[ArrayBuffer],
                          encrypted:Option[ArrayBuffer],
                          random:Option[ArrayBuffer],
                          signature:Option[ArrayBuffer],
-                         metaData:Option[ArrayBuffer]
+                         metaData:Option[ArrayBuffer],
+                         metaRandom:Option[ArrayBuffer]
+
                         )
   extends Encrypted{
 

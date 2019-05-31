@@ -38,14 +38,16 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
                 t.encrypted,
                 t.random,
                 Some(signature),
-                t.metaData
+                t.metaData,
+                t.metaRandom
               ))
             ).getOrElse(Future{
           ZippableEncrypt(t.unencrypted,
           t.encrypted,
           t.random,
           None,
-            t.metaData)})
+            t.metaData,
+            t.metaRandom)})
       )).getOrElse(
        pyramidConfig.signKeyOpt.map(signKeys=>
          signFile(signKeys,f).map(signatureTupel =>ZippableEncrypt(
@@ -53,9 +55,10 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
            None,
            None,
            Some(signatureTupel._2),
+           None,
            None))
        ).
-         getOrElse(Future{ZippableEncrypt(None,None,None,None,None)})   )
+         getOrElse(Future{ZippableEncrypt(None,None,None,None,None,None)})   )
   }
 
   def zipEncrypt(f:File) (implicit ctx:ExecutionContext) =
