@@ -1,10 +1,9 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.ipfs.BufferObject
-import org.scalajs.dom.raw.Blob
 import typings.jszipLib.jszipMod.JSZipGeneratorOptions
 import typings.jszipLib.jszipLibStrings.uint8array
-import typings.stdLib.{ArrayBuffer, Uint8Array}
+import typings.stdLib.{ArrayBuffer, Uint8Array,Blob}
 
 import scala.concurrent.ExecutionContext
 
