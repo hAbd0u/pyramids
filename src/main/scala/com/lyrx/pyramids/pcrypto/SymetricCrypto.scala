@@ -34,7 +34,8 @@ trait SymetricCrypto extends Crypto {
     map(DistributedDir(_,distributedDir.name))
 
 
-  def encrypt(symKey:CryptoKey,distributedData: DistributedData)(implicit ctx:ExecutionContext)=
+  def encrypt(symKey:CryptoKey,distributedData: DistributedData)
+             (implicit ctx:ExecutionContext)=
     distributedData.unencryptedOpt.
       map(arrayBuffer => {
         val iv = crypto.getRandomValues(new Uint8Array(12))
@@ -56,7 +57,10 @@ trait SymetricCrypto extends Crypto {
     case Right(dir:DistributedDir) => encryptEither(key,eitherData)
   }
 
-  def symEncryptFile(key:CryptoKey,f:File)(implicit executionContext: ExecutionContext):Future[Encrypted] =
+  def metaDataFrom(f: File): Option[ArrayBuffer] = None
+
+  def symEncryptFile(key:CryptoKey, f:File)
+                    (implicit executionContext: ExecutionContext) =
     new FileReader().
     futureReadArrayBuffer(f).
     flatMap(unencryptedData=>{
@@ -72,7 +76,7 @@ trait SymetricCrypto extends Crypto {
         Some(r.asInstanceOf[ArrayBuffer]),
         Some(iv.buffer),
         None,
-        None
+        metaDataFrom(f)
       ))
     })
 
@@ -89,7 +93,9 @@ trait SymetricCrypto extends Crypto {
 
 
   def decryptEither(key:CryptoKey,
-                    eitherData: EitherData)(implicit executionContext: ExecutionContext):Future[EitherData] = eitherData match {
+                    eitherData: EitherData)
+                   (implicit executionContext: ExecutionContext):Future[EitherData] =
+    eitherData match {
     case Left(data:DistributedData) => decrypt(key,data).map(f=>Left(f))
     case Right(dir:DistributedDir) => decryptEither(key,eitherData)
   }

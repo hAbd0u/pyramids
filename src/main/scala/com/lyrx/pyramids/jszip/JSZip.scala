@@ -8,6 +8,7 @@ import typings.stdLib.Uint8Array
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array => UINT8ARRAY}
+import scala.scalajs.js.|
 
 
 
@@ -35,8 +36,8 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
   )
 
   def zipped()=signature.map(
-    s=>zippedUnsigned().file("data.signature",convert(s))).
-    getOrElse(zippedUnsigned())
+    s=>withMetaData().file("data.signature",convert(s))).
+    getOrElse(withMetaData())
 
   private def convert(b:ArrayBuffer) = new UINT8ARRAY(b).asInstanceOf[typings.stdLib.Uint8Array]
 
@@ -46,8 +47,15 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
     map(
       b=>new JJSZip().
         file("data.encr", convert(b)).
-        file("data.random",convert(random.get))).
+        file("data.random",convert(random.get))
+        ).
     getOrElse(new JJSZip().file("data.dat",convert(unencrypted.get)))
+
+
+  def withMetaData()=metaData.map(
+    md => zippedUnsigned().file("data.meta",convert(md))
+  ).getOrElse(zippedUnsigned())
+
 
   def orEncrypted() = if(encrypted.isDefined)
     this
