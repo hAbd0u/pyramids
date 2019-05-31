@@ -52,12 +52,27 @@ trait SymetricCrypto extends Crypto {
       }).getOrElse(Future{distributedData})
 
   def encryptEither(key:CryptoKey,
-                    eitherData: EitherData)(implicit executionContext: ExecutionContext):Future[EitherData] = eitherData match {
+                    eitherData: EitherData)
+                   (implicit executionContext: ExecutionContext):Future[EitherData] =
+    eitherData match {
     case Left(data:DistributedData) => encrypt(key,data).map(f=>Left(f))
     case Right(dir:DistributedDir) => encryptEither(key,eitherData)
   }
 
-  def metaDataFrom(f: File): Option[ArrayBuffer] = None
+  def metaDataFrom(f: File):ArrayBuffer = ???
+
+  def encryptArrayBuffer(key:CryptoKey,b:ArrayBuffer)
+                        (implicit executionContext: ExecutionContext)={
+    val iv = crypto.getRandomValues(new Uint8Array(12))
+    crypto.
+      subtle.
+      encrypt(algorithmIdentifier(iv), key, b).
+      toFuture.map(_.asInstanceOf[ArrayBuffer]).
+      map(b2 => (b2,iv.buffer))
+  }
+
+
+
 
   def symEncryptFile(key:CryptoKey, f:File)
                     (implicit executionContext: ExecutionContext) =
@@ -76,7 +91,7 @@ trait SymetricCrypto extends Crypto {
         Some(r.asInstanceOf[ArrayBuffer]),
         Some(iv.buffer),
         None,
-        metaDataFrom(f)
+        None
       ))
     })
 
