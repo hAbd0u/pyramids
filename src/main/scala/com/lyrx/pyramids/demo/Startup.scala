@@ -87,11 +87,17 @@ object Startup extends DragAndDrop with UserFeedback {
 
   }
 
-   def uploadMe(pyramid: Pyramid, f: File) = pyramid
-      .zipEncrypt(f).
-      flatMap(_.dump()).
-     flatMap(b=>pyramid.bufferToIpfs(b)).
-     map(os=>pyramid.pyramidConfig.msg(s"Uploaded: ${os}"))
+   def uploadMe(pyramid: Pyramid, f: File) = {
+     message("Uploading ...")
+     pyramid
+       .zipEncrypt(f).
+       flatMap(_.dump()).
+       flatMap(b=>pyramid.bufferToIpfs(b)).
+       map(os=>os.map(s=>pyramid.
+         pyramidConfig.
+         msg(s"Uploaded: ${s}")).
+         getOrElse(pyramid.pyramidConfig))
+   }
 
 
 }
