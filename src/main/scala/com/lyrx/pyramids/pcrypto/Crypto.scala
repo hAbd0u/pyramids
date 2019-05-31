@@ -20,11 +20,8 @@ case class EncryptedData(unencrypted: Option[ArrayBuffer],
                          signature:Option[ArrayBuffer],
                          metaData:Option[ArrayBuffer],
                          metaRandom:Option[ArrayBuffer]
-
                         )
-  extends Encrypted{
-
-}
+  extends Encrypted
 
 
 object CryptoTypes {

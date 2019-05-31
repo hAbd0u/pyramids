@@ -1,12 +1,16 @@
 package com.lyrx.pyramids.demo
 
 import com.lyrx.pyramids.frontend.UserFeedback
+import com.lyrx.pyramids.ipfs.CanIpfs
+import com.lyrx.pyramids.jszip.JJSZip
 import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
-import org.scalajs.dom.{Event, document}
+import org.scalajs.dom.{Event, File, document}
 import typings.jqueryLib.{JQuery, JQueryEventObject, jqueryMod => $}
+import typings.jszipLib.jszipMod.JSZip
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 object Startup extends DragAndDrop with UserFeedback {
   implicit val ec = ExecutionContext.global
@@ -42,10 +46,15 @@ object Startup extends DragAndDrop with UserFeedback {
 
   }
 
-  def handle(f: Future[PyramidConfig], msgOpt: Option[String] = None) = {
+  def handleWithIpfs(f: Future[PyramidConfig], msgOpt: Option[String] = None) = {
     msgOpt.map(message(_))
     f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
     f.map(config => ipfsInit(config))
+  }
+  def handle(f: Future[PyramidConfig], msgOpt: Option[String] = None) = {
+    msgOpt.map(message(_))
+    f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
+    f.map(config => init(config))
   }
 
   def init(pyramidConfig: PyramidConfig)(
@@ -68,24 +77,21 @@ object Startup extends DragAndDrop with UserFeedback {
         (q2: JQuery[_]) =>
           onDrop(q2,
             (f) =>
-              handle(pyramid.uploadWallet(f),
+              handleWithIpfs(pyramid.uploadWallet(f),
                 Some(s"Importing keys from ${f.name}"))))
 
-    onDrop(
-      $("#drop_zone").off(),
-      (f) => {
-        pyramid
-          .zipEncrypt(f)
-          .onComplete(t => {
-            t.failed.map(thr => s" ${thr}")
-            t.map(r => message(s"Result: ${r}"))
-          })
-        Future {pyramidConfig}
-      }
-    )
+   onDrop($("#drop_zone").off(),
+     (f)=>handle(uploadMe(pyramid, f)))
 
     Future {pyramidConfig}
 
   }
+
+   def uploadMe(pyramid: Pyramid, f: File) = pyramid
+      .zipEncrypt(f).
+      flatMap(_.dump()).
+     flatMap(b=>pyramid.bufferToIpfs(b)).
+     map(os=>pyramid.pyramidConfig.msg(s"Uploaded: ${os}"))
+
 
 }

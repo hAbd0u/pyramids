@@ -3,9 +3,11 @@ package com.lyrx.pyramids
 import com.lyrx.pyramids.ipfs.BufferObject
 import org.scalajs.dom.raw.Blob
 import typings.jszipLib.jszipMod.JSZipGeneratorOptions
+import typings.jszipLib.jszipLibStrings.uint8array
+import typings.stdLib.{ArrayBuffer, Uint8Array}
 
 import scala.concurrent.ExecutionContext
-import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+
 import scala.scalajs.js.|
 
 package object jszip {
@@ -15,10 +17,13 @@ package object jszip {
 
   implicit class PimpedZip(zip: JJSZip){
 
-    def dump()(implicit executionContext: ExecutionContext) = {
-      zip.generateAsync_uint8array(JSZipGeneratorOptions()).toFuture.map(BufferObject.from(_))
+    def dump()(implicit executionContext: ExecutionContext) =
+      zip.
+        generateAsync_uint8array(
+          JSZipGeneratorOptions(`type` = uint8array)) .
+        toFuture.map(BufferObject.from(_))
 
-    }
+
   }
 
 

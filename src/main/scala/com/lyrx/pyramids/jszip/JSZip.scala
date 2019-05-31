@@ -72,24 +72,3 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
 
 
 
-
-
-trait Zipping{
-
-
-  def zip(data:Uint8Array)={
-
-
-
-    //val r = JSZip.f
-
-
-   // new Uint8Array {}
-    //JJSZip.file("data.encr",data)
-
-
-  }
-
-
-
-}
