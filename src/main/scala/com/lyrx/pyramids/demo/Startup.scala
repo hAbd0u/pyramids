@@ -69,7 +69,8 @@ object Startup extends DragAndDrop with UserFeedback {
       map(s =>
         $("#pinfolder").
           html
-          (s"<a href='https://ipfs.infura.io/ipfs/$s' target='_blank'>$s</a>")
+          (s"<a href='https://ipfs.infura.io/ipfs/$s'"+
+            s" target='_blank'>${s.substring(0,8)}</a>")
       )
 
 
