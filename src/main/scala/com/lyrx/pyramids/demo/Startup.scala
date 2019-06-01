@@ -3,7 +3,7 @@ package com.lyrx.pyramids.demo
 import com.lyrx.pyramids.frontend.UserFeedback
 import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
-import com.lyrx.pyramids.jszip._
+
 import org.scalajs.dom.{Event, File, document}
 import typings.jqueryLib.{JQuery, JQueryEventObject, jqueryMod => $}
 
@@ -78,22 +78,15 @@ object Startup extends DragAndDrop with UserFeedback {
                    handleWithIpfs(pyramid.uploadWallet(f),
                                   Some(s"Importing keys from ${f.name}"))))
 
-    onDrop($("#drop_zone").off(), (f) => handle(uploadMe(pyramid, f)))
+    onDrop($("#drop_zone").off(), (f) => handle({
+      message("Uploading ...")
+      pyramid.uploadZip(f)
+    }))
 
     Future { pyramidConfig }
 
   }
 
-  def uploadMe(pyramid: Pyramid, f: File) = {
-    message("Uploading ...")
-    pyramid
-      .zipEncrypt(f)
-      .flatMap(_.dump())
-      .flatMap(b => pyramid.bufferToIpfs(b))
-      .map(
-        os =>
-          os.map(s => pyramid.pyramidConfig.msg(s"Uploaded: ${s}"))
-            .getOrElse(pyramid.pyramidConfig))
-  }
+
 
 }
