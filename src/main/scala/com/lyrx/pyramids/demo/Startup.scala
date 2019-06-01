@@ -60,10 +60,27 @@ object Startup extends DragAndDrop with UserFeedback {
 
     val pyramid = new Pyramid(pyramidConfig)
 
-    //show message and error
-    pyramidConfig.messages.messageOpt.map(s => message(s))
-    pyramidConfig.messages.errorOpt.map(s => error(s))
+    showMessages(pyramidConfig)
 
+    updateFrontend(pyramid)
+
+    pyramidConfig.
+      uploadOpt.
+      map(s =>
+        $("#pinfolder").
+          html
+          (s"<a href='https://ipfs.infura.io/ipfs/$s' target='_blank'>$s</a>")
+      )
+
+
+
+
+    Future { pyramidConfig }
+
+  }
+
+
+  private def updateFrontend( pyramid: Pyramid) = {
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off())
       .on("drop", (e: JQueryEventObject) => e.preventDefault())
@@ -74,19 +91,19 @@ object Startup extends DragAndDrop with UserFeedback {
       .map(
         (q2: JQuery[_]) =>
           onDrop(q2,
-                 (f) =>
-                   handleWithIpfs(pyramid.uploadWallet(f),
-                                  Some(s"Importing keys from ${f.name}"))))
+            (f) =>
+              handleWithIpfs(pyramid.uploadWallet(f),
+                Some(s"Importing keys from ${f.name}"))))
 
     onDrop($("#drop_zone").off(), (f) => handle({
       message("Uploading ...")
       pyramid.uploadZip(f)
     }))
-
-    Future { pyramidConfig }
-
   }
 
-
-
+  def showMessages(pyramidConfig: _root_.com.lyrx.pyramids.PyramidConfig): Option[Unit] = {
+    //show message and error
+    pyramidConfig.messages.messageOpt.map(s => message(s))
+    pyramidConfig.messages.errorOpt.map(s => error(s))
+  }
 }

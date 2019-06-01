@@ -45,7 +45,8 @@ case class PyramidConfig(//distributedDir: DistributedDir,
                          asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          messages:Messages ,
-                         ipfsOpt:Option[ IpfsClient]
+                         ipfsOpt:Option[ IpfsClient],
+                         uploadOpt:Option[String]
                         ) {
 
   def msg(s:String) = this.

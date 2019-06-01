@@ -14,6 +14,7 @@ object  Pyramid{
     None,
     Messages(Some("Welcome to your Pyramid!"),
       None),
+    None,
     None))
 }
 
@@ -34,8 +35,10 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
     .flatMap(b => bufferToIpfs(b))
     .map(
       os =>
-        os.map(s => pyramidConfig.msg(s"Uploaded ${f.name}"))
-          .getOrElse(pyramidConfig))
+        os.map(s => pyramidConfig.
+          copy(uploadOpt=Some(s)).
+          msg(s"Uploaded ${f.name}")
+        ).getOrElse(pyramidConfig))
 
 
 
