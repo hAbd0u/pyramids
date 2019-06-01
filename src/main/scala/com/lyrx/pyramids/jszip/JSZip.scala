@@ -2,19 +2,15 @@ package com.lyrx.pyramids.jszip
 
 
 import com.lyrx.pyramids.pcrypto.Encrypted
-import typings.jszipLib.jszipMod.JSZip
-import typings.stdLib.Uint8Array
+import typings.jszipLib.jszipMod
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array => UINT8ARRAY}
-import scala.scalajs.js.|
 
 
 
-@JSImport("jszip", JSImport.Namespace)
-@js.native
-class JJSZip extends JSZip
+
 
 
 
@@ -28,6 +24,8 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
 
 ) extends Encrypted{
 
+
+  def init() = new jszipMod.Class()
 
   def fromEncrypted(e:Encrypted) = ZippableEncrypt(
     e.unencrypted,
@@ -48,11 +46,11 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
   def zippedUnsigned() = orEncrypted().
     encrypted.
     map(
-      b=>new JJSZip().
+      b=>init().
         file("data.encr", convert(b)).
         file("data.random",convert(random.get))
         ).
-    getOrElse(new JJSZip().file("data.dat",convert(unencrypted.get)))
+    getOrElse(init().file("data.dat",convert(unencrypted.get)))
 
 
   def withMetaData()=metaData.map(

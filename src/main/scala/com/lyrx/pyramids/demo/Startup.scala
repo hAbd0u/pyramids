@@ -1,16 +1,13 @@
 package com.lyrx.pyramids.demo
 
 import com.lyrx.pyramids.frontend.UserFeedback
-import com.lyrx.pyramids.ipfs.CanIpfs
-import com.lyrx.pyramids.jszip.JJSZip
 import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+import com.lyrx.pyramids.jszip._
 import org.scalajs.dom.{Event, File, document}
 import typings.jqueryLib.{JQuery, JQueryEventObject, jqueryMod => $}
-import typings.jszipLib.jszipMod.JSZip
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 object Startup extends DragAndDrop with UserFeedback {
   implicit val ec = ExecutionContext.global
@@ -34,7 +31,7 @@ object Startup extends DragAndDrop with UserFeedback {
   }
 
   def ipfsInit(pyramidConfig: PyramidConfig)(
-    implicit executionContext: ExecutionContext) = {
+      implicit executionContext: ExecutionContext) = {
     message("Connecting IPFS network ...")
     val f =
       new Pyramid(
@@ -46,7 +43,8 @@ object Startup extends DragAndDrop with UserFeedback {
 
   }
 
-  def handleWithIpfs(f: Future[PyramidConfig], msgOpt: Option[String] = None) = {
+  def handleWithIpfs(f: Future[PyramidConfig],
+                     msgOpt: Option[String] = None) = {
     msgOpt.map(message(_))
     f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
     f.map(config => ipfsInit(config))
@@ -58,7 +56,7 @@ object Startup extends DragAndDrop with UserFeedback {
   }
 
   def init(pyramidConfig: PyramidConfig)(
-    implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
+      implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
     val pyramid = new Pyramid(pyramidConfig)
 
@@ -76,28 +74,26 @@ object Startup extends DragAndDrop with UserFeedback {
       .map(
         (q2: JQuery[_]) =>
           onDrop(q2,
-            (f) =>
-              handleWithIpfs(pyramid.uploadWallet(f),
-                Some(s"Importing keys from ${f.name}"))))
+                 (f) =>
+                   handleWithIpfs(pyramid.uploadWallet(f),
+                                  Some(s"Importing keys from ${f.name}"))))
 
-   onDrop($("#drop_zone").off(),
-     (f)=>handle(uploadMe(pyramid, f)))
+    onDrop($("#drop_zone").off(), (f) => handle(uploadMe(pyramid, f)))
 
-    Future {pyramidConfig}
+    Future { pyramidConfig }
 
   }
 
-   def uploadMe(pyramid: Pyramid, f: File) = {
-     message("Uploading ...")
-     pyramid
-       .zipEncrypt(f).
-       flatMap(_.dump()).
-       flatMap(b=>pyramid.bufferToIpfs(b)).
-       map(os=>os.map(s=>pyramid.
-         pyramidConfig.
-         msg(s"Uploaded: ${s}")).
-         getOrElse(pyramid.pyramidConfig))
-   }
-
+  def uploadMe(pyramid: Pyramid, f: File) = {
+    message("Uploading ...")
+    pyramid
+      .zipEncrypt(f)
+      .flatMap(_.dump())
+      .flatMap(b => pyramid.bufferToIpfs(b))
+      .map(
+        os =>
+          os.map(s => pyramid.pyramidConfig.msg(s"Uploaded: ${s}"))
+            .getOrElse(pyramid.pyramidConfig))
+  }
 
 }

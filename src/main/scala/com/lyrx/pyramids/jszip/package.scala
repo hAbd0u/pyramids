@@ -1,12 +1,11 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.ipfs.BufferObject
-import typings.jszipLib.jszipMod.JSZipGeneratorOptions
+import typings.jszipLib.jszipMod.{JSZip, JSZipGeneratorOptions}
 import typings.jszipLib.jszipLibStrings.uint8array
-import typings.stdLib.{ArrayBuffer, Uint8Array,Blob}
+import typings.stdLib.{ArrayBuffer, Blob, Uint8Array}
 
 import scala.concurrent.ExecutionContext
-
 import scala.scalajs.js.|
 
 package object jszip {
@@ -14,7 +13,7 @@ package object jszip {
 
 
 
-  implicit class PimpedZip(zip: JJSZip){
+  implicit class PimpedZip(zip: JSZip){
 
     def dump()(implicit executionContext: ExecutionContext) =
       zip.
