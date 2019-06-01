@@ -70,7 +70,7 @@ object Startup extends DragAndDrop with UserFeedback {
         $("#pinfolder").
           html
           (s"<a href='https://ipfs.infura.io/ipfs/$s'"+
-            s" target='_blank'>${s.substring(0,8)}</a>")
+            s" target='_blank'>Chamber</a>")
       )
 
 
