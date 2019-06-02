@@ -10,12 +10,6 @@ package object pyramids {
   type EitherData = Either[DistributedData,DistributedDir]
 
 
-  implicit class PimpedFile(f:File) extends PyramidJSON {
-
-    def toBuffer()=Buffer.
-      from(stringify(f)).
-      buffer
-  }
 
 
 
