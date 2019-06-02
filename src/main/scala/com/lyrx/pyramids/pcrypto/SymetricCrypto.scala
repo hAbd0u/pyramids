@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.pcrypto
 
-import com.lyrx.pyramids.{DistributedData, DistributedDir, EitherData}
+import com.lyrx.pyramids.{DistributedData, DistributedDir, EitherData, PyramidJSON}
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 import org.scalajs.dom.raw.{File, FileReader}
 
@@ -9,10 +9,12 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
 import js.Dynamic.{literal => l}
 import PCryptoImplicits._
+import typings.nodeLib.bufferMod.Buffer
+import typings.stdLib.ArrayBufferLike
 
 
 
-trait SymetricCrypto extends Crypto {
+trait SymetricCrypto extends Crypto with PyramidJSON {
   val ALGORITHM = "AES-GCM"
 
 
@@ -59,7 +61,9 @@ trait SymetricCrypto extends Crypto {
     case Right(dir:DistributedDir) => encryptEither(key,eitherData)
   }
 
-  def metaDataFrom(f: File):ArrayBuffer = ???
+  def metaDataFrom(f: File) = Buffer.
+    from(stringify(f)).
+    buffer.asInstanceOf[ArrayBuffer]
 
   def encryptArrayBuffer(key:CryptoKey,b:ArrayBuffer)
                         (implicit executionContext: ExecutionContext)={
@@ -94,7 +98,14 @@ trait SymetricCrypto extends Crypto {
         None,
         None
       ))
-    })
+    }).flatMap(e=>encryptArrayBuffer(
+      key,
+      metaDataFrom(f)).
+      map(r=>
+        e.copy(
+          metaData = Some(r._1),
+          metaRandom = Some(r._2)
+        )))
 
 
 
