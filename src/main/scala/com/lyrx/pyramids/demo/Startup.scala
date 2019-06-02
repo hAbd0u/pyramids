@@ -64,14 +64,20 @@ object Startup extends DragAndDrop with UserFeedback {
 
     updateFrontend(pyramid)
 
+
+    val infura = "https://ipfs.infura.io/ipfs"
+
+
     pyramidConfig.
       uploadOpt.
-      map(s =>
-        $("#pinfolder").
-          html
-          (s"<a href='https://ipfs.infura.io/ipfs/$s'"+
-            s" target='_blank'>Chamber</a>")
+      map(s => $("#pinfolder").html
+        (s"<a href='$infura/$s' target='_blank'>Chamber</a>")
       )
+
+    pyramidConfig.
+      pubKeysOpt.
+      map(s => $("#signature").html
+      (s"<a href='$infura/$s' target='_blank'>Signature</a>"))
 
 
 
@@ -81,7 +87,9 @@ object Startup extends DragAndDrop with UserFeedback {
   }
 
 
-  private def updateFrontend( pyramid: Pyramid) = {
+
+
+  private def updateFrontend(pyramid: Pyramid) = {
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off())
       .on("drop", (e: JQueryEventObject) => e.preventDefault())

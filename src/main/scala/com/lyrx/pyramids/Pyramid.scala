@@ -15,6 +15,7 @@ object  Pyramid{
     Messages(Some("Welcome to your Pyramid!"),
       None),
     None,
+    None,
     None))
 }
 
