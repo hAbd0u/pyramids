@@ -9,32 +9,6 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 
 
 
-
-case class DistributedDir(data:Seq[EitherData],name:String){
-
-  def `:+`(distributedData: DistributedData):DistributedDir = this.
-    copy(data =
-      this.data :+ Left(distributedData))
-
-  def `:+`(distributedDir: DistributedDir):DistributedDir = this.
-    copy(data =
-      this.data :+ Right(distributedDir))
-
-
-
-}
-
-
-
-case class DistributedData(
-                            unencryptedOpt:Option[ArrayBuffer],
-                           bufferOpt:Option[ArrayBuffer],
-                            ivOpt:Option[ArrayBuffer],
-                          signatures: Seq[ArrayBuffer]
-                          ) {
-}
-
-
 case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 
 }

@@ -1,16 +1,15 @@
 package com.lyrx.pyramids.pcrypto
 
-import com.lyrx.pyramids.{DistributedData, DistributedDir, EitherData, PyramidJSON}
+import com.lyrx.pyramids.PyramidJSON
+import com.lyrx.pyramids.pcrypto.PCryptoImplicits._
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 import org.scalajs.dom.raw.{File, FileReader}
+import typings.nodeLib.bufferMod.Buffer
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
+import scala.scalajs.js.Dynamic.{literal => l}
 import scala.scalajs.js.typedarray.{ArrayBuffer, ArrayBufferView, Uint8Array}
-import js.Dynamic.{literal => l}
-import PCryptoImplicits._
-import typings.nodeLib.bufferMod.Buffer
-import typings.stdLib.ArrayBufferLike
 
 
 
@@ -28,38 +27,8 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
 
 
 
-  def encryptDir(key:CryptoKey,distributedDir:DistributedDir) (implicit executionContext: ExecutionContext) = Future.
-    sequence(
-      distributedDir.
-        data.
-        map( encryptEither(key,_))).
-    map(DistributedDir(_,distributedDir.name))
 
 
-  def encrypt(symKey:CryptoKey,distributedData: DistributedData)
-             (implicit ctx:ExecutionContext)=
-    distributedData.unencryptedOpt.
-      map(arrayBuffer => {
-        val iv = crypto.getRandomValues(new Uint8Array(12))
-        crypto.
-          subtle.
-          encrypt(algorithmIdentifier(iv),
-            symKey,
-            arrayBuffer
-          ).
-          toFuture.
-          map(_.asInstanceOf[ArrayBuffer]).map(b=>distributedData.copy(
-          bufferOpt = Some(b),
-          ivOpt = Some(iv.buffer)))
-      }).getOrElse(Future{distributedData})
-
-  def encryptEither(key:CryptoKey,
-                    eitherData: EitherData)
-                   (implicit executionContext: ExecutionContext):Future[EitherData] =
-    eitherData match {
-    case Left(data:DistributedData) => encrypt(key,data).map(f=>Left(f))
-    case Right(dir:DistributedDir) => encryptEither(key,eitherData)
-  }
 
   def metaDataFrom(f: File) = Buffer.
     from(stringify(f)).
@@ -107,38 +76,6 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
           metaRandom = Some(r._2)
         )))
 
-
-
-
-  def decryptDir(key:CryptoKey,distributedDir:DistributedDir) (implicit executionContext: ExecutionContext) = Future.
-    sequence(
-    distributedDir.
-    data.
-    map( decryptEither(key,_))).
-    map(DistributedDir(_,distributedDir.name))
-
-
-
-  def decryptEither(key:CryptoKey,
-                    eitherData: EitherData)
-                   (implicit executionContext: ExecutionContext):Future[EitherData] =
-    eitherData match {
-    case Left(data:DistributedData) => decrypt(key,data).map(f=>Left(f))
-    case Right(dir:DistributedDir) => decryptEither(key,eitherData)
-  }
-
-  def decrypt(key:CryptoKey,distributedData: DistributedData)
-             (implicit executionContext: ExecutionContext)= distributedData.
-    bufferOpt.flatMap(data => distributedData.ivOpt.
-  map(iv =>  crypto.
-    subtle.
-    decrypt(algorithmIdentifier(new Uint8Array(iv,0,12)),
-      key,
-      data
-    ).toFuture.
-    map(aAny=>aAny.asInstanceOf[ArrayBuffer]).
-  map(b=>distributedData.copy(unencryptedOpt = Some(b)))
-  )).getOrElse(Future{distributedData})
 
 
 
