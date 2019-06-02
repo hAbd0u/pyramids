@@ -51,7 +51,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
             t.metaRandom,
             t.signer)})
       )).getOrElse( // no encryption keys:
-       pyramidConfig.signKeyOpt.map(signKeys=>
+       pyramidConfig.signKeyOpt.map(signKeys=>  // signature keys present:
          signFile(signKeys,f).map(signatureTupel =>ZippableEncrypt(
            Some(signatureTupel._1),
            None,
