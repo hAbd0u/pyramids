@@ -31,8 +31,8 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
   def encryptAndSignFile(f:File) (implicit ctx:ExecutionContext) = {
      pyramidConfig.
       symKeyOpt.
-      map(k=>symEncryptFile(k,f).flatMap(
-        t=> pyramidConfig.signKeyOpt.
+      map(k=>symEncryptFile(k,f).flatMap( //encryption keys present:
+        t=> pyramidConfig.signKeyOpt. // sign keys present:
             map(signKeys=> sign(signKeys,t.encrypted.get).
               map(signature=>ZippableEncrypt(t.unencrypted,
                 t.encrypted,
@@ -42,7 +42,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
                 t.metaRandom,
                 t.signer
               ))
-            ).getOrElse(Future{
+            ).getOrElse(Future{ // no signature keys:
           ZippableEncrypt(t.unencrypted,
           t.encrypted,
           t.random,
@@ -50,7 +50,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
             t.metaData,
             t.metaRandom,
             t.signer)})
-      )).getOrElse(
+      )).getOrElse( // no encryption keys:
        pyramidConfig.signKeyOpt.map(signKeys=>
          signFile(signKeys,f).map(signatureTupel =>ZippableEncrypt(
            Some(signatureTupel._1),
@@ -61,7 +61,10 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
            None,
            None))
        ).
-         getOrElse(Future{ZippableEncrypt(None,None,None,None,None,None,None)})   )
+         getOrElse( // No signature keys;
+           Future{
+             ZippableEncrypt(None,None,None,None,None,None,None)})
+     )
   }
 
   def zipEncrypt(f:File) (implicit ctx:ExecutionContext) =

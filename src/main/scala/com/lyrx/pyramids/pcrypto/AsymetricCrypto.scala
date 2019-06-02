@@ -103,8 +103,12 @@ trait AsymetricCrypto extends Crypto {
     data
   ).toFuture.map(_.asInstanceOf[ArrayBuffer])
 
-  def signFile(keys:CryptoKeyPair,f:File)(implicit executionContext: ExecutionContext) = new FileReader().
-    futureReadArrayBuffer(f).flatMap(b=>sign(keys,b).map(signedB=>(b,signedB)))
+  def signFile(keys:CryptoKeyPair,f:File)
+              (implicit executionContext: ExecutionContext) =
+    new FileReader().
+    futureReadArrayBuffer(f).
+      flatMap(b=>sign(keys,b).
+        map(signedB=>(b,signedB)))
 
 
 
