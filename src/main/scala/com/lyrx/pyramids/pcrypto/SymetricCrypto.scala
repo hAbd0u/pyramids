@@ -51,34 +51,42 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
                     (implicit executionContext: ExecutionContext) =
     new FileReader().
     futureReadArrayBuffer(f).
-    flatMap(unencryptedData=>{
-      val iv = crypto.getRandomValues(new Uint8Array(12))
-      crypto.
-        subtle.
-        encrypt(algorithmIdentifier(iv),
-          key,
-          unencryptedData
-        ).
-        toFuture.map(r=>EncryptedData(
-        Some(unencryptedData),
-        Some(r.asInstanceOf[ArrayBuffer]),
-        Some(iv.buffer),
-        None,
-        None,
-        None
-      ))
-    }).flatMap(e=>encryptArrayBuffer(
+    flatMap(encryptFileData(key, _)).
+      flatMap(encryptMetaData(_, key, f))
+
+
+  def encryptFileData(key: CryptoKey, unencryptedData: ArrayBuffer)
+                     (implicit executionContext: ExecutionContext) = {
+
+    val iv = crypto.getRandomValues(new Uint8Array(12))
+    crypto.
+      subtle.
+      encrypt(algorithmIdentifier(iv),
+        key,
+        unencryptedData
+      ).
+      toFuture.map(r => EncryptedData(
+      Some(unencryptedData),
+      Some(r.asInstanceOf[ArrayBuffer]),
+      Some(iv.buffer),
+      None,
+      None,
+      None
+    ))
+
+  }
+
+  def encryptMetaData(e:EncryptedData,
+                      key: CryptoKey, f: File)
+                     (implicit executionContext: ExecutionContext) =
+    encryptArrayBuffer(
       key,
       metaDataFrom(f)).
-      map(r=>
+      map(r =>
         e.copy(
           metaData = Some(r._1),
           metaRandom = Some(r._2)
-        )))
-
-
-
-
+        ))
 
 
   def generateSymmetricKey()(implicit ctx:ExecutionContext)= crypto.
