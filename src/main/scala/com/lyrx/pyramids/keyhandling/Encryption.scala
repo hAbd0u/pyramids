@@ -20,14 +20,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
     getOrElse(Future{None})
 
 
-  /*
 
-    ._1:  unencrypted
-    ._2: encrypted
-    ._3: random data
-    ._4 signature
-
-   */
   def encryptAndSignFile(f:File) (implicit ctx:ExecutionContext) = {
      pyramidConfig.
       symKeyOpt.
