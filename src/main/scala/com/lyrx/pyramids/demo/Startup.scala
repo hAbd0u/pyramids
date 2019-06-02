@@ -67,17 +67,18 @@ object Startup extends DragAndDrop with UserFeedback {
 
     val infura = "https://ipfs.infura.io/ipfs"
 
+    val atts="target='_blank' class='bottom-line'"
 
     pyramidConfig.
       uploadOpt.
       map(s => $("#pinfolder").html
-        (s"<a href='$infura/$s' target='_blank'>Chamber</a>")
+        (s"<a href='$infura/$s' $atts >Chamber</a>")
       )
 
     pyramidConfig.
       pubKeysOpt.
       map(s => $("#signature").html
-      (s"<a href='$infura/$s' target='_blank'>Signature</a>"))
+      (s"<a href='$infura/$s' $atts >Signature</a>"))
 
 
 
