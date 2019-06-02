@@ -33,7 +33,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
       symKeyOpt.
       map(k=>symEncryptFile(k,f).flatMap(
         t=> pyramidConfig.signKeyOpt.
-            map(signKeys=> sign(signKeys,t.unencrypted.get).
+            map(signKeys=> sign(signKeys,t.encrypted.get).
               map(signature=>ZippableEncrypt(t.unencrypted,
                 t.encrypted,
                 t.random,
