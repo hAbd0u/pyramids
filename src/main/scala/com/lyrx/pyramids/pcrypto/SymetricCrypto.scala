@@ -71,6 +71,7 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
       Some(iv.buffer),
       None,
       None,
+      None,
       None
     ))
 
