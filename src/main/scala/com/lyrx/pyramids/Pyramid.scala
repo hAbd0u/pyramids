@@ -4,7 +4,9 @@ import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.ipfs.CanIpfs
 import org.scalajs.dom.raw.File
 import com.lyrx.pyramids.jszip._
-import scala.concurrent.ExecutionContext
+
+import scala.concurrent.{ExecutionContext, Future}
+import typings.stdLib.Blob
 
 
 object  Pyramid{
@@ -42,6 +44,13 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
         ).getOrElse(pyramidConfig))
 
 
+  def download(aHash:String)
+              (implicit executionContext:ExecutionContext) =
+    readIpfs(aHash).flatMap(aFuture=>aFuture.
+      map(aFile=>zipInstance().
+        loadAsync(aFile.asInstanceOf[Blob]).
+      toFuture.map(Some(_))
+      ).getOrElse(Future{None}))
 
 
 

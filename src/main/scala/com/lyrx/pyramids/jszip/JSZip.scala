@@ -31,7 +31,6 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
 ) extends Encrypted{
 
 
-  def init() = new jszipMod.Class()
 
   def fromEncrypted(e:Encrypted) = ZippableEncrypt(
     e.unencrypted,
@@ -53,11 +52,11 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
   def zippedUnsigned() = orEncrypted().
     encrypted.
     map(
-      b=>init().
+      b=>zipInstance().
         file("data.encr", convert(b)).
         file("data.random",convert(random.get))
         ).
-    getOrElse(init().file("data.dat",convert(unencrypted.get)))
+    getOrElse(zipInstance().file("data.dat",convert(unencrypted.get)))
 
 
   def withMetaData()=metaData.map(

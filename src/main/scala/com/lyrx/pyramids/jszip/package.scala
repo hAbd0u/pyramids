@@ -3,6 +3,7 @@ package com.lyrx.pyramids
 import com.lyrx.pyramids.ipfs.BufferObject
 import typings.jszipLib.jszipMod.{JSZip, JSZipGeneratorOptions}
 import typings.jszipLib.jszipLibStrings.uint8array
+import typings.jszipLib.jszipMod
 import typings.stdLib.{ArrayBuffer, Blob, Uint8Array}
 
 import scala.concurrent.ExecutionContext
@@ -12,6 +13,7 @@ package object jszip {
   type JSData = String  | ArrayBuffer | Blob | Uint8Array
 
 
+  def zipInstance() =new jszipMod.Class()
 
   implicit class PimpedZip(zip: JSZip){
 
