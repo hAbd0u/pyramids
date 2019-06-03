@@ -5,13 +5,14 @@ import com.lyrx.pyramids.pcrypto.EncryptedData
 import typings.jszipLib.jszipMod.{JSZip, JSZipGeneratorOptions}
 import typings.jszipLib.jszipLibStrings.uint8array
 import typings.jszipLib.jszipMod
-import typings.stdLib.{ArrayBuffer, Blob, Uint8Array}
+import typings.stdLib//.{ Blob, Uint8Array}
 
-import scala.concurrent.ExecutionContext
+import scala.scalajs.js.typedarray
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.|
 
 package object jszip {
-  type JSData = String  | ArrayBuffer | Blob | Uint8Array
+  type JSData = String  | stdLib.ArrayBuffer | stdLib.Blob | stdLib.Uint8Array
 
 
   def zipInstance() =new jszipMod.Class()
@@ -38,13 +39,15 @@ package object jszip {
       .generateAsync_uint8array(
       JSZipGeneratorOptions(`type` = uint8array)).
     toFuture.map( r=> if(r !=null)
-      Some(r.buffer.asInstanceOf[ArrayBuffer])
+      Some(r.buffer.asInstanceOf[typedarray.ArrayBuffer])
     else
       None
     )
 
 
-    def toEncrypted() = Seq(
+    def toEncrypted()
+                   (implicit executionContext: ExecutionContext)=
+      Future.sequence(Seq(
       "data.dat",
       "data.encrypted",
       "data.random",
@@ -52,19 +55,20 @@ package object jszip {
       "data.meta",
       "meta.random",
       "signer.json"
-    )
+    ).map(toArrayBuffer(_))).
+        map(aSequence =>
+          EncryptedData(
+            unencrypted=  aSequence(0),
+            encrypted = aSequence(1),
+            random = aSequence(2),
+            signature = aSequence(3),
+          metaData = aSequence(4),
+          metaRandom = aSequence(5),
+          signer = aSequence(6)
+        ))
 
 
-    /* EncryptedData(
-      unencrypted= zip.file("data.dat").generateNodeStream(),
-      encrypted = None,
-      random = None,)
-      signature = None,
-      metaData = None,
-      metaRandom = None,
-      signer = None
-    )
-    */
+
 
 
 
