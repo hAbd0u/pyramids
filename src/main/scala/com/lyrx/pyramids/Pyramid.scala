@@ -66,6 +66,10 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
   def download()
                        (implicit executionContext:ExecutionContext) =
-    pyramidConfig.uploadOpt.map(downloadEncrypted(_)).getOrElse(Future{EncryptedData()})
+    pyramidConfig.
+      uploadOpt.
+      map(downloadEncrypted(_)).
+      getOrElse(Future{EncryptedData()}).
+      map(e=>pyramidConfig.msg("Oh Pharao, we have data for you: " +e))
 
 }

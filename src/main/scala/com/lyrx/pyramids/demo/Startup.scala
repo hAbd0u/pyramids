@@ -112,7 +112,9 @@ object Startup extends DragAndDrop with UserFeedback {
 
     $("#drop_zone").on("click",
       (e: JQueryEventObject)=>{
-      println("Click!")
+      //println("Click!")
+        handle(pyramid.download(),None)
+        ()
     })
   }
 

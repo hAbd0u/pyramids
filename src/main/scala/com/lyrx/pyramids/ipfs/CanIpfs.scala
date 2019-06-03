@@ -6,7 +6,6 @@ import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
-import typings.stdLib.ReadableStream
 
 trait CanIpfs extends Crypto with PyramidJSON {
   val pyramidConfig: PyramidConfig

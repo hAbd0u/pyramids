@@ -35,7 +35,7 @@ package object jszip {
 
     def toArrayBuffer(fileName:String)
                    (implicit executionContext: ExecutionContext)=  zip.
-      file(fileName)
+      file(fileName)// TODO: perform null check
       .generateAsync_uint8array(
       JSZipGeneratorOptions(`type` = uint8array)).
     toFuture.map( r=> if(r !=null)
