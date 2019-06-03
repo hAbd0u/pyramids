@@ -7,9 +7,11 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 import PCryptoImplicits._
+import com.lyrx.pyramids.PyramidJSON
+import typings.nodeLib.bufferMod.Buffer
 
 import js.Dynamic.{literal => l}
-trait AsymetricCrypto extends Crypto {
+trait AsymetricCrypto extends Crypto with PyramidJSON{
 
   val aHashAlgorithm:KeyAlgorithmIdentifier =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
     publicExponent = new Uint8Array( js.Array(1,0,1)),
@@ -93,7 +95,7 @@ trait AsymetricCrypto extends Crypto {
 
 
 
-  def sign(keys:CryptoKeyPair,data:ArrayBuffer)
+  private def sign(keys:CryptoKeyPair,data:ArrayBuffer)
           (implicit executionContext: ExecutionContext)= crypto.subtle.sign(
     l(
       "name" -> "ECDSA",
@@ -107,12 +109,30 @@ trait AsymetricCrypto extends Crypto {
               (implicit executionContext: ExecutionContext) =
     new FileReader().
     futureReadArrayBuffer(f).
-      flatMap(b=>sign(keys,b).
-        map(signedB=>(b,signedB)))
+      flatMap(b=>signArrayBuffer(keys, b))
 
 
+   def signArrayBuffer(keys: CryptoKeyPair, b: ArrayBuffer)
+                              (implicit executionContext: ExecutionContext)
+  = {
+    sign(keys, b).
+      flatMap(signedB => signArrayBufferAddSigner(keys, b, signedB))
+  }
 
-  def verify(key:CryptoKey,signature:ArrayBuffer,data:ArrayBuffer)
+  private def signArrayBufferAddSigner
+  (keys: CryptoKeyPair, b: ArrayBuffer, signedB: ArrayBuffer)
+  (implicit executionContext: ExecutionContext)
+  = {
+    exportCryptoKey(
+      keys.publicKey).
+      map(jk => Buffer.
+        from(stringify(jk)).
+        buffer.
+        asInstanceOf[ArrayBuffer]).
+      map(r => (b, signedB, r))
+  }
+
+  def verify(key:CryptoKey, signature:ArrayBuffer, data:ArrayBuffer)
             (implicit executionContext: ExecutionContext)= crypto.subtle.verify(
     l(
       "name" -> "ECDSA",

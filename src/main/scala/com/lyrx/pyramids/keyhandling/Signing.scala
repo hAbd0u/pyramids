@@ -12,9 +12,4 @@ trait Signing extends  AsymetricCrypto  {
 
 
 
-    def signArrayBuffer(data:ArrayBuffer)
-            (implicit executionContext: ExecutionContext) = pyramidConfig.
-      signKeyOpt.map(key=>sign(key,data).map(Some(_))).
-      getOrElse(Future{None})
-
 }

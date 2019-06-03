@@ -9,7 +9,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 
-trait Encryption extends  SymetricCrypto with AsymetricCrypto {
+trait Encryption extends  SymetricCrypto with AsymetricCrypto  {
 
   val pyramidConfig: PyramidConfig
 
@@ -26,33 +26,35 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto {
       symKeyOpt.
       map(k=>symEncryptFile(k,f).flatMap( //encryption keys present:
         t=> pyramidConfig.signKeyOpt. // sign keys present:
-            map(signKeys=> sign(signKeys,t.encrypted.get).
-              map(signature=>ZippableEncrypt(t.unencrypted,
-                t.encrypted,
-                t.random,
-                Some(signature),
-                t.metaData,
-                t.metaRandom,
-                t.signer
+            map(signKeys=> signArrayBuffer(signKeys,t.encrypted.get).
+              map(t2=>ZippableEncrypt(
+                unencrypted = t.unencrypted,
+                encrypted = t.encrypted,
+                random = t.random,
+                signature = Some(t2._2),
+                metaData = t.metaData,
+                metaRandom = t.metaRandom,
+                signer = Some(t2._3)
               ))
             ).getOrElse(Future{ // no signature keys:
-          ZippableEncrypt(t.unencrypted,
-          t.encrypted,
-          t.random,
-          None,
-            t.metaData,
-            t.metaRandom,
-            t.signer)})
+          ZippableEncrypt(
+            unencrypted = t.unencrypted,
+          encrypted = t.encrypted,
+          random = t.random,
+            signature = None,
+            metaData = t.metaData,
+           metaRandom = t.metaRandom,
+            signer = t.signer)})
       )).getOrElse( // no encryption keys:
        pyramidConfig.signKeyOpt.map(signKeys=>  // signature keys present:
          signFile(signKeys,f).map(signatureTupel =>ZippableEncrypt(
-           Some(signatureTupel._1),
-           None,
-           None,
-           Some(signatureTupel._2),
-           None,
-           None,
-           None))
+           unencrypted = Some(signatureTupel._1),
+          encrypted = None,
+           random =  None,
+           signature = Some(signatureTupel._2),
+           metaData = None,
+           metaRandom = None,
+           signer = Some(signatureTupel._3)))
        ).
          getOrElse( // No signature keys;
            Future{
