@@ -3,6 +3,7 @@ package com.lyrx.pyramids.jszip
 
 import com.lyrx.pyramids.pcrypto.Encrypted
 import typings.jszipLib.jszipMod
+import typings.jszipLib.jszipMod.JSZip
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
@@ -11,6 +12,9 @@ import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array => UINT8ARRAY}
 
 
 
+object  ZippableEncrypt{
+  def fromZip(zip:JSZip) = ???
+}
 
 
 

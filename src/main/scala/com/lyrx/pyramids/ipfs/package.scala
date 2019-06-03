@@ -15,6 +15,8 @@ package object ipfs {
   implicit class PimpedIpfsClient(ipfsClient:IpfsClient){
 
 
+    def futureCat(s:String) = ipfsClient.cat(s).toFuture
+
     def futureAdd(content:Buffer) = {
       val promise = Promise[js.Array[IPFSSFile]]
 
