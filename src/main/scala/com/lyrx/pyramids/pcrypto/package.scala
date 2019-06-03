@@ -14,6 +14,8 @@ package object pcrypto {
 
 
 
+
+
   def hash(b: BufferSource)(implicit excecutionContext:ExecutionContext): Future[ArrayBuffer] =
     crypto.crypto.subtle.digest("SHA-256", b).toFuture.map(_.asInstanceOf[ArrayBuffer])
 

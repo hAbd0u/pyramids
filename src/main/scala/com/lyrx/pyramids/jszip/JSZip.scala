@@ -1,7 +1,7 @@
 package com.lyrx.pyramids.jszip
 
 
-import com.lyrx.pyramids.pcrypto.Encrypted
+import com.lyrx.pyramids.pcrypto.{Encrypted, EncryptedData}
 import typings.jszipLib.jszipMod
 import typings.jszipLib.jszipMod.JSZip
 
@@ -9,12 +9,6 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array => UINT8ARRAY}
 
-
-
-
-object  ZippableEncrypt{
-  def fromZip(zip:JSZip) = ???
-}
 
 
 
@@ -43,7 +37,10 @@ case class ZippableEncrypt(unencrypted: Option[ArrayBuffer],
   )
 
   def zipped()=signature.map(
-    s=>withMetaData().file("data.signature",convert(s))).
+    s=>withMetaData().
+      file("data.signature",convert(s)).
+      file("signature.json",convert(signer.get))
+  ).
     getOrElse(withMetaData())
 
   private def convert(b:ArrayBuffer) = new UINT8ARRAY(b).asInstanceOf[typings.stdLib.Uint8Array]
