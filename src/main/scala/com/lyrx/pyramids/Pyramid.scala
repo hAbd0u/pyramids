@@ -4,6 +4,8 @@ import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.ipfs.CanIpfs
 import org.scalajs.dom.raw.File
 import com.lyrx.pyramids.jszip._
+import com.lyrx.pyramids.pcrypto.{Encrypted, EncryptedData}
+import typings.jszipLib.jszipMod.JSZip
 
 import scala.concurrent.{ExecutionContext, Future}
 import typings.stdLib.Blob
@@ -44,7 +46,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
         ).getOrElse(pyramidConfig))
 
 
-  def download(aHash:String)
+  def downloadZip(aHash:String)
               (implicit executionContext:ExecutionContext) =
     readIpfs(aHash).flatMap(aFuture=>aFuture.
       map(aFile=>zipInstance().
@@ -53,5 +55,17 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
       ).getOrElse(Future{None}))
 
 
+  def downloadEncrypted(aHash:String)
+                 (implicit executionContext:ExecutionContext) =
+    downloadZip(aHash).flatMap(
+      (o:Option[JSZip])=> o.map(z=>z.toEncrypted()
+      ).getOrElse(Future{EncryptedData()}))
+
+
+
+
+  def download()
+                       (implicit executionContext:ExecutionContext) =
+    pyramidConfig.uploadOpt.map(downloadEncrypted(_)).getOrElse(Future{EncryptedData()})
 
 }

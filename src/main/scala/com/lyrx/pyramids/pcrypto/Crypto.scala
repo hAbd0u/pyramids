@@ -15,6 +15,12 @@ trait Encrypted {
   val signer:Option[ArrayBuffer]
 }
 
+object EncryptedData{
+  def apply():EncryptedData=EncryptedData(
+    None,None,None,None,None,None,None
+  )
+}
+
 case class EncryptedData(unencrypted: Option[ArrayBuffer],
                          encrypted:Option[ArrayBuffer],
                          random:Option[ArrayBuffer],

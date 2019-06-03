@@ -109,6 +109,11 @@ object Startup extends DragAndDrop with UserFeedback {
       message("Uploading ...")
       pyramid.uploadZip(f)
     }))
+
+    $("#drop_zone").on("click",
+      (e: JQueryEventObject)=>{
+      println("Click!")
+    })
   }
 
   def showMessages(pyramidConfig: _root_.com.lyrx.pyramids.PyramidConfig): Option[Unit] = {
