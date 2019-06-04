@@ -2,13 +2,15 @@ package com.lyrx.pyramids
 
 import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.ipfs.CanIpfs
-import org.scalajs.dom.raw.File
+import org.scalajs.dom.raw//.{Blob, File}
 import com.lyrx.pyramids.jszip._
-import com.lyrx.pyramids.pcrypto.{DecryptedData, Encrypted, EncryptedData}
+import com.lyrx.pyramids.pcrypto.{DecryptedData, EncryptedData}
 import typings.jszipLib.jszipMod.JSZip
+import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
 
+import scala.scalajs.js
 import scala.concurrent.{ExecutionContext, Future}
-import typings.stdLib.Blob
+import typings.stdLib
 
 
 object  Pyramid{
@@ -35,7 +37,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
-  def uploadZip(f:File)(implicit executionContext:ExecutionContext)=
+  def uploadZip(f:raw.File)(implicit executionContext:ExecutionContext)=
     zipEncrypt(f)
     .flatMap(_.dump())
     .flatMap(b => bufferToIpfs(b))
@@ -51,7 +53,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
               (implicit executionContext:ExecutionContext) =
     readIpfs(aHash).flatMap(aFuture=>aFuture.
       map(aFile=>zipInstance().
-        loadAsync(aFile.asInstanceOf[Blob]).
+        loadAsync(aFile.asInstanceOf[stdLib.Blob]).
       toFuture.map(Some(_))
       ).getOrElse(Future{None}))
 
@@ -81,8 +83,18 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
     ))
 
   def download()(implicit executionContext:ExecutionContext) =
-    downloadDecrypted().map(d=>pyramidConfig.
-      msg(s"Oh Pharao,you have ${d.descr()}"))
+    downloadDecrypted().map(d=>{
+      d.unencrypted.map(unencr=>d.metaData.map(meta=>{
+
+        filesaver.saveAs(
+          new raw.Blob(js.Array(unencr)).asInstanceOf[stdLib.Blob],
+          "data.dat"
+        )
+
+      }))
+      pyramidConfig.
+        msg(s"Oh Pharao,you have ${d.descr()}")
+    })
 
 
 
