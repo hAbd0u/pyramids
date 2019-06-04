@@ -4,7 +4,7 @@ import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.ipfs.CanIpfs
 import org.scalajs.dom.raw.File
 import com.lyrx.pyramids.jszip._
-import com.lyrx.pyramids.pcrypto.{Encrypted, EncryptedData}
+import com.lyrx.pyramids.pcrypto.{DecryptedData, Encrypted, EncryptedData}
 import typings.jszipLib.jszipMod.JSZip
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -56,8 +56,8 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
       ).getOrElse(Future{None}))
 
 
-  def downloadEncrypted(aHash:String)
-                 (implicit executionContext:ExecutionContext) =
+  def downloadHashEncrypted(aHash:String)
+                           (implicit executionContext:ExecutionContext) =
     downloadZip(aHash).flatMap(
       (o:Option[JSZip])=> o.map(z=>z.toEncrypted()
       ).getOrElse(Future{EncryptedData()}))
@@ -65,12 +65,26 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
-  def download()
+  def downloadEncrypted()
                        (implicit executionContext:ExecutionContext) =
     pyramidConfig.
       ipfsData.uploadOpt.
-      map(downloadEncrypted(_)).
-      getOrElse(Future{EncryptedData()}).
-      map(e=>pyramidConfig.msg(s"Oh Pharao, you have ${e.descr()}." ))
+      map(downloadHashEncrypted(_)).
+      getOrElse(Future{EncryptedData()})
+
+  def downloadDecrypted()
+                       (implicit executionContext:ExecutionContext) =
+    downloadEncrypted().flatMap(encr=>pyramidConfig.
+      symKeyOpt.
+    map(symKey=>encr.decrypt(symKey)).getOrElse(
+      Future{DecryptedData(None,None)}
+    ))
+
+  def download()(implicit executionContext:ExecutionContext) =
+    downloadDecrypted().map(d=>pyramidConfig.
+      msg(s"Oh Pharao,you have ${d.descr()}"))
+
+
+
 
 }
