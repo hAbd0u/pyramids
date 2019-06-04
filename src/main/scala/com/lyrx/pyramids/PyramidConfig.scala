@@ -14,15 +14,29 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 }
 
 
+case class IpfsData(uploadOpt:Option[String],
+                         pubKeysOpt:Option[String]
+                        )
+
 case class PyramidConfig(//distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
                          asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          messages:Messages ,
                          ipfsOpt:Option[ IpfsClient],
-                         uploadOpt:Option[String],
-                         pubKeysOpt:Option[String]
+                         ipfsData: IpfsData
                         ) {
+
+
+  def withUpload(s:String) =this.
+    copy(ipfsData = ipfsData.
+      copy(uploadOpt = Some(s)))
+
+  def withPubKeys(s:String) =this.
+    copy(ipfsData = ipfsData.
+      copy(pubKeysOpt = Some(s)))
+
+
 
   def msg(s:String) = this.
     copy(

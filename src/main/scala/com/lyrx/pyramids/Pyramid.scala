@@ -12,15 +12,14 @@ import typings.stdLib.Blob
 
 
 object  Pyramid{
-  def apply()=new Pyramid(PyramidConfig(//DistributedDir(Nil,""),
+  def apply()=new Pyramid(PyramidConfig(
     None,
     None,
     None,
     Messages(Some("Welcome to your Pyramid!"),
       None),
     None,
-    None,
-    None))
+    IpfsData(None,None)))
 }
 
 class Pyramid(override val pyramidConfig: PyramidConfig)
@@ -34,6 +33,8 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
 
 def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
+
+
   def uploadZip(f:File)(implicit executionContext:ExecutionContext)=
     zipEncrypt(f)
     .flatMap(_.dump())
@@ -41,7 +42,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
     .map(
       os =>
         os.map(s => pyramidConfig.
-          copy(uploadOpt=Some(s)).
+        withUpload(s).
           msg(s"Uploaded ${f.name}")
         ).getOrElse(pyramidConfig))
 
@@ -67,7 +68,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def download()
                        (implicit executionContext:ExecutionContext) =
     pyramidConfig.
-      uploadOpt.
+      ipfsData.uploadOpt.
       map(downloadEncrypted(_)).
       getOrElse(Future{EncryptedData()}).
       map(e=>pyramidConfig.msg("Oh Pharao, we have data for you: " +e))

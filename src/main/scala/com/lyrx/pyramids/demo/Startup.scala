@@ -70,13 +70,13 @@ object Startup extends DragAndDrop with UserFeedback {
     val atts="target='_blank' class='bottom-line'"
 
     pyramidConfig.
-      uploadOpt.
+      ipfsData.uploadOpt.
       map(s => $("#pinfolder").html
         (s"<a href='$infura/$s' $atts >Chamber</a>")
       )
 
     pyramidConfig.
-      pubKeysOpt.
+      ipfsData.pubKeysOpt.
       map(s => $("#signature").html
       (s"<a href='$infura/$s' $atts >Signature</a>"))
 

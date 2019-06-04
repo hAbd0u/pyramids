@@ -57,7 +57,7 @@ trait CanIpfs extends Crypto with PyramidJSON {
       .map(_.flatMap(_.headOption.map(_.hash)))
       .map(_.map(s =>
         new Pyramid(pyramidConfig.
-          copy(pubKeysOpt = Some(s)).
+          withPubKeys(s).
           msg(s"Oh Pharao, we have published your divine signature!")))
         .getOrElse(new Pyramid(pyramidConfig)))
 
