@@ -1,9 +1,11 @@
 package com.lyrx.pyramids.pcrypto
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey, KeyFormat, crypto}
+import org.scalajs.dom.raw.File
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js.typedarray.ArrayBuffer
+import scala.scalajs.js
+import js.typedarray.ArrayBuffer
 
 trait Encrypted extends SymetricCrypto {
   val unencrypted: Option[ArrayBuffer]
@@ -34,7 +36,12 @@ trait Encrypted extends SymetricCrypto {
           symKey,
           data,
           metaRandom.get
-        ).map(b=>DecryptedData(d.unencrypted,Some(b)))).
+        ).map(b=>{
+
+          DecryptedData(
+            d.unencrypted,
+            Some(js.JSON.parse(stringify(b)).asInstanceOf[File])
+        )})).
         getOrElse(
           Future{DecryptedData(d.unencrypted,None)
           }))
@@ -64,7 +71,7 @@ object EncryptedData{
 
 
 case class DecryptedData(unencrypted: Option[ArrayBuffer],
-                         metaData:Option[ArrayBuffer]
+                         metaData:Option[File]
                         ){
   def isEmpty() =(
     unencrypted.isEmpty  &&

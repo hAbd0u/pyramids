@@ -88,7 +88,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
         filesaver.saveAs(
           new raw.Blob(js.Array(unencr)).asInstanceOf[stdLib.Blob],
-          "data.dat"
+          meta.name
         )
 
       }))
