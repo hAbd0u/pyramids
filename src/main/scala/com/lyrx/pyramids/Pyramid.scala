@@ -71,6 +71,6 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
       ipfsData.uploadOpt.
       map(downloadEncrypted(_)).
       getOrElse(Future{EncryptedData()}).
-      map(e=>pyramidConfig.msg("Oh Pharao, we have data for you: " +e))
+      map(e=>pyramidConfig.msg(s"Oh Pharao, you have ${e.descr()}." ))
 
 }

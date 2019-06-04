@@ -17,6 +17,18 @@ trait Encrypted extends SymetricCrypto {
 
   def decrypt(symKey:CryptoKey) = encrypted.
     map(data=>data)
+
+  def isEmpty() =(
+    unencrypted.isEmpty &&
+    encrypted.isEmpty &&
+    random.isEmpty &&
+    signature.isEmpty &&
+    metaData.isEmpty &&
+    metaRandom.isEmpty &&
+    signer.isEmpty
+  )
+
+  def descr()=if(isEmpty()) "no data" else "encrypted data"
 }
 
 object EncryptedData{
@@ -28,7 +40,12 @@ object EncryptedData{
 
 case class DecryptedData(unencrypted: Option[ArrayBuffer],
                          metaData:Option[ArrayBuffer]
-                        )
+                        ){
+  def isEmpty() =(
+    unencrypted.isEmpty  &&
+    metaData.isEmpty)
+
+}
 
 case class EncryptedData(unencrypted: Option[ArrayBuffer],
                          encrypted:Option[ArrayBuffer],
