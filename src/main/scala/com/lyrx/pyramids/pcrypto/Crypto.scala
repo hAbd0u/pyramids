@@ -2,10 +2,11 @@ package com.lyrx.pyramids.pcrypto
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey, KeyFormat, crypto}
 import org.scalajs.dom.raw.File
+import com.lyrx.pyramids.ipfs.TextDecoder
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import js.typedarray.ArrayBuffer
+import js.typedarray.{ArrayBuffer, Uint8Array}
 
 trait Encrypted extends SymetricCrypto {
   val unencrypted: Option[ArrayBuffer]
@@ -36,12 +37,13 @@ trait Encrypted extends SymetricCrypto {
           symKey,
           data,
           metaRandom.get
-        ).map(b=>{
-
-          DecryptedData(
+        ).map(b=>DecryptedData(
             d.unencrypted,
-            Some(js.JSON.parse(stringify(b)).asInstanceOf[File])
-        )})).
+            Some(js.JSON.parse(
+              new TextDecoder("utf-8").
+              decode(
+                new Uint8Array(b))).asInstanceOf[File])
+        ))).
         getOrElse(
           Future{DecryptedData(d.unencrypted,None)
           }))

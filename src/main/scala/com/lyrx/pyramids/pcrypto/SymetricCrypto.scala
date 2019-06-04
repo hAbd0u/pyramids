@@ -31,7 +31,11 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
 
 
   def metaDataFrom(f: File) = Buffer.
-    from(stringify(f)).
+    from(stringify(
+      l("name"  -> f.name,
+        "type" -> f.`type`,
+        "size"  -> f.size
+      ))).
     buffer.asInstanceOf[ArrayBuffer]
 
   def encryptArrayBuffer(key:CryptoKey,b:ArrayBuffer)
