@@ -45,6 +45,18 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
   }
 
 
+  def decryptArrayBuffer(key:CryptoKey,data:ArrayBuffer,iv:ArrayBuffer)
+                        (implicit executionContext: ExecutionContext)=
+    crypto.
+      subtle.
+      decrypt(algorithmIdentifier(new Uint8Array(iv)), key, data).
+      toFuture.map(_.asInstanceOf[ArrayBuffer])
+
+
+
+
+
+
 
 
   def symEncryptFile(key:CryptoKey, f:File)

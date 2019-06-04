@@ -5,7 +5,7 @@ import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey, KeyFormat, 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.typedarray.ArrayBuffer
 
-trait Encrypted {
+trait Encrypted extends SymetricCrypto {
   val unencrypted: Option[ArrayBuffer]
   val encrypted: Option[ArrayBuffer]
   val random: Option[ArrayBuffer]
@@ -13,6 +13,10 @@ trait Encrypted {
   val metaData:Option[ArrayBuffer]
   val metaRandom:Option[ArrayBuffer]
   val signer:Option[ArrayBuffer]
+
+
+  def decrypt(symKey:CryptoKey) = encrypted.
+    map(data=>data)
 }
 
 object EncryptedData{
@@ -20,6 +24,11 @@ object EncryptedData{
     None,None,None,None,None,None,None
   )
 }
+
+
+case class DecryptedData(unencrypted: Option[ArrayBuffer],
+                         metaData:Option[ArrayBuffer]
+                        )
 
 case class EncryptedData(unencrypted: Option[ArrayBuffer],
                          encrypted:Option[ArrayBuffer],
