@@ -15,8 +15,33 @@ trait Encrypted extends SymetricCrypto {
   val signer:Option[ArrayBuffer]
 
 
-  def decrypt(symKey:CryptoKey) = encrypted.
-    map(data=>data)
+  def decryptData(symKey:CryptoKey)(implicit executionContext: ExecutionContext) =
+    encrypted.
+    map(data=>decryptArrayBuffer(
+      symKey,
+      data,
+      random.get
+    ).map(b=>DecryptedData(Some(b),None))).
+      getOrElse(
+        Future{DecryptedData(None,None)
+        })
+
+
+  def decrypt(symKey:CryptoKey)(implicit executionContext: ExecutionContext) =
+    decryptData(symKey).flatMap(d=>
+      metaData.
+        map(data=>decryptArrayBuffer(
+          symKey,
+          data,
+          metaRandom.get
+        ).map(b=>DecryptedData(d.unencrypted,Some(b)))).
+        getOrElse(
+          Future{DecryptedData(d.unencrypted,None)
+          }))
+
+
+
+
 
   def isEmpty() =(
     unencrypted.isEmpty &&
@@ -28,7 +53,7 @@ trait Encrypted extends SymetricCrypto {
     signer.isEmpty
   )
 
-  def descr()=if(isEmpty()) "no data" else "encrypted data"
+  def descr()=if(isEmpty()) "no encrypted data" else "encrypted data"
 }
 
 object EncryptedData{
@@ -44,6 +69,8 @@ case class DecryptedData(unencrypted: Option[ArrayBuffer],
   def isEmpty() =(
     unencrypted.isEmpty  &&
     metaData.isEmpty)
+
+  def descr()=if(isEmpty()) "no decrypted data" else "decrypted data"
 
 }
 
