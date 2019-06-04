@@ -93,7 +93,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
       }))
       pyramidConfig.
-        msg(s"Oh Pharao,you have ${d.descr()}")
+        msg(s"Oh Pharao,you have downloaded ${d.descr()}")
     })
 
 
