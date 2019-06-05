@@ -6,7 +6,7 @@ import typings.jqueryLib.{JQuery, JQueryEventObject}
 import scala.concurrent.Future
 
 trait DragAndDrop {
-  def onDrop[T](jq:JQuery[T],h: ((File) => Future[Any])): JQuery[T] = onDragOverNothing(jq.on(
+  def onDrop[T](jq:JQuery[T],h: ((File) => Unit)): JQuery[T] = onDragOverNothing(jq.on(
     "drop",
     (evt: JQueryEventObject) => {
       evt.stopPropagation();

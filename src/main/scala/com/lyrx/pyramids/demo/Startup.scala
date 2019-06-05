@@ -48,11 +48,13 @@ object Startup extends DragAndDrop with UserFeedback {
     msgOpt.map(message(_))
     f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
     f.map(config => ipfsInit(config))
+    ()
   }
   def handle(f: Future[PyramidConfig], msgOpt: Option[String] = None) = {
     msgOpt.map(message(_))
     f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
     f.map(config => init(config))
+    ()
   }
 
   def init(pyramidConfig: PyramidConfig)(
@@ -96,14 +98,16 @@ object Startup extends DragAndDrop with UserFeedback {
       .on("drop", (e: JQueryEventObject) => e.preventDefault())
 
     //Download/upload wallet:
-    pyramid
-      .downloadWallet($("#logo").off())
-      .map(
-        (q2: JQuery[_]) =>
-          onDrop(q2,
-            (f) =>
-              handleWithIpfs(pyramid.uploadWallet(f),
-                Some(s"Importing keys from ${f.name}"))))
+
+    onDrop($("#logo").off(),
+      f=>handleWithIpfs(
+        pyramid.uploadWallet(f),
+        None)).
+      on("click",
+        (e:JQueryEventObject)=> handle(
+          pyramid.downloadWallet(),None)
+      )
+
 
     onDrop($("#drop_zone").off(), (f) => handle({
       message("Uploading ...")

@@ -2,13 +2,12 @@ package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
 import org.scalajs.dom
-import org.scalajs.dom.raw.{Blob, BlobPropertyBag}
-
+import org.scalajs.dom.raw//.{Blob, BlobPropertyBag}
+import typings.stdLib
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
-import typings.jqueryLib.{JQuery}
-
+import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
 
 
 @js.native
@@ -21,7 +20,7 @@ class MyWindow extends dom.Window {
 @js.native
 trait URL extends js.Any {
 
-  def createObjectURL(blob: Blob): String = js.native
+  def createObjectURL(blob: raw.Blob): String = js.native
 
 }
 
@@ -37,16 +36,26 @@ trait DownloadWallet extends PyramidJSON{
   val mywindow = js.Dynamic.global.window.asInstanceOf[MyWindow]
 
 
-  def createObjectURL(blob: Blob): String = mywindow.URL.createObjectURL(blob)
+  def createObjectURL(blob: raw.Blob): String = mywindow.URL.createObjectURL(blob)
 
 
 
-  def downloadWallet[T](n:JQuery[T])(implicit executionContext: ExecutionContext):Future[JQuery[T]]=new Pyramid(pyramidConfig).
+  def downloadWallet()
+                       (implicit executionContext: ExecutionContext)= new
+      Pyramid(pyramidConfig).
       exportAllKeys().
-      map(walletNative=>stringify(walletNative)).
-      map(s=>n.attr("href",createObjectURL(
-        new Blob(js.Array(s), BlobPropertyBag("application/json")
-        ))))
+      map(walletNative =>filesaver.
+        saveAs(
+          new raw.Blob(
+            js.Array(stringify(walletNative)),
+            raw.BlobPropertyBag("application/json")).
+            asInstanceOf[stdLib.Blob],
+        "pyramid-keys.json")).
+      map(v=>pyramidConfig.
+          msg("Oh Pharao, you have saved your keys!"))
+
+
+
 
 
 
