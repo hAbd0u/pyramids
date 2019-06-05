@@ -110,7 +110,7 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
     subtle.
     generateKey(
       keyAlgorithmIdentifier,
-      true,
+      extractable = true,
       js.Array(
       KeyUsage.encrypt,
       KeyUsage.decrypt)).
@@ -122,7 +122,7 @@ trait SymetricCrypto extends Crypto with PyramidJSON {
     KeyFormat.jwk,
     jsonWebKey,
     keyAlgorithmIdentifier,
-    true,
+    extractable = true,
     js.Array(
       KeyUsage.encrypt,
       KeyUsage.decrypt)).

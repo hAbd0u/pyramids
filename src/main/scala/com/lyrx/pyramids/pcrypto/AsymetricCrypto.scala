@@ -48,8 +48,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
   private def generateKeysFor(aUsage:js.Array[KeyUsage],alg:KeyAlgorithmIdentifier)
                      (implicit ctx:ExecutionContext):Future[CryptoKeyPair]
   = crypto.subtle.generateKey(
-    algorithm = alg
-    ,
+    algorithm = alg,
     extractable = true,
     keyUsages = aUsage).
     toFuture.map(_.asInstanceOf[CryptoKeyPair])
@@ -89,7 +88,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
     KeyFormat.jwk,
       jsonWebKey,
       algo,
-      true,
+    extractable = true,
       usages).toFuture.
       map(k=>Some(k.asInstanceOf[CryptoKey]))
 
