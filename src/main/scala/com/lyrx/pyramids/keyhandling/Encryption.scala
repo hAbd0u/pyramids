@@ -69,12 +69,5 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto  {
 
 
 
-  def zipEncrypt(f:File) (implicit ctx:ExecutionContext) =
-    encryptAndSignFileDefault(f).map(_.zipped())
-    //pyramidConfig.ipfsData.symKeyOpt.map(aHash=>)
-
-  /*
-    encryptAndSignFileDefault(f).map(_.zipped())
-*/
 
 }

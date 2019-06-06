@@ -3,9 +3,10 @@ package com.lyrx.pyramids
 import com.lyrx.pyramids.ipfs.CanIpfs
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
-import com.lyrx.pyramids.pcrypto.{DecryptedData, EncryptedData}
+import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, DecryptedData, EncryptedData}
 import org.scalajs.dom.crypto.CryptoKey
 import org.scalajs.dom.raw
+import org.scalajs.dom.raw.File
 import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
 import typings.jszipLib.jszipMod.JSZip
 import typings.{nodeLib, stdLib}
@@ -33,7 +34,9 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with DownloadWallet
   with UploadWallet
   with Encryption
-  with CanIpfs {
+  with CanIpfs
+  with AsymetricCrypto
+{
 
 def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
@@ -126,6 +129,30 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def readIpfsSymKey(aHash:String,cryptoKey: CryptoKey)
                     (implicit executionContext: ExecutionContext) =
     readIpfs(aHash).map(_.map(f=>f))
+
+
+
+  def zipEncrypt(f:File) (implicit ctx:ExecutionContext) = encryptAndSignFileDefault(f).map(_.zipped())
+
+  def fileForSymKey(f:File) (implicit ctx:ExecutionContext) =
+    pyramidConfig.ipfsData.symKeyOpt.
+      flatMap(aHash=>
+        pyramidConfig.
+          asymKeyOpt.
+          map(asymKey=>readIpfs(aHash))).
+      getOrElse(Future{None})
+
+  def decryptFileForSymKey(f:File) (implicit ctx:ExecutionContext) =
+    fileForSymKey(f).flatMap(
+      _.flatMap(f=>pyramidConfig.
+      asymKeyOpt.
+      map(asymKeys=>decryptFile(
+        asymKeys.privateKey,f).
+        map(Some(_)))).
+      getOrElse(Future{None}))
+
+
+
 
 
 
