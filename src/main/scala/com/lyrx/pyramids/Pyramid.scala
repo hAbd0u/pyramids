@@ -1,10 +1,10 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.ipfs.CanIpfs
+import com.lyrx.pyramids.ipfs.{CanIpfs, TextDecoder}
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, DecryptedData, EncryptedData}
-import org.scalajs.dom.crypto.CryptoKey
+import org.scalajs.dom.crypto.{CryptoKey, JsonWebKey}
 import org.scalajs.dom.raw
 import org.scalajs.dom.raw.File
 import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
@@ -13,7 +13,8 @@ import typings.{nodeLib, stdLib}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.ArrayBuffer
+import scala.scalajs.js.JSON
+import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
 object  Pyramid{
@@ -134,7 +135,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
   def zipEncrypt(f:File) (implicit ctx:ExecutionContext) = encryptAndSignFileDefault(f).map(_.zipped())
 
-  def fileForSymKey(f:File) (implicit ctx:ExecutionContext) =
+  def fileForSymKey() (implicit ctx:ExecutionContext) =
     pyramidConfig.ipfsData.symKeyOpt.
       flatMap(aHash=>
         pyramidConfig.
@@ -142,14 +143,31 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
           map(asymKey=>readIpfs(aHash))).
       getOrElse(Future{None})
 
-  def decryptFileForSymKey(f:File) (implicit ctx:ExecutionContext) =
-    fileForSymKey(f).flatMap(
+  def decryptFileForSymKey() (implicit ctx:ExecutionContext) =
+    fileForSymKey().flatMap(
       _.flatMap(f=>pyramidConfig.
       asymKeyOpt.
       map(asymKeys=>decryptFile(
         asymKeys.privateKey,f).
         map(Some(_)))).
       getOrElse(Future{None}))
+
+  def decodeFileForSymKey() (implicit ctx:ExecutionContext) =
+    decryptFileForSymKey().
+      map(_.map(b=>new TextDecoder().decode(new Uint8Array(b))))
+
+  def parseFileForSymKey() (implicit ctx:ExecutionContext) =
+    decodeFileForSymKey().
+      map(_.map(s=>JSON.parse(s).asInstanceOf[JsonWebKey]))
+
+  def importFileForSymKey() (implicit ctx:ExecutionContext) =
+    parseFileForSymKey().
+      flatMap(
+        _.map(wk=>importSymetricKey(wk).
+          map(Some(_))).
+          getOrElse(Future{None}))
+
+
 
 
 
