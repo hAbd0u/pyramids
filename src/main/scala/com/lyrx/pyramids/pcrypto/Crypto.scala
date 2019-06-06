@@ -40,7 +40,7 @@ trait Encrypted extends SymetricCrypto {
         ).map(b=>DecryptedData(
             d.unencrypted,
             Some(js.JSON.parse(
-              new TextDecoder("utf-8").
+              new TextDecoder().
               decode(
                 new Uint8Array(b))).asInstanceOf[File])
         ))).

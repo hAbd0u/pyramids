@@ -1,16 +1,20 @@
 package com.lyrx.pyramids.ipfs
 
-import com.lyrx.pyramids.pcrypto.CryptoTypes.JsonWebKeyOptPair
-import com.lyrx.pyramids.pcrypto.{Crypto, WalletNative}
+
+import com.lyrx.pyramids.pcrypto
+import pcrypto.PCryptoImplicits._
 import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
+import org.scalajs.dom.raw.FileReader
 import typings.nodeLib
-import nodeLib.bufferMod
+import typings.nodeLib.bufferMod
+
+import scala.scalajs.js.typedarray.Uint8Array
 //import typings.nodeLib.bufferMod.Buffer
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
 
-trait CanIpfs extends Crypto with PyramidJSON {
+trait CanIpfs extends pcrypto.Crypto with PyramidJSON {
   val pyramidConfig: PyramidConfig
 
   def initIpfs()(implicit executionContext: ExecutionContext) = Future {
@@ -33,7 +37,7 @@ trait CanIpfs extends Crypto with PyramidJSON {
     initIpfs().flatMap(_.publicKeysToIpfs())
 
   def exportAllPublicKeys()(
-      implicit ctx: ExecutionContext): Future[JsonWebKeyOptPair] =
+      implicit ctx: ExecutionContext): Future[pcrypto.CryptoTypes.JsonWebKeyOptPair] =
     exportPublicKey(pyramidConfig.asymKeyOpt).flatMap(pubKeyOpt =>
       exportPublicKey(pyramidConfig.signKeyOpt).map(signKeyOpt =>
         (pubKeyOpt, signKeyOpt)))
@@ -45,7 +49,7 @@ trait CanIpfs extends Crypto with PyramidJSON {
           l(
             "asym" -> l("public" -> kp._1.getOrElse(null)),
             "sign" -> l("public" -> kp._2.getOrElse(null))
-          ).asInstanceOf[WalletNative])
+          ).asInstanceOf[pcrypto.WalletNative])
       .map(
         w => bufferMod.Buffer.from(stringify(w))
       )
@@ -75,5 +79,18 @@ trait CanIpfs extends Crypto with PyramidJSON {
     ipfsOpt.map(ipfsClient => ipfsClient.
     futureCat(aHash).map(Some(_))).
     getOrElse(Future{None})
+
+
+  def readIpfsString(aHash:String)
+              (implicit executionContext: ExecutionContext)
+  = readIpfs(aHash).
+    flatMap(_.
+      map(new FileReader().
+        futureReadArrayBuffer(_).
+        map(b=>Some(new TextDecoder().decode(new Uint8Array(b))))
+  ).getOrElse(Future{None}))
+
+
+
 
 }

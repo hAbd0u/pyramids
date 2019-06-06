@@ -30,7 +30,7 @@ class TextEncoder(utfLabel: js.UndefOr[String]) extends js.Object {
 
 @js.native
 @JSGlobal
-class TextDecoder(utfLabel: js.UndefOr[String]) extends js.Object {
+class TextDecoder(utfLabel: js.UndefOr[String] = "utf-8") extends js.Object {
   def decode(buffer: Uint8Array): String = js.native
 }
 

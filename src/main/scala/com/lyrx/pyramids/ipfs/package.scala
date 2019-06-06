@@ -14,6 +14,9 @@ package object ipfs {
   type CanBuffer = String | ArrayBuffer | Uint8Array
 
 
+
+
+
   implicit class PimpedIpfsClient(ipfsClient:IpfsClient){
 
 
