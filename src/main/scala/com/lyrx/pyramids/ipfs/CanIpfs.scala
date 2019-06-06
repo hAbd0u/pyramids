@@ -2,12 +2,14 @@ package com.lyrx.pyramids.ipfs
 
 
 import com.lyrx.pyramids.pcrypto
+import com.lyrx.pyramids.pcrypto.WalletNative
 import pcrypto.PCryptoImplicits._
 import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
-import org.scalajs.dom.raw.FileReader
+import org.scalajs.dom.raw.{File, FileReader}
 import typings.nodeLib
 import typings.nodeLib.bufferMod
 
+import scala.scalajs.js.JSON
 import scala.scalajs.js.typedarray.Uint8Array
 //import typings.nodeLib.bufferMod.Buffer
 
@@ -83,12 +85,22 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON {
 
   def readIpfsString(aHash:String)
               (implicit executionContext: ExecutionContext)
-  = readIpfs(aHash).
-    flatMap(_.
-      map(new FileReader().
-        futureReadArrayBuffer(_).
-        map(b=>Some(new TextDecoder().decode(new Uint8Array(b))))
-  ).getOrElse(Future{None}))
+  =   pyramidConfig.
+    ipfsOpt.map(ipfsClient => ipfsClient.
+    futureCatString(aHash).map(Some(_))).
+    getOrElse(Future{None})
+
+
+
+
+
+
+
+  def readIpfsWallet()
+                    (implicit executionContext: ExecutionContext)
+  = readIpfsString(pyramidConfig.ipfsData.pharao).
+    map(_.map(s=>JSON.parse(s)).asInstanceOf[WalletNative]).
+    map(wallet=>pyramidConfig.msg(s"Oh Pharao, we have read your divine Wallet ..."))
 
 
 

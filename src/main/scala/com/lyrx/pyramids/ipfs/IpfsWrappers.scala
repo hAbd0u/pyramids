@@ -4,7 +4,7 @@ import org.scalajs.dom.raw.File
 import typings.nodeLib
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSGlobal, JSImport}
+import scala.scalajs.js.annotation.{JSGlobal, JSImport, JSName}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
@@ -65,5 +65,13 @@ trait IpfsClient extends js.Object {
           c: js.Function2[IPFSSError,js.Array[IPFSSFile],Unit]):Unit =
     js.native
 
+
+  @JSName("cat")
   def cat(s:String):js.Promise[File] = js.native
+
+  @JSName("cat")
+  def catString(s:String):js.Promise[String] = js.native
+
+
+
 }

@@ -112,14 +112,18 @@ object Startup extends DragAndDrop with UserFeedback {
     onDrop($("#drop_zone").off(), (f) => handle({
       message("Uploading ...")
       pyramid.uploadZip(f)
-    }))
-
-    $("#drop_zone").on("click",
+    })).on("click",
       (e: JQueryEventObject)=>{
         message("Loading/decrypting ...")
         handle(pyramid.download(),None)
         ()
     })
+
+    $("#stampd").off().on("click",
+      (e:JQueryEventObject) =>
+        handle(pyramid.readIpfsWallet()))
+
+
   }
 
   def showMessages(pyramidConfig: _root_.com.lyrx.pyramids.PyramidConfig): Option[Unit] = {

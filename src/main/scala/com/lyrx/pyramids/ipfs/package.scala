@@ -22,6 +22,8 @@ package object ipfs {
 
     def futureCat(s:String) = ipfsClient.cat(s).toFuture
 
+    def futureCatString(s:String) = ipfsClient.catString(s).toFuture
+
     def futureAdd(content:nodeLib.Buffer) = {
       val promise = Promise[js.Array[IPFSSFile]]
 
