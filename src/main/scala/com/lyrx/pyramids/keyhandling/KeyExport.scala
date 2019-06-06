@@ -3,6 +3,7 @@ package com.lyrx.pyramids.keyhandling
 import com.lyrx.pyramids.PyramidConfig
 import com.lyrx.pyramids.pcrypto.CryptoTypes.{AllJSKeysOpt, JsonKeyPair}
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, Crypto, SymetricCrypto, WalletNative}
+import org.scalajs.dom.crypto.CryptoKey
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
@@ -38,6 +39,18 @@ trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
       "asym" -> ko._2.map((kp:JsonKeyPair)=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null),
       "sign" -> ko._3.map((kp:JsonKeyPair)=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null)
     ).asInstanceOf[WalletNative])
+
+
+
+  def exportSymKeyEncrypted(key:CryptoKey)(implicit ctx:ExecutionContext) = exportSymKey().
+    flatMap(_.map(jk=>
+      encryptString(key,stringify(jk)).map(Some(_))).getOrElse(Future{None}))
+
+
+  def exportSymKeyDefault()(implicit ctx:ExecutionContext) =
+    pyramidConfig.asymKeyOpt.map(kp=>exportSymKeyEncrypted(kp.publicKey)).getOrElse(Future{None})
+
+
 
 
 

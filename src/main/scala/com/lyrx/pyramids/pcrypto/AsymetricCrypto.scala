@@ -8,6 +8,7 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 import PCryptoImplicits._
 import com.lyrx.pyramids.PyramidJSON
+import com.lyrx.pyramids.ipfs.TextEncoder
 import typings.nodeLib.bufferMod.Buffer
 
 import js.Dynamic.{literal => l}
@@ -76,6 +77,8 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
 
 
 
+
+
   def toKeyPair(privateKey: Option[CryptoKey], publicKey: Option[CryptoKey]) = js.Dictionary(
     "publicKey" -> publicKey.getOrElse(null),
     "privateKey" -> privateKey.getOrElse(null)
@@ -93,6 +96,14 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
       map(k=>Some(k.asInstanceOf[CryptoKey]))
 
 
+
+  def encryptString(key:CryptoKey,s:String)
+                   (implicit executionContext: ExecutionContext) =
+    crypto.subtle.encrypt(aHashAlgorithm,
+      key,
+      new TextEncoder().encode(s)).
+      toFuture.
+      map(_.asInstanceOf[ArrayBuffer])
 
   private def sign(keys:CryptoKeyPair,data:ArrayBuffer)
           (implicit executionContext: ExecutionContext)= crypto.subtle.sign(

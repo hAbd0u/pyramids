@@ -24,7 +24,7 @@ trait IPFSSError extends js.Object{
 
 @js.native
 @JSGlobal
-class TextEncoder(utfLabel: js.UndefOr[String]) extends js.Object {
+class TextEncoder(utfLabel: js.UndefOr[String]= "utf-8" ) extends js.Object {
   def encode(buffer: String): Uint8Array = js.native
 }
 
