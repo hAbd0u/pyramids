@@ -100,16 +100,21 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
 
 
 
-
-  def readPharaoWallet()
-                    (implicit executionContext: ExecutionContext)
+  def readPharaoKeys()
+                      (implicit executionContext: ExecutionContext)
   = readIpfsNativeWallet().flatMap(_.flatMap(nativeWallet=>
     nativeWallet.`asym`.toOption.flatMap(_.`public`.toOption.map(k =>
       importKey(
         jsonWebKey = k ,
         usages = usageEncrypt,
         aHashAlgorithm)
-    ))).getOrElse(Future{None})).map( (keyOpt:Option[CryptoKey])=>
+    ))).getOrElse(Future{None}))
+
+
+
+  def readPharaoWallet()
+                    (implicit executionContext: ExecutionContext)
+  = readPharaoKeys().map( (keyOpt:Option[CryptoKey])=>
     keyOpt.map(key=>pyramidConfig.msg(
       s"Oh Pharao, here are your devine public keys!")).
     getOrElse(pyramidConfig.msg("Oh Pharao, please excuse! We did not find your keys!"))
