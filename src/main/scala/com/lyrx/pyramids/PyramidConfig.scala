@@ -15,7 +15,8 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 
 
 case class IpfsData(uploadOpt:Option[String],
-                         pubKeysOpt:Option[String]
+                         pubKeysOpt:Option[String],
+                         pharao:String,
                         )
 
 case class PyramidConfig(//distributedDir: DistributedDir,

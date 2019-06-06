@@ -14,14 +14,14 @@ import typings.stdLib
 
 
 object  Pyramid{
-  def apply()=new Pyramid(PyramidConfig(
+  def apply(pharaoKeys:String)=new Pyramid(PyramidConfig(
     None,
     None,
     None,
     Messages(Some("Welcome to your Pyramid!"),
       None),
     None,
-    IpfsData(None,None)))
+    IpfsData(None,None,pharao = pharaoKeys)))
 }
 
 class Pyramid(override val pyramidConfig: PyramidConfig)

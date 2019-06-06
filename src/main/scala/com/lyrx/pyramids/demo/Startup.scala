@@ -24,7 +24,7 @@ object Startup extends DragAndDrop with UserFeedback {
   def startup() = {
 
     message("Generating keys ...")
-    Pyramid()
+    Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
       .generateKeys()
       .map(p => ipfsInit(p.pyramidConfig))
 
