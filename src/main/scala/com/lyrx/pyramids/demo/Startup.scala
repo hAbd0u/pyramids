@@ -112,7 +112,7 @@ object Startup extends DragAndDrop with UserFeedback {
 
     $("#stampd")
       .off()
-      .on("click", (e: JQueryEventObject) => handle(pyramid.readPharaoWallet()))
+      .on("click", (e: JQueryEventObject) => handle(pyramid.publishSymKeys()))
 
   }
 

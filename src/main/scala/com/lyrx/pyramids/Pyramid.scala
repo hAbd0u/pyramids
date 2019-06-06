@@ -8,10 +8,11 @@ import org.scalajs.dom.raw
 import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
 import typings.jszipLib.jszipMod.JSZip
 import typings.nodeLib.bufferMod.Buffer
-import typings.stdLib
+import typings.{nodeLib, stdLib}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
+import scala.scalajs.js.typedarray.ArrayBuffer
 
 
 object  Pyramid{
@@ -96,6 +97,26 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
       pyramidConfig.
         msg(s"Oh Pharao,you have downloaded ${d.descr()}")
     })
+
+
+
+  def encryptSymKeys()(implicit executionContext:ExecutionContext) = readPharaoKeys().
+    flatMap(_.map(exportSymKeyEncrypted(_)).getOrElse(Future{None}))
+
+  def uploadSymKeys()(implicit executionContext:ExecutionContext) =encryptSymKeys().
+    flatMap(_.map((b:ArrayBuffer)=>bufferToIpfs(
+      nodeLib.bufferMod.Buffer.from(
+        b.asInstanceOf[stdLib.ArrayBuffer]
+      ))).getOrElse(Future{None}))
+
+
+
+  def publishSymKeys()(implicit executionContext:ExecutionContext) =
+    uploadSymKeys().map(_.map(s=>pyramidConfig.
+      msg(s"You have given your keys to the Pharao!")).
+      getOrElse(
+        pyramidConfig.msg("Why didn't you give your keys to the Pharao?")))
+
 
 
 
