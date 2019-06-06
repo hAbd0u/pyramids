@@ -101,7 +101,7 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
 
 
 
-  def readIpfsWallet()
+  def readPharaoWallet()
                     (implicit executionContext: ExecutionContext)
   = readIpfsNativeWallet().flatMap(_.flatMap(nativeWallet=>
     nativeWallet.`asym`.toOption.flatMap(_.`public`.toOption.map(k =>
@@ -109,8 +109,11 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
         jsonWebKey = k ,
         usages = usageEncrypt,
         aHashAlgorithm)
-    ))).getOrElse(Future{None})).map( (keyOpt:Option[CryptoKey])=>pyramidConfig.msg(
-      s"Oh Pharao, we have received your divine public key ${keyOpt}"))
+    ))).getOrElse(Future{None})).map( (keyOpt:Option[CryptoKey])=>
+    keyOpt.map(key=>pyramidConfig.msg(
+      s"Oh Pharao, here are your devine public keys!")).
+    getOrElse(pyramidConfig.msg("Oh Pharao, please excuse! We did not find your keys!"))
+    )
 
 
 
