@@ -73,8 +73,10 @@ object Startup extends DragAndDrop with UserFeedback {
 
     pyramidConfig.
       ipfsData.uploadOpt.
-      map(s => $("#pinfolder").html
-        (s"<a href='$infura/$s' $atts >Chamber</a>")
+      map(s => {
+        $("#pinfolder").html(s"<a href='$infura/$s' $atts >Chamber</a>")
+        //$("#signed").`val`(s)
+      }
       )
 
     pyramidConfig.
@@ -82,6 +84,8 @@ object Startup extends DragAndDrop with UserFeedback {
       map(s => $("#signature").html
       (s"<a href='$infura/$s' $atts >Signature</a>"))
 
+
+    $("#cid").`val`(pyramidConfig.ipfsData.pharao)
 
 
 
