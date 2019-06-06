@@ -2,9 +2,10 @@ package com.lyrx.pyramids.ipfs
 
 
 import com.lyrx.pyramids.pcrypto
-import com.lyrx.pyramids.pcrypto.WalletNative
+import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, WalletNative}
 import pcrypto.PCryptoImplicits._
 import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
+import org.scalajs.dom.crypto.CryptoKey
 import org.scalajs.dom.raw.{File, FileReader}
 import typings.nodeLib
 import typings.nodeLib.bufferMod
@@ -16,7 +17,7 @@ import scala.scalajs.js.typedarray.Uint8Array
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
 
-trait CanIpfs extends pcrypto.Crypto with PyramidJSON {
+trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
   val pyramidConfig: PyramidConfig
 
   def initIpfs()(implicit executionContext: ExecutionContext) = Future {
@@ -92,16 +93,24 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON {
 
 
 
+  def readIpfsNativeWallet()
+                    (implicit executionContext: ExecutionContext)
+  = readIpfsString(pyramidConfig.ipfsData.pharao).
+    map(_.map(s=>JSON.parse(s).asInstanceOf[WalletNative]))
 
 
 
 
   def readIpfsWallet()
                     (implicit executionContext: ExecutionContext)
-  = readIpfsString(pyramidConfig.ipfsData.pharao).
-    map(_.map(s=>JSON.parse(s)).asInstanceOf[WalletNative]).
-    map(wallet=>pyramidConfig.msg(s"Oh Pharao, we have read your divine Wallet ..."))
-
+  = readIpfsNativeWallet().flatMap(_.flatMap(nativeWallet=>
+    nativeWallet.`asym`.toOption.flatMap(_.`public`.toOption.map(k =>
+      importKey(
+        jsonWebKey = k ,
+        usages = usageEncrypt,
+        aHashAlgorithm)
+    ))).getOrElse(Future{None})).map( (keyOpt:Option[CryptoKey])=>pyramidConfig.msg(
+      s"Oh Pharao, we have received your divine public key ${keyOpt}"))
 
 
 

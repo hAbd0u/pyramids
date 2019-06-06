@@ -83,7 +83,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
 
 
 
-  private def importKey(jsonWebKey: JsonWebKey,usages: js.Array[KeyUsage],algo:KeyAlgorithmIdentifier)(
+  def importKey(jsonWebKey: JsonWebKey,usages: js.Array[KeyUsage],algo:KeyAlgorithmIdentifier)(
     implicit executionContext: ExecutionContext) = crypto.subtle.importKey(
     KeyFormat.jwk,
       jsonWebKey,
