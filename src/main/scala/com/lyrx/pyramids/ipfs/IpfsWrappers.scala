@@ -1,6 +1,7 @@
 package com.lyrx.pyramids.ipfs
 
 import org.scalajs.dom.raw.File
+import typings.nodeLib
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSGlobal, JSImport}
@@ -34,15 +35,9 @@ class TextDecoder(utfLabel: js.UndefOr[String]) extends js.Object {
 }
 
 
+
+
 /*
-@js.native
-trait ResultFromCat extends js.Object {
-
-}
- */
-
-
-
 @js.native
 @JSImport("buffer/","Buffer")
 object BufferObject extends js.Object {
@@ -51,6 +46,7 @@ object BufferObject extends js.Object {
 
 }
 
+ */
 
 @js.native
 @JSImport("ipfs-http-client",JSImport.Namespace)
@@ -64,15 +60,10 @@ object IpfsHttpClient extends js.Object {
 @js.native
 trait IpfsClient extends js.Object {
 
-  def add(content:Buffer,
+  def add(content:nodeLib.Buffer,
           option:js.Dynamic,
           c: js.Function2[IPFSSError,js.Array[IPFSSFile],Unit]):Unit =
     js.native
 
   def cat(s:String):js.Promise[File] = js.native
-}
-
-@js.native
-trait Buffer extends js.Object {
-
 }

@@ -1,16 +1,17 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.ipfs.CanIpfs
-import org.scalajs.dom.raw//.{Blob, File}
 import com.lyrx.pyramids.jszip._
+import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.pcrypto.{DecryptedData, EncryptedData}
-import typings.jszipLib.jszipMod.JSZip
+import org.scalajs.dom.raw
 import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
-
-import scala.scalajs.js
-import scala.concurrent.{ExecutionContext, Future}
+import typings.jszipLib.jszipMod.JSZip
+import typings.nodeLib.bufferMod.Buffer
 import typings.stdLib
+
+import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 
 object  Pyramid{
@@ -40,7 +41,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def uploadZip(f:raw.File)(implicit executionContext:ExecutionContext)=
     zipEncrypt(f)
     .flatMap(_.dump())
-    .flatMap(b => bufferToIpfs(b))
+    .flatMap((b) => bufferToIpfs(b))
     .map(
       os =>
         os.map(s => pyramidConfig.

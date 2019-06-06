@@ -3,6 +3,9 @@ package com.lyrx.pyramids.ipfs
 import com.lyrx.pyramids.pcrypto.CryptoTypes.JsonWebKeyOptPair
 import com.lyrx.pyramids.pcrypto.{Crypto, WalletNative}
 import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
+import typings.nodeLib
+import nodeLib.bufferMod
+//import typings.nodeLib.bufferMod.Buffer
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
@@ -44,7 +47,7 @@ trait CanIpfs extends Crypto with PyramidJSON {
             "sign" -> l("public" -> kp._2.getOrElse(null))
           ).asInstanceOf[WalletNative])
       .map(
-        w => BufferObject.from(stringify(w))
+        w => bufferMod.Buffer.from(stringify(w))
       )
 
   def publicKeysToIpfs()(implicit ctx: ExecutionContext) =
@@ -61,7 +64,7 @@ trait CanIpfs extends Crypto with PyramidJSON {
           msg(s"Oh Pharao, we have published your divine signature!")))
         .getOrElse(new Pyramid(pyramidConfig)))
 
-  def bufferToIpfs(buffer: Buffer)(implicit ctx: ExecutionContext) =
+  def bufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
     pyramidConfig.ipfsOpt
       .map(_.futureAdd(buffer).map(l => Some(l.head.hash)))
       .getOrElse(Future { None })

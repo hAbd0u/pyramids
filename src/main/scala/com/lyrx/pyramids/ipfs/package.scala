@@ -1,6 +1,8 @@
 package com.lyrx.pyramids
 
-import typings.stdLib.{ArrayBuffer,Uint8Array}
+
+import typings.nodeLib//.bufferMod.Buffer
+import typings.stdLib.{ArrayBuffer, Uint8Array}
 
 import scala.concurrent.Promise
 import scala.scalajs.js
@@ -17,7 +19,7 @@ package object ipfs {
 
     def futureCat(s:String) = ipfsClient.cat(s).toFuture
 
-    def futureAdd(content:Buffer) = {
+    def futureAdd(content:nodeLib.Buffer) = {
       val promise = Promise[js.Array[IPFSSFile]]
 
       ipfsClient.add(content,l(),(e,r)=>if(e != null )

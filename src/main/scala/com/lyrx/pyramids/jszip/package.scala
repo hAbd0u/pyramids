@@ -1,10 +1,10 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.ipfs.BufferObject
 import com.lyrx.pyramids.pcrypto.EncryptedData
 import typings.jszipLib.jszipMod.{JSZip, JSZipGeneratorOptions, JSZipObject}
 import typings.jszipLib.jszipLibStrings.uint8array
 import typings.jszipLib.jszipMod
+import typings.nodeLib.bufferMod.Buffer
 import typings.stdLib
 
 import scala.scalajs.js.typedarray
@@ -31,7 +31,7 @@ package object jszip {
       zip
         .generateAsync_uint8array(JSZipGeneratorOptions(`type` = uint8array))
         .toFuture
-        .map(BufferObject.from(_))
+        .map(Buffer.from(_))
 
     def toArrayBuffer(fileName: String)(
         implicit executionContext: ExecutionContext) = {
