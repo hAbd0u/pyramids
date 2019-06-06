@@ -17,6 +17,7 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 case class IpfsData(uploadOpt:Option[String],
                          pubKeysOpt:Option[String],
                          pharao:String,
+                        symKeyOpt:Option[String]
                         )
 
 case class PyramidConfig(//distributedDir: DistributedDir,
@@ -36,6 +37,12 @@ case class PyramidConfig(//distributedDir: DistributedDir,
   def withPubKeys(s:String) =this.
     copy(ipfsData = ipfsData.
       copy(pubKeysOpt = Some(s)))
+
+  def withSymKey(s:String) =this.
+    copy(ipfsData = ipfsData.
+      copy(symKeyOpt = Some(s)))
+
+
 
 
 

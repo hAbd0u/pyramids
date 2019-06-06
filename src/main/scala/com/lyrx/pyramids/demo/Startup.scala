@@ -77,10 +77,14 @@ object Startup extends DragAndDrop with UserFeedback {
 
     pyramidConfig.ipfsData.pubKeysOpt.map(s => {
       $("#signature").html(s"<a href='$infura/$s' $atts >Signature</a>")
-      //$("#cid").`val`(pyramidConfig.ipfsData.pharao)
       $("#cid").`val`(s"From: $s")
-
     })
+
+    pyramidConfig.ipfsData.symKeyOpt.map(s => {
+      $("#signed").`val`(s"To: $s")
+    })
+
+
 
     //pyramidConfig.ipfsData.uploadOpt.map(s=>)
 

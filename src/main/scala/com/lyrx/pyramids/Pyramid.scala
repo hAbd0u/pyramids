@@ -23,7 +23,7 @@ object  Pyramid{
     Messages(Some("Welcome to your Pyramid!"),
       None),
     None,
-    IpfsData(None,None,pharao = pharaoKeys)))
+    IpfsData(None,None,pharao = pharaoKeys,None)))
 }
 
 class Pyramid(override val pyramidConfig: PyramidConfig)
@@ -95,7 +95,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
       }))
       pyramidConfig.
-        msg(s"Oh Pharao,you have downloaded ${d.descr()}")
+        msg(s"Oh Pharao, you have downloaded ${d.descr()}")
     })
 
 
@@ -113,6 +113,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
   def publishSymKeys()(implicit executionContext:ExecutionContext) =
     uploadSymKeys().map(_.map(s=>pyramidConfig.
+      withSymKey(s).
       msg(s"You have given your keys to the Pharao!")).
       getOrElse(
         pyramidConfig.msg("Why didn't you give your keys to the Pharao?")))
