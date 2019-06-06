@@ -84,6 +84,9 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
     getOrElse(Future{None})
 
 
+
+
+
   def readIpfsString(aHash:String)
               (implicit executionContext: ExecutionContext)
   =   pyramidConfig.

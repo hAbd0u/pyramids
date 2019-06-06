@@ -105,6 +105,19 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
       toFuture.
       map(_.asInstanceOf[ArrayBuffer])
 
+  def decryptFile(key:CryptoKey,f:File)
+                   (implicit executionContext: ExecutionContext) =
+    crypto.subtle.decrypt(aHashAlgorithm,
+      key,
+      new Uint8Array(js.Array(f))).
+      toFuture.
+      map(_.asInstanceOf[ArrayBuffer])
+
+
+
+
+
+
   private def sign(keys:CryptoKeyPair,data:ArrayBuffer)
           (implicit executionContext: ExecutionContext)= crypto.subtle.sign(
     l(

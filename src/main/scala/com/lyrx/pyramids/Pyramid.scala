@@ -4,10 +4,10 @@ import com.lyrx.pyramids.ipfs.CanIpfs
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.pcrypto.{DecryptedData, EncryptedData}
+import org.scalajs.dom.crypto.CryptoKey
 import org.scalajs.dom.raw
 import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
 import typings.jszipLib.jszipMod.JSZip
-import typings.nodeLib.bufferMod.Buffer
 import typings.{nodeLib, stdLib}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -123,6 +123,9 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def initKeys()(implicit executionContext:ExecutionContext) = initIpfsAndPublishPublicKeys()
     .flatMap(_.publishSymKeys()).map(new Pyramid(_))
 
+  def readIpfsSymKey(aHash:String,cryptoKey: CryptoKey)
+                    (implicit executionContext: ExecutionContext) =
+    readIpfs(aHash).map(_.map(f=>f))
 
 
 
