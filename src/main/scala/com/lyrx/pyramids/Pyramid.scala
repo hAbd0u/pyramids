@@ -120,6 +120,10 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
+  def initKeys()(implicit executionContext:ExecutionContext) = initIpfsAndPublishPublicKeys()
+    .flatMap(_.publishSymKeys()).map(new Pyramid(_))
+
+
 
 
 }

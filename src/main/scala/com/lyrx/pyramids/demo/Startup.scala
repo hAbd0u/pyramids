@@ -36,7 +36,7 @@ object Startup extends DragAndDrop with UserFeedback {
     val f =
       new Pyramid(
         pyramidConfig
-      ).initIpfsAndPublishPublicKeys()
+      ).initKeys()
 
     f.failed.map(thr => error(s"Initialization Error: ${thr.getMessage}"))
     f.map((p: Pyramid) => init(p.pyramidConfig))
@@ -77,11 +77,11 @@ object Startup extends DragAndDrop with UserFeedback {
 
     pyramidConfig.ipfsData.pubKeysOpt.map(s => {
       $("#signature").html(s"<a href='$infura/$s' $atts >Signature</a>")
-      $("#signed").`val`(s"Sign: $s")
+
     })
 
     pyramidConfig.ipfsData.symKeyOpt.map(s => {
-      $("#cid").`val`(s"Encr: $s")
+      $("#cid").`val`(s"$s")
     })
 
 
@@ -116,7 +116,8 @@ object Startup extends DragAndDrop with UserFeedback {
 
     $("#stampd")
       .off()
-      .on("click", (e: JQueryEventObject) => handle(pyramid.publishSymKeys()))
+      .on("click", (e: JQueryEventObject) => {}//handle(pyramid.publishSymKeys())
+      )
 
   }
 
