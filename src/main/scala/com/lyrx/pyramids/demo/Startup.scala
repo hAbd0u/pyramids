@@ -14,6 +14,7 @@ object Startup extends DragAndDrop with UserFeedback {
   implicit val ec = ExecutionContext.global
 
   type JQueryOb = org.scalablytyped.runtime.TopLevel[JQueryStatic]
+  type TextFieldContents = js.UndefOr[java.lang.String | scala.Double | js.Array[java.lang.String]]
 
 
   override def msgField[T](): JQuery[T] = {
@@ -25,10 +26,13 @@ object Startup extends DragAndDrop with UserFeedback {
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded", (e: Event) => startup())
 
+
+  def createPyramid()=Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
+
   def startup() = {
 
     message("Generating keys ...")
-    Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
+    createPyramid()
       .generateKeys()
       .map(p => ipfsInit(p.pyramidConfig))
 
@@ -125,6 +129,7 @@ object Startup extends DragAndDrop with UserFeedback {
       $("#symkey").show()
     }
     else {
+
       $("#stampd").hide()
       $("#send").hide()
 
@@ -134,6 +139,7 @@ object Startup extends DragAndDrop with UserFeedback {
     }
   }
 
+
   private def updateActions(pyramid: Pyramid)(implicit $: JQueryOb) = {
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off())
@@ -141,27 +147,53 @@ object Startup extends DragAndDrop with UserFeedback {
 
     //Download/upload wallet:
 
-    onDrop($("#logo").off(), f => handleWithIpfs(pyramid.uploadWallet(f), None))
+    onDrop($("#logo").off(), f => handleWithIpfs(createPyramid().uploadWallet(f), None))
       .on("click",
           (e: JQueryEventObject) => handle(pyramid.downloadWallet(), None))
 
     def doDownload() = {
 
-      message("Loading/decrypting ...")
-      val av = ($("#cid").`val`())
-      val ao: Option[String] = av.map(r => Some(r.toString())).
-        getOrElse(pyramid.
-          pyramidConfig.
-          ipfsData.
-          uploadOpt)
-      val p: Pyramid = new Pyramid(ao.
-        map(s => pyramid.
-          pyramidConfig.
-          withUpload(s)).
-        getOrElse(pyramid.pyramidConfig))
+      def downloadAsSlave() = {
+        message("Loading/decrypting ...")
+        val av = ($("#cid").`val`())
+        val ao: Option[String] = av.map(r => Some(r.toString())).
+          getOrElse(pyramid.
+            pyramidConfig.
+            ipfsData.
+            uploadOpt)
+        val p: Pyramid = new Pyramid(ao.
+          map(s => pyramid.
+            pyramidConfig.
+            withUpload(s)).
+          getOrElse(pyramid.pyramidConfig))
 
 
-      handle(p.download(), None)
+        handle(p.download(), None)
+      }
+      def downloadAsPharao() = {
+        message("Loading/decrypting ...")
+        val av: TextFieldContents = ($("#symkey").`val`())
+        val ao: Option[String] = av.map(r => Some(r.toString())).
+          getOrElse(pyramid.
+            pyramidConfig.
+            ipfsData.
+            symKeyOpt)
+        val p: Pyramid = new Pyramid(ao.
+          map(s => pyramid.
+            pyramidConfig.
+            withSymKey(s)).
+          getOrElse(pyramid.pyramidConfig))
+
+
+        handle(p.download(), None)
+      }
+
+      if(pyramid.pyramidConfig.isPharao())
+      downloadAsPharao()
+      else
+      downloadAsSlave()
+
+
       ()
 
     }
