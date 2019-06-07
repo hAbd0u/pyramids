@@ -7,6 +7,8 @@ import org.scalajs.dom.{Event, File, document}
 import typings.jqueryLib.{JQuery, JQueryEventObject, JQueryStatic, jqueryMod => jq}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
+import scala.scalajs.js.{UndefOr, |}
 
 object Startup extends DragAndDrop with UserFeedback {
   implicit val ec = ExecutionContext.global
@@ -141,8 +143,35 @@ object Startup extends DragAndDrop with UserFeedback {
     onDrop($("#drop_zone").off(),
            (f) =>
              handle({
-               message("Uploading ...")
-               pyramid.uploadZip(f)
+
+
+               def uploadAsPharao() = {
+                 message("Oh Pharao, you are donating ...")
+                 val av = ($("#symkey").`val`())
+
+                 val ao: Option[String] = av.map(r => Some(r.toString())).
+                   getOrElse(pyramid.
+                     pyramidConfig.
+                     ipfsData.
+                     symKeyOpt)
+
+                 val p: Pyramid = new Pyramid(ao.
+                   map(s => pyramid.
+                     pyramidConfig.
+                     withSymKey(s)).
+                   getOrElse(pyramid.pyramidConfig))
+
+
+                 p.uploadZip(f)
+               }
+
+               if(pyramid.pyramidConfig.isPharao())
+               uploadAsPharao()
+               else {
+                 message("Humble Tokenizer, you are trying to save ...")
+                 pyramid.uploadZip(f)
+               }
+
              })).on("click", (e: JQueryEventObject) => {
       message("Loading/decrypting ...")
       handle(pyramid.download(), None)
