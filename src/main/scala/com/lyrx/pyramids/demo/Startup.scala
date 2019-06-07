@@ -173,19 +173,22 @@ object Startup extends DragAndDrop with UserFeedback {
       def downloadAsPharao() = {
         message("Loading/decrypting ...")
         val av: TextFieldContents = ($("#symkey").`val`())
+
         val ao: Option[String] = av.map(r => Some(r.toString())).
           getOrElse(pyramid.
             pyramidConfig.
             ipfsData.
             symKeyOpt)
+
         val p: Pyramid = new Pyramid(ao.
           map(s => pyramid.
             pyramidConfig.
             withSymKey(s)).
           getOrElse(pyramid.pyramidConfig))
+        p.withImportSymKey().map(_.map(p2=> handle(p.download(), None)  ))
 
 
-        handle(p.download(), None)
+        //handle(p.download(), None)
       }
 
       if(pyramid.pyramidConfig.isPharao())

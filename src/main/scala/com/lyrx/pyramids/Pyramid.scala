@@ -174,6 +174,12 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
           map(Some(_))).
           getOrElse(Future{None}))
 
+  def withImportSymKey()(implicit ctx:ExecutionContext) = importSymKey().
+    map(_.map(kryptoKey=>new Pyramid(pyramidConfig.copy(symKeyOpt = Some(kryptoKey)))))
+
+
+
+
   def uploadZip2()(implicit ctx:ExecutionContext) =
     importSymKey().map(key=>pyramidConfig.msg("I have found your keys!"))
 
