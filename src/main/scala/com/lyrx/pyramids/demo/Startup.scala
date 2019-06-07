@@ -145,43 +145,64 @@ object Startup extends DragAndDrop with UserFeedback {
       .on("click",
           (e: JQueryEventObject) => handle(pyramid.downloadWallet(), None))
 
-    onDrop($("#drop_zone").off(),
-           (f) =>
-             handle({
+    def doDownload() = {
 
-
-               def uploadAsPharao() = {
-                 message("Oh Pharao, you are donating ...")
-                 val av = ($("#symkey").`val`())
-
-                 val ao: Option[String] = av.map(r => Some(r.toString())).
-                   getOrElse(pyramid.
-                     pyramidConfig.
-                     ipfsData.
-                     symKeyOpt)
-
-                 val p: Pyramid = new Pyramid(ao.
-                   map(s => pyramid.
-                     pyramidConfig.
-                     withSymKey(s)).
-                   getOrElse(pyramid.pyramidConfig))
-
-
-                 p.uploadZip(f)
-               }
-
-               if(pyramid.pyramidConfig.isPharao())
-               uploadAsPharao()
-               else {
-                 message("Humble Tokenizer, you are trying to save ...")
-                 pyramid.uploadZip(f)
-               }
-
-             })).on("click", (e: JQueryEventObject) => {
       message("Loading/decrypting ...")
-      handle(pyramid.download(), None)
+      val av = ($("#cid").`val`())
+      val ao: Option[String] = av.map(r => Some(r.toString())).
+        getOrElse(pyramid.
+          pyramidConfig.
+          ipfsData.
+          uploadOpt)
+      val p: Pyramid = new Pyramid(ao.
+        map(s => pyramid.
+          pyramidConfig.
+          withUpload(s)).
+        getOrElse(pyramid.pyramidConfig))
+
+
+      handle(p.download(), None)
       ()
-    })
+
+    }
+
+    def doUpload(f: File) = {
+      handle({
+
+
+        def uploadAsPharao() = {
+          message("Oh Pharao, you are donating ...")
+          val av = ($("#symkey").`val`())
+
+          val ao: Option[String] = av.map(r => Some(r.toString())).
+            getOrElse(pyramid.
+              pyramidConfig.
+              ipfsData.
+              symKeyOpt)
+
+          val p: Pyramid = new Pyramid(ao.
+            map(s => pyramid.
+              pyramidConfig.
+              withSymKey(s)).
+            getOrElse(pyramid.pyramidConfig))
+
+
+          p.uploadZip(f)
+        }
+
+        if (pyramid.pyramidConfig.isPharao())
+          uploadAsPharao()
+        else {
+          message("Humble Tokenizer, you are trying to save ...")
+          pyramid.uploadZip(f)
+        }
+
+      })
+    }
+
+    onDrop($("#drop_zone").off(),
+           (f) => doUpload(f)
+    ).on("click", (e: JQueryEventObject) => doDownload())
 
     $("#stampd")
       .off()
