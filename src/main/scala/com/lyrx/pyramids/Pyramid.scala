@@ -8,6 +8,7 @@ import org.scalajs.dom.crypto.{CryptoKey, JsonWebKey}
 import org.scalajs.dom.raw
 import org.scalajs.dom.raw.File
 import typings.fileDashSaverLib.fileDashSaverMod.{^ => filesaver}
+import typings.jszipLib.jszipMod
 import typings.jszipLib.jszipMod.JSZip
 import typings.{nodeLib, stdLib}
 
@@ -46,13 +47,11 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def uploadZip(f:raw.File)(implicit executionContext:ExecutionContext)=
     zipEncrypt(f)
     .flatMap(_.dump())
-    .flatMap((b) => bufferToIpfs(b))
-    .map(
-      os =>
-        os.map(s => pyramidConfig.
-        withUpload(s).
-          msg(s"Uploaded ${f.name}")
-        ).getOrElse(pyramidConfig))
+    .flatMap(bufferToIpfs(_))
+    .map(_.
+      map(s=>pyramidConfig.
+        withUpload(s).msg(s)
+        ).getOrElse(pyramidConfig.msg("We have done nothing!")))
 
 
   def downloadZip(aHash:String)
@@ -133,9 +132,17 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
-  def zipEncrypt(f:File) (implicit ctx:ExecutionContext) = encryptAndSignFileDefault(f).map(_.zipped())
+  def encryptAndSignWithLoaded(f:File)(implicit ctx:ExecutionContext) =
+  importSymKey().
+    flatMap(keyOpt => encryptAndSignFile(f,keyOpt).map(_.zipped()))
 
-  def fileForSymKey() (implicit ctx:ExecutionContext) =
+  def zipEncrypt(f:File) (implicit ctx:ExecutionContext) =
+    if(pyramidConfig.isPharao())
+      encryptAndSignWithLoaded(f)
+      else
+    encryptAndSignFileDefault(f).map(_.zipped())
+
+  def readEncryptedSymKey()(implicit ctx:ExecutionContext) =
     pyramidConfig.ipfsData.symKeyOpt.
       flatMap(aHash=>
         pyramidConfig.
@@ -143,8 +150,8 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
           map(asymKey=>readIpfs(aHash))).
       getOrElse(Future{None})
 
-  def decryptFileForSymKey() (implicit ctx:ExecutionContext) =
-    fileForSymKey().flatMap(
+  def decryptSymKey()(implicit ctx:ExecutionContext) =
+    readEncryptedSymKey().flatMap(
       _.flatMap(f=>pyramidConfig.
       asymKeyOpt.
       map(asymKeys=>asymDecryptBuffer(
@@ -152,23 +159,23 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
         map(Some(_)))).
       getOrElse(Future{None}))
 
-  def decodeFileForSymKey() (implicit ctx:ExecutionContext) =
-    decryptFileForSymKey().
+  def decodeSymKey()(implicit ctx:ExecutionContext) =
+    decryptSymKey().
       map(_.map(b=>new TextDecoder().decode(new Uint8Array(b))))
 
-  def parseFileForSymKey() (implicit ctx:ExecutionContext) =
-    decodeFileForSymKey().
+  def parseSymKey()(implicit ctx:ExecutionContext) =
+    decodeSymKey().
       map(_.map(s=>JSON.parse(s).asInstanceOf[JsonWebKey]))
 
-  def importFileForSymKey() (implicit ctx:ExecutionContext) =
-    parseFileForSymKey().
+  def importSymKey()(implicit ctx:ExecutionContext) =
+    parseSymKey().
       flatMap(
         _.map(wk=>importSymetricKey(wk).
           map(Some(_))).
           getOrElse(Future{None}))
 
   def uploadZip2()(implicit ctx:ExecutionContext) =
-    importFileForSymKey().map(key=>pyramidConfig.msg("I have found your keys!"))
+    importSymKey().map(key=>pyramidConfig.msg("I have found your keys!"))
 
 
 

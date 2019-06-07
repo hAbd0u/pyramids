@@ -86,7 +86,6 @@ object Startup extends DragAndDrop with UserFeedback {
 
     pyramidConfig.ipfsData.uploadOpt.map(s => {
       $("#pinfolder").html(s"<a href='$infura/$s' $atts >Chamber</a>")
-      $("#drop_zone").html(s"${s.substring(0, 10)}...")
     })
 
     pyramidConfig.ipfsData.pubKeysOpt.map(s => {
