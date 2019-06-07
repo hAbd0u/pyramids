@@ -3,20 +3,22 @@ package com.lyrx.pyramids.demo
 import com.lyrx.pyramids.frontend.UserFeedback
 import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
-
 import org.scalajs.dom.{Event, File, document}
-import typings.jqueryLib.{JQuery, JQueryEventObject, jqueryMod => $}
+import typings.jqueryLib.{JQuery, JQueryEventObject, JQueryStatic, jqueryMod => jq}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 object Startup extends DragAndDrop with UserFeedback {
   implicit val ec = ExecutionContext.global
 
+  type JQueryOb = org.scalablytyped.runtime.TopLevel[JQueryStatic]
+
+
   override def msgField[T](): JQuery[T] = {
-    $("#message")
+    jq("#message")
   }
 
-  override def timeField[T](): JQuery[T] = $("#time")
+  override def timeField[T](): JQuery[T] = jq("#time")
 
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded", (e: Event) => startup())
@@ -64,18 +66,27 @@ object Startup extends DragAndDrop with UserFeedback {
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
     val pyramid = new Pyramid(pyramidConfig)
+    implicit val $ = jq
 
     showMessages(pyramidConfig)
 
-    updateFrontend(pyramid)
+    updateActions(pyramid)
 
+    updateFrontend(pyramidConfig)
+
+
+    Future { pyramidConfig }
+
+  }
+
+  private def updateFrontend( pyramidConfig: PyramidConfig)(implicit $: JQueryOb) = {
     val infura = "https://ipfs.infura.io/ipfs"
 
     val atts = "target='_blank' class='bottom-line'"
 
     pyramidConfig.ipfsData.uploadOpt.map(s => {
       $("#pinfolder").html(s"<a href='$infura/$s' $atts >Chamber</a>")
-      $("#drop_zone").html(s"${s.substring(0,10)}...")
+      $("#drop_zone").html(s"${s.substring(0, 10)}...")
     })
 
     pyramidConfig.ipfsData.pubKeysOpt.map(s => {
@@ -87,10 +98,10 @@ object Startup extends DragAndDrop with UserFeedback {
       $("#cid").`val`(s"$s")
     })
 
-    $("#title").html(if(pyramidConfig.isPharao())"Welcome back, oh Pharao!" else "You are the Pharao's slave!")
+    $("#title").html(if (pyramidConfig.isPharao()) "Welcome back, oh Pharao!" else "You are the Pharao's slave!")
 
 
-    if(pyramidConfig.isPharao()){
+    if (pyramidConfig.isPharao()) {
 
       $("#stampd").show()
       $("#send").show()
@@ -100,14 +111,9 @@ object Startup extends DragAndDrop with UserFeedback {
       $("#send").hide()
 
     }
-
-
-
-    Future { pyramidConfig }
-
   }
 
-  private def updateFrontend(pyramid: Pyramid) = {
+  private def updateActions(pyramid: Pyramid)(implicit $: JQueryOb) = {
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off())
       .on("drop", (e: JQueryEventObject) => e.preventDefault())
