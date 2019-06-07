@@ -95,20 +95,36 @@ object Startup extends DragAndDrop with UserFeedback {
     })
 
     pyramidConfig.ipfsData.symKeyOpt.map(s => {
-      $("#cid").`val`(s"$s")
+      $("#symkey").`val`(s"$s")
     })
 
-    $("#title").html(if (pyramidConfig.isPharao()) "Welcome back, oh Pharao!" else "You are the Pharao's slave!")
+    $("#title").html(if (pyramidConfig.isPharao())
+      "Welcome back, oh Pharao!"
+    else
+
+     s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse(
+       "the Pharao's slave!")}"
+
+
+
+    )
 
 
     if (pyramidConfig.isPharao()) {
 
       $("#stampd").show()
       $("#send").show()
+
+
+      $("#cid").hide()
+      $("#symkey").show()
     }
     else {
       $("#stampd").hide()
       $("#send").hide()
+
+      $("#cid").show()
+      $("#symkey").hide()
 
     }
   }
