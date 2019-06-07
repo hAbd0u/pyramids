@@ -101,8 +101,8 @@ object Startup extends DragAndDrop with UserFeedback {
     $("#title").html(if (pyramidConfig.isPharao())
       " Pharao!"
     else
-     s"${pyramidConfig.ipfsData.pubKeysOpt.getOrElse(
-       "unknown, we are sorry.")}"
+     s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse(
+       " ... sorry, you cannot encrypt anything!")}"
 
 
 
