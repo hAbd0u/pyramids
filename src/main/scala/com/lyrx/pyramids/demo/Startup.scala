@@ -87,6 +87,8 @@ object Startup extends DragAndDrop with UserFeedback {
       $("#cid").`val`(s"$s")
     })
 
+    $("#title").html(if(pyramidConfig.isPharao())"Welcome back, oh Pharao!" else "You are the Pharao's slave!")
+
 
 
     //pyramidConfig.ipfsData.uploadOpt.map(s=>)

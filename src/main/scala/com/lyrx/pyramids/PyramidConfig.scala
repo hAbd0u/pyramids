@@ -18,7 +18,10 @@ case class IpfsData(uploadOpt:Option[String],
                          pubKeysOpt:Option[String],
                          pharao:String,
                         symKeyOpt:Option[String]
-                        )
+                        ){
+  def isPharao()= pubKeysOpt.
+    map(k=> (k == pharao)).getOrElse(false)
+}
 
 case class PyramidConfig(//distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
@@ -28,6 +31,8 @@ case class PyramidConfig(//distributedDir: DistributedDir,
                          ipfsOpt:Option[ IpfsClient],
                          ipfsData: IpfsData
                         ) {
+
+  def isPharao()=ipfsData.isPharao()
 
 
   def withUpload(s:String) =this.
