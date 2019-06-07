@@ -4,7 +4,12 @@ import com.lyrx.pyramids.frontend.UserFeedback
 import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 import org.scalajs.dom.{Event, File, document}
-import typings.jqueryLib.{JQuery, JQueryEventObject, JQueryStatic, jqueryMod => jq}
+import typings.jqueryLib.{
+  JQuery,
+  JQueryEventObject,
+  JQueryStatic,
+  jqueryMod => jq
+}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -14,8 +19,8 @@ object Startup extends DragAndDrop with UserFeedback {
   implicit val ec = ExecutionContext.global
 
   type JQueryOb = org.scalablytyped.runtime.TopLevel[JQueryStatic]
-  type TextFieldContents = js.UndefOr[java.lang.String | scala.Double | js.Array[java.lang.String]]
-
+  type TextFieldContents =
+    js.UndefOr[java.lang.String | scala.Double | js.Array[java.lang.String]]
 
   override def msgField[T](): JQuery[T] = {
     jq("#message")
@@ -26,8 +31,8 @@ object Startup extends DragAndDrop with UserFeedback {
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded", (e: Event) => startup())
 
-
-  def createPyramid()=Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
+  def createPyramid() =
+    Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
 
   def startup() = {
 
@@ -80,12 +85,12 @@ object Startup extends DragAndDrop with UserFeedback {
 
     updateFrontend(pyramidConfig)
 
-
     Future { pyramidConfig }
 
   }
 
-  private def updateFrontend( pyramidConfig: PyramidConfig)(implicit $: JQueryOb) = {
+  private def updateFrontend(pyramidConfig: PyramidConfig)(
+      implicit $ : JQueryOb) = {
     val infura = "https://ipfs.infura.io/ipfs"
 
     val atts = "target='_blank' class='bottom-line'"
@@ -106,29 +111,20 @@ object Startup extends DragAndDrop with UserFeedback {
       $("#cid").`val`(s"$s")
     })
 
-
-
-    $("#title").html(if (pyramidConfig.isPharao())
-      " Pharao!"
-    else
-     s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse(
-       " ... sorry, you cannot encrypt anything!")}"
-
-
-
-    )
-
+    $("#title").html(
+      if (pyramidConfig.isPharao())
+        " Pharao!"
+      else
+        s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse(" ... sorry, you cannot encrypt anything!")}")
 
     if (pyramidConfig.isPharao()) {
 
       $("#stampd").show()
       $("#send").show()
 
-
       $("#cid").hide()
       $("#symkey").show()
-    }
-    else {
+    } else {
 
       $("#stampd").hide()
       $("#send").hide()
@@ -139,15 +135,15 @@ object Startup extends DragAndDrop with UserFeedback {
     }
   }
 
-
-  private def updateActions(pyramid: Pyramid)(implicit $: JQueryOb) = {
+  private def updateActions(pyramid: Pyramid)(implicit $ : JQueryOb) = {
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off())
       .on("drop", (e: JQueryEventObject) => e.preventDefault())
 
     //Download/upload wallet:
 
-    onDrop($("#logo").off(), f => handleWithIpfs(createPyramid().uploadWallet(f), None))
+    onDrop($("#logo").off(),
+           f => handleWithIpfs(createPyramid().uploadWallet(f), None))
       .on("click",
           (e: JQueryEventObject) => handle(pyramid.downloadWallet(), None))
 
@@ -156,17 +152,12 @@ object Startup extends DragAndDrop with UserFeedback {
       def downloadAsSlave() = {
         message("Loading/decrypting ...")
         val av = ($("#cid").`val`())
-        val ao: Option[String] = av.map(r => Some(r.toString())).
-          getOrElse(pyramid.
-            pyramidConfig.
-            ipfsData.
-            uploadOpt)
-        val p: Pyramid = new Pyramid(ao.
-          map(s => pyramid.
-            pyramidConfig.
-            withUpload(s)).
-          getOrElse(pyramid.pyramidConfig))
-
+        val ao: Option[String] = av
+          .map(r => Some(r.toString()))
+          .getOrElse(pyramid.pyramidConfig.ipfsData.uploadOpt)
+        val p: Pyramid = new Pyramid(
+          ao.map(s => pyramid.pyramidConfig.withUpload(s))
+            .getOrElse(pyramid.pyramidConfig))
 
         handle(p.download(), None)
       }
@@ -174,28 +165,23 @@ object Startup extends DragAndDrop with UserFeedback {
         message("Loading/decrypting ...")
         val av: TextFieldContents = ($("#symkey").`val`())
 
-        val ao: Option[String] = av.map(r => Some(r.toString())).
-          getOrElse(pyramid.
-            pyramidConfig.
-            ipfsData.
-            symKeyOpt)
+        val ao: Option[String] = av
+          .map(r => Some(r.toString()))
+          .getOrElse(pyramid.pyramidConfig.ipfsData.symKeyOpt)
 
-        val p: Pyramid = new Pyramid(ao.
-          map(s => pyramid.
-            pyramidConfig.
-            withSymKey(s)).
-          getOrElse(pyramid.pyramidConfig))
-        p.withImportSymKey().map(_.map(p2=> handle(p.download(), None)  ))
+        val p: Pyramid = new Pyramid(
+          ao.map(s => pyramid.pyramidConfig.withSymKey(s))
+            .getOrElse(pyramid.pyramidConfig))
+        val f: Future[Option[Pyramid]] = p.withImportSymKey()
+        f.failed.map(thr => error(thr.getMessage))
+        f.map(_.map(p2 => handle(p.download(), None)))
 
-
-        //handle(p.download(), None)
       }
 
-      if(pyramid.pyramidConfig.isPharao())
-      downloadAsPharao()
+      if (pyramid.pyramidConfig.isPharao())
+        downloadAsPharao()
       else
-      downloadAsSlave()
-
+        downloadAsSlave()
 
       ()
 
@@ -204,23 +190,17 @@ object Startup extends DragAndDrop with UserFeedback {
     def doUpload(f: File) = {
       handle({
 
-
         def uploadAsPharao() = {
           message("Oh Pharao, you are donating ...")
           val av = ($("#symkey").`val`())
 
-          val ao: Option[String] = av.map(r => Some(r.toString())).
-            getOrElse(pyramid.
-              pyramidConfig.
-              ipfsData.
-              symKeyOpt)
+          val ao: Option[String] = av
+            .map(r => Some(r.toString()))
+            .getOrElse(pyramid.pyramidConfig.ipfsData.symKeyOpt)
 
-          val p: Pyramid = new Pyramid(ao.
-            map(s => pyramid.
-              pyramidConfig.
-              withSymKey(s)).
-            getOrElse(pyramid.pyramidConfig))
-
+          val p: Pyramid = new Pyramid(
+            ao.map(s => pyramid.pyramidConfig.withSymKey(s))
+              .getOrElse(pyramid.pyramidConfig))
 
           p.uploadZip(f)
         }
@@ -235,15 +215,14 @@ object Startup extends DragAndDrop with UserFeedback {
       })
     }
 
-    onDrop($("#drop_zone").off(),
-           (f) => doUpload(f)
-    ).on("click", (e: JQueryEventObject) => doDownload())
+    onDrop($("#drop_zone").off(), (f) => doUpload(f))
+      .on("click", (e: JQueryEventObject) => doDownload())
 
     $("#stampd")
       .off()
-      .on("click", (e: JQueryEventObject) => // handle(pyramid.testAsym())
-         handle(pyramid.uploadZip2())
-      )
+      .on("click",
+          (e: JQueryEventObject) => // handle(pyramid.testAsym())
+            handle(pyramid.uploadZip2()))
 
   }
 
