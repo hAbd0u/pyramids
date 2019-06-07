@@ -1,18 +1,14 @@
 package com.lyrx.pyramids.ipfs
 
 
-import com.lyrx.pyramids.pcrypto
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, WalletNative}
-import pcrypto.PCryptoImplicits._
-import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON}
+import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON, pcrypto}
 import org.scalajs.dom.crypto.CryptoKey
-import org.scalajs.dom.raw.{File, FileReader}
 import typings.nodeLib
 import typings.nodeLib.bufferMod
 
 import scala.scalajs.js.JSON
-import scala.scalajs.js.typedarray.Uint8Array
-//import typings.nodeLib.bufferMod.Buffer
+
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}

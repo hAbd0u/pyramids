@@ -1,12 +1,10 @@
 package com.lyrx.pyramids.ipfs
 
-import org.scalajs.dom.raw.File
-import typings.nodeLib
-import typings.nodeLib.Buffer
 
+import typings.nodeLib
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSGlobal, JSImport, JSName}
-import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import js.annotation.{JSGlobal, JSImport, JSName}
+import js.typedarray
 
 
 
@@ -26,28 +24,16 @@ trait IPFSSError extends js.Object{
 @js.native
 @JSGlobal
 class TextEncoder(utfLabel: js.UndefOr[String]= "utf-8" ) extends js.Object {
-  def encode(buffer: String): Uint8Array = js.native
+  def encode(buffer: String): typedarray.Uint8Array = js.native
 }
 
 @js.native
 @JSGlobal
 class TextDecoder(utfLabel: js.UndefOr[String] = "utf-8") extends js.Object {
-  def decode(buffer: Uint8Array): String = js.native
+  def decode(buffer: typedarray.Uint8Array): String = js.native
 }
 
 
-
-
-/*
-@js.native
-@JSImport("buffer/","Buffer")
-object BufferObject extends js.Object {
-
-  def from(s:CanBuffer):Buffer = js.native
-
-}
-
- */
 
 @js.native
 @JSImport("ipfs-http-client",JSImport.Namespace)
@@ -68,7 +54,7 @@ trait IpfsClient extends js.Object {
 
 
   @JSName("cat")
-  def cat(s:String):js.Promise[Buffer] = js.native
+  def cat(s:String):js.Promise[nodeLib.Buffer] = js.native
 
   @JSName("cat")
   def catString(s:String):js.Promise[String] = js.native
