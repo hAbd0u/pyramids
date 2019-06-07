@@ -90,8 +90,18 @@ object Startup extends DragAndDrop with UserFeedback {
     $("#title").html(if(pyramidConfig.isPharao())"Welcome back, oh Pharao!" else "You are the Pharao's slave!")
 
 
+    if(pyramidConfig.isPharao()){
 
-    //pyramidConfig.ipfsData.uploadOpt.map(s=>)
+      $("#stampd").show()
+      $("#send").show()
+    }
+    else {
+      $("#stampd").hide()
+      $("#send").hide()
+
+    }
+
+
 
     Future { pyramidConfig }
 
