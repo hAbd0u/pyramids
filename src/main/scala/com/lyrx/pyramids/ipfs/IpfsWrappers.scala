@@ -2,6 +2,7 @@ package com.lyrx.pyramids.ipfs
 
 import org.scalajs.dom.raw.File
 import typings.nodeLib
+import typings.nodeLib.Buffer
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSGlobal, JSImport, JSName}
@@ -67,7 +68,7 @@ trait IpfsClient extends js.Object {
 
 
   @JSName("cat")
-  def cat(s:String):js.Promise[File] = js.native
+  def cat(s:String):js.Promise[Buffer] = js.native
 
   @JSName("cat")
   def catString(s:String):js.Promise[String] = js.native

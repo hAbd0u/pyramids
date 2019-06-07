@@ -147,7 +147,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
     fileForSymKey().flatMap(
       _.flatMap(f=>pyramidConfig.
       asymKeyOpt.
-      map(asymKeys=>decryptFile(
+      map(asymKeys=>asymDecryptBuffer(
         asymKeys.privateKey,f).
         map(Some(_)))).
       getOrElse(Future{None}))
@@ -167,9 +167,29 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
           map(Some(_))).
           getOrElse(Future{None}))
 
+  def uploadZip2()(implicit ctx:ExecutionContext) =
+    importFileForSymKey().map(key=>pyramidConfig.msg("I have found your keys!"))
 
 
 
+  def testAsymEncr()(implicit ctx:ExecutionContext) =
+    pyramidConfig.
+      asymKeyOpt.map(
+      k=>asymEncryptString(k.publicKey,"This is a test").map(Some(_))
+    ).getOrElse(Future{None})
+
+  def testAsymDecr()(implicit ctx:ExecutionContext) =
+    testAsymEncr().flatMap(_.flatMap(b=>
+      pyramidConfig.asymKeyOpt.map(k=>asymDecryptArrayBuffer(k.privateKey,b).map(Some(_)))).getOrElse(Future{None}))
+
+
+
+
+
+
+  def testAsym()(implicit ctx:ExecutionContext) =
+    testAsymDecr()
+      .map(r=>pyramidConfig.msg(s"Test successfull: $r"))
 
 
 

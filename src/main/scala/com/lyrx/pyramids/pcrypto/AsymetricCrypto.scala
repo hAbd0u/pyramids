@@ -8,10 +8,11 @@ import scala.scalajs.js
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 import PCryptoImplicits._
 import com.lyrx.pyramids.PyramidJSON
-import com.lyrx.pyramids.ipfs.TextEncoder
-import typings.nodeLib.bufferMod.Buffer
+import com.lyrx.pyramids.ipfs.{TextDecoder, TextEncoder}
+import typings.nodeLib.Buffer
 
 import js.Dynamic.{literal => l}
+import scala.io.BufferedSource
 trait AsymetricCrypto extends Crypto with PyramidJSON{
 
   val aHashAlgorithm:KeyAlgorithmIdentifier =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
@@ -97,21 +98,31 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
 
 
 
-  def encryptString(key:CryptoKey,s:String)
-                   (implicit executionContext: ExecutionContext) =
-    crypto.subtle.encrypt(aHashAlgorithm,
+  def asymEncryptString(key:CryptoKey, s:String)
+                       (implicit executionContext: ExecutionContext) =
+    crypto.subtle.encrypt(aAlgorithm,
       key,
       new TextEncoder().encode(s)).
       toFuture.
       map(_.asInstanceOf[ArrayBuffer])
 
-  def decryptFile(key:CryptoKey,f:File)
-                   (implicit executionContext: ExecutionContext) =
-    crypto.subtle.decrypt(aHashAlgorithm,
+  def asymDecryptBuffer(key:CryptoKey, b:Buffer)
+                     (implicit executionContext: ExecutionContext) =
+    crypto.subtle.decrypt(aAlgorithm,
       key,
-      new Uint8Array(js.Array(f))).
+      b.asInstanceOf[org.scalajs.dom.crypto.BufferSource]).
+      //Buffer.from(f)).
       toFuture.
       map(_.asInstanceOf[ArrayBuffer])
+
+  def asymDecryptArrayBuffer(key:CryptoKey, b:ArrayBuffer)
+                     (implicit executionContext: ExecutionContext) =
+    crypto.subtle.decrypt(aAlgorithm,
+      key,
+      b).
+      toFuture.
+      map(_.asInstanceOf[ArrayBuffer])
+
 
 
 

@@ -44,7 +44,7 @@ trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
 
   def exportSymKeyEncrypted(key:CryptoKey)(implicit ctx:ExecutionContext) = exportSymKey().
     flatMap(_.map(jk=>
-      encryptString(key,stringify(jk)).map(Some(_))).getOrElse(Future{None}))
+      asymEncryptString(key,stringify(jk)).map(Some(_))).getOrElse(Future{None}))
 
 
   def exportSymKeyDefault()(implicit ctx:ExecutionContext) =

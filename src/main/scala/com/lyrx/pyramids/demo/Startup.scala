@@ -38,7 +38,10 @@ object Startup extends DragAndDrop with UserFeedback {
         pyramidConfig
       ).initKeys()
 
-    f.failed.map(thr => error(s"Initialization Error: ${thr.getMessage}"))
+    f.failed.map(thr => {
+      error(s"Initialization Error: ${thr.getMessage()}")
+
+    })
     f.map((p: Pyramid) => init(p.pyramidConfig))
 
   }
@@ -116,7 +119,8 @@ object Startup extends DragAndDrop with UserFeedback {
 
     $("#stampd")
       .off()
-      .on("click", (e: JQueryEventObject) => {}//handle(pyramid.publishSymKeys())
+      .on("click", (e: JQueryEventObject) => // handle(pyramid.testAsym())
+         handle(pyramid.uploadZip2())
       )
 
   }
