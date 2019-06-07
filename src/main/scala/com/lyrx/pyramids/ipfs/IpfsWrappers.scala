@@ -10,12 +10,25 @@ import js.typedarray
 
 
 
+
+@js.native
+trait IPFSMetaData extends js.Object{
+  val name:String = js.native
+  val `type`:String = js.native
+  val size:Int = js.native
+
+}
+
+
+
 @js.native
 trait IPFSSFile extends js.Object{
   val path:String = js.native
   val hash:String = js.native
   val size:Int = js.native
 }
+
+
 @js.native
 trait IPFSSError extends js.Object{
 

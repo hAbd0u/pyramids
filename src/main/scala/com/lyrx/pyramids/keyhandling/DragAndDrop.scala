@@ -11,8 +11,6 @@ trait DragAndDrop {
     (evt: JQueryEventObject) => {
       evt.stopPropagation();
       evt.preventDefault();
-
-      //println("Hiiiiier: "+ evt.originalEvent.asInstanceOf[DataTransferEvent].dataTransfer)
       evt.originalEvent.asInstanceOf[DataTransferEvent].
         dataTransfer.flatMap(dt=>dt.
         files.

@@ -2,7 +2,7 @@ package com.lyrx.pyramids.pcrypto
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey, KeyFormat, crypto}
 import org.scalajs.dom.raw.File
-import com.lyrx.pyramids.ipfs.TextDecoder
+import com.lyrx.pyramids.ipfs.{IPFSMetaData, TextDecoder}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -42,7 +42,7 @@ trait Encrypted extends SymetricCrypto {
             Some(js.JSON.parse(
               new TextDecoder().
               decode(
-                new Uint8Array(b))).asInstanceOf[File])
+                new Uint8Array(b))).asInstanceOf[IPFSMetaData])
         ))).
         getOrElse(
           Future{DecryptedData(d.unencrypted,None)
@@ -73,7 +73,7 @@ object EncryptedData{
 
 
 case class DecryptedData(unencrypted: Option[ArrayBuffer],
-                         metaData:Option[File]
+                         metaData:Option[IPFSMetaData]
                         ){
   def isEmpty() =(
     unencrypted.isEmpty  &&
