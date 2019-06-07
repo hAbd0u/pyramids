@@ -9,15 +9,15 @@ import org.scalajs.dom.raw.{File, FileReader}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => l}
-import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
+import js.Dynamic.{literal => l}
+import js.typedarray
 import typings.nodeLib
 import nodeLib.bufferMod
 
 trait AsymetricCrypto extends Crypto with PyramidJSON{
 
   val aHashAlgorithm:KeyAlgorithmIdentifier =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
-    publicExponent = new Uint8Array( js.Array(1,0,1)),
+    publicExponent = new typedarray.Uint8Array( js.Array(1,0,1)),
     hash = HashAlgorithm.`SHA-256`)
 
   val aSignAlgorithm:KeyAlgorithmIdentifier  = l(
@@ -105,7 +105,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
       key,
       new TextEncoder().encode(s)).
       toFuture.
-      map(_.asInstanceOf[ArrayBuffer])
+      map(_.asInstanceOf[typedarray.ArrayBuffer])
 
   def asymDecryptBuffer(key:CryptoKey, b:nodeLib.Buffer)
                      (implicit executionContext: ExecutionContext) =
@@ -114,15 +114,15 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
       b.asInstanceOf[org.scalajs.dom.crypto.BufferSource]).
       //Buffer.from(f)).
       toFuture.
-      map(_.asInstanceOf[ArrayBuffer])
+      map(_.asInstanceOf[typedarray.ArrayBuffer])
 
-  def asymDecryptArrayBuffer(key:CryptoKey, b:ArrayBuffer)
+  def asymDecryptArrayBuffer(key:CryptoKey, b:typedarray.ArrayBuffer)
                      (implicit executionContext: ExecutionContext) =
     crypto.subtle.decrypt(aAlgorithm,
       key,
       b).
       toFuture.
-      map(_.asInstanceOf[ArrayBuffer])
+      map(_.asInstanceOf[typedarray.ArrayBuffer])
 
 
 
@@ -130,7 +130,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
 
 
 
-  private def sign(keys:CryptoKeyPair,data:ArrayBuffer)
+  private def sign(keys:CryptoKeyPair,data:typedarray.ArrayBuffer)
           (implicit executionContext: ExecutionContext)= crypto.subtle.sign(
     l(
       "name" -> "ECDSA",
@@ -138,7 +138,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
     ).asInstanceOf[KeyAlgorithmIdentifier],
     keys.privateKey,
     data
-  ).toFuture.map(_.asInstanceOf[ArrayBuffer])
+  ).toFuture.map(_.asInstanceOf[typedarray.ArrayBuffer])
 
   def signFile(keys:CryptoKeyPair,f:File)
               (implicit executionContext: ExecutionContext) =
@@ -147,7 +147,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
       flatMap(b=>signArrayBuffer(keys, b))
 
 
-   def signArrayBuffer(keys: CryptoKeyPair, b: ArrayBuffer)
+   def signArrayBuffer(keys: CryptoKeyPair, b: typedarray.ArrayBuffer)
                               (implicit executionContext: ExecutionContext)
   = {
     sign(keys, b).
@@ -155,7 +155,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
   }
 
   private def signArrayBufferAddSigner
-  (keys: CryptoKeyPair, b: ArrayBuffer, signedB: ArrayBuffer)
+  (keys: CryptoKeyPair, b: typedarray.ArrayBuffer, signedB: typedarray.ArrayBuffer)
   (implicit executionContext: ExecutionContext)
   = {
     exportCryptoKey(
@@ -163,11 +163,11 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
       map(jk => bufferMod.Buffer.
         from(stringify(jk)).
         buffer.
-        asInstanceOf[ArrayBuffer]).
+        asInstanceOf[typedarray.ArrayBuffer]).
       map(r => (b, signedB, r))
   }
 
-  def verify(key:CryptoKey, signature:ArrayBuffer, data:ArrayBuffer)
+  def verify(key:CryptoKey, signature:typedarray.ArrayBuffer, data:typedarray.ArrayBuffer)
             (implicit executionContext: ExecutionContext)= crypto.subtle.verify(
     l(
       "name" -> "ECDSA",
