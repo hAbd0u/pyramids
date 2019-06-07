@@ -1,18 +1,19 @@
 package com.lyrx.pyramids.pcrypto
 
+import com.lyrx.pyramids.PyramidJSON
+import com.lyrx.pyramids.ipfs.TextEncoder
+import com.lyrx.pyramids.pcrypto.PCryptoImplicits._
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 import org.scalajs.dom.raw.{File, FileReader}
 
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
+import scala.scalajs.js.Dynamic.{literal => l}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
-import PCryptoImplicits._
-import com.lyrx.pyramids.PyramidJSON
-import com.lyrx.pyramids.ipfs.{TextDecoder, TextEncoder}
-import typings.nodeLib.Buffer
+import typings.nodeLib
+import nodeLib.bufferMod
 
-import js.Dynamic.{literal => l}
-import scala.io.BufferedSource
 trait AsymetricCrypto extends Crypto with PyramidJSON{
 
   val aHashAlgorithm:KeyAlgorithmIdentifier =  RsaHashedKeyAlgorithm.`RSA-OAEP`(modulusLength = 4096,
@@ -106,7 +107,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
       toFuture.
       map(_.asInstanceOf[ArrayBuffer])
 
-  def asymDecryptBuffer(key:CryptoKey, b:Buffer)
+  def asymDecryptBuffer(key:CryptoKey, b:nodeLib.Buffer)
                      (implicit executionContext: ExecutionContext) =
     crypto.subtle.decrypt(aAlgorithm,
       key,
@@ -159,7 +160,7 @@ trait AsymetricCrypto extends Crypto with PyramidJSON{
   = {
     exportCryptoKey(
       keys.publicKey).
-      map(jk => Buffer.
+      map(jk => bufferMod.Buffer.
         from(stringify(jk)).
         buffer.
         asInstanceOf[ArrayBuffer]).
