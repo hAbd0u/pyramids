@@ -133,7 +133,7 @@ object Startup extends DragAndDrop with UserFeedback {
       $("#stampd").show()
       $("#send").show()
 
-      $("#cid").hide()
+      $("#cid").show()
       $("#symkey").show()
     } else {
 
@@ -160,29 +160,34 @@ object Startup extends DragAndDrop with UserFeedback {
 
     def doDownload() = {
 
+      def forDownload()={
+        val av = ($("#cid").`val`())
+        val uploadOpt: Option[String] = av
+          .map(r => Some(r.toString()))
+          .getOrElse(pyramid.pyramidConfig.ipfsData.uploadOpt)
+        new Pyramid(
+          uploadOpt.map(s => pyramid.pyramidConfig.withUpload(s))
+            .getOrElse(pyramid.pyramidConfig))
+      }
+
       def downloadAsSlave() = {
         message("Loading/decrypting ...")
         val av = ($("#cid").`val`())
-        val ao: Option[String] = av
-          .map(r => Some(r.toString()))
-          .getOrElse(pyramid.pyramidConfig.ipfsData.uploadOpt)
-        val p: Pyramid = new Pyramid(
-          ao.map(s => pyramid.pyramidConfig.withUpload(s))
-            .getOrElse(pyramid.pyramidConfig))
-
-        handle(p.download(), None)
+        handle(forDownload().download(), None)
       }
       def downloadAsPharao() = {
         message("Loading/decrypting ...")
         val av: TextFieldContents = ($("#symkey").`val`())
-
-        val ao: Option[String] = av
+        val symKeyOpt: Option[String] = av
           .map(r => Some(r.toString()))
           .getOrElse(pyramid.pyramidConfig.ipfsData.symKeyOpt)
 
+        val dp = forDownload()
+
         val p: Pyramid = new Pyramid(
-          ao.map(s => pyramid.pyramidConfig.withSymKey(s))
-            .getOrElse(pyramid.pyramidConfig))
+          symKeyOpt.map(s => dp.pyramidConfig.withSymKey(s))
+            .getOrElse(dp.pyramidConfig))
+
         val f: Future[Option[Pyramid]] = p.withImportSymKey()
         f.failed.map(thr => error(thr.getMessage))
         f.map(_.map(p2 => handle(p.download(), None)))
