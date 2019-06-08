@@ -170,23 +170,25 @@ object Startup extends DragAndDrop with UserFeedback {
             .getOrElse(pyramid.pyramidConfig))
       }
 
-      def downloadAsSlave() = {
-        message("Loading/decrypting ...")
-        val av = ($("#cid").`val`())
-        handle(forDownload().download(), None)
-      }
-      def downloadAsPharao() = {
-        message("Loading/decrypting ...")
+      def forDownloadPharao(dp:Pyramid) = {
         val av: TextFieldContents = ($("#symkey").`val`())
         val symKeyOpt: Option[String] = av
           .map(r => Some(r.toString()))
           .getOrElse(pyramid.pyramidConfig.ipfsData.symKeyOpt)
+        new Pyramid(
+        symKeyOpt.map(s => dp.pyramidConfig.withSymKey(s))
+          .getOrElse(dp.pyramidConfig))
 
-        val dp = forDownload()
+      }
 
-        val p: Pyramid = new Pyramid(
-          symKeyOpt.map(s => dp.pyramidConfig.withSymKey(s))
-            .getOrElse(dp.pyramidConfig))
+      def downloadAsSlave() = {
+        message("Loading/decrypting ...")
+        handle(forDownload().download(), None)
+      }
+      def downloadAsPharao() = {
+        message("Loading/decrypting for the Pharao ...")
+
+        val p: Pyramid = forDownloadPharao(forDownload())
 
         val f: Future[Option[Pyramid]] = p.withImportSymKey()
         f.failed.map(thr => error(thr.getMessage))
