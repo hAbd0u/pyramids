@@ -104,12 +104,10 @@ object Startup extends DragAndDrop with UserFeedback {
 
     })
 
-    pyramidConfig.ipfsData.symKeyOpt.map(s => {
-      $("#symkey").`val`(s"$s")
-    })
-    pyramidConfig.ipfsData.uploadOpt.map(s => {
-      $("#cid").`val`(s"$s")
-    })
+
+    $("#symkey").`val`(s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse("")}")
+    $("#cid").`val`(s"${pyramidConfig.ipfsData.uploadOpt.getOrElse("")}")
+
 
     $("#title").html(
       if (pyramidConfig.isPharao())
