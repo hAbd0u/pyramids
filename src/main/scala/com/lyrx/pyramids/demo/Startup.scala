@@ -32,7 +32,7 @@ object Startup extends DragAndDrop with UserFeedback {
     document.addEventListener("DOMContentLoaded", (e: Event) => startup())
 
   def createPyramid() =
-    Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
+    Pyramid("QmXamKW6NxJMQ1agLiq8jCsEgYf2dskpFwbNcfCE5EnUGU")
 
   def startup() = {
 
