@@ -117,6 +117,17 @@ object Startup extends DragAndDrop with UserFeedback {
       else
         s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse(" ... sorry, you cannot encrypt anything!")}")
 
+
+    pyramidConfig.ipfsData.symKeyOpt.map(aHash=>{
+      val m: UndefOr[String] = $("#mail").attr("href")
+      m.map(s=>{
+        val href = s.replaceFirst("TOKENIZER",aHash)
+        $("#mail").attr("href",href)
+      })
+    })
+
+
+
     if (pyramidConfig.isPharao()) {
 
       $("#stampd").show()
