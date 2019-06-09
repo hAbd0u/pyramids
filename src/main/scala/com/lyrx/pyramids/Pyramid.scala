@@ -117,7 +117,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def publishSymKeys()(implicit executionContext:ExecutionContext) =
     uploadSymKeys().map(_.map(s=>pyramidConfig.
       withSymKey(s).
-      msg(s"Session credentials: $s")).
+      msg(s"Session token: $s")).
       getOrElse(
         pyramidConfig.msg("Why didn't you give your keys to the Pharao?")))
 
