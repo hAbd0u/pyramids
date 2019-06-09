@@ -186,7 +186,7 @@ object Startup extends DragAndDrop with UserFeedback {
 
         val f: Future[Option[Pyramid]] = p.withImportSymKey()
         f.failed.map(thr => error(thr.getMessage))
-        f.map(_.map(p2 => handle(p.download(), None)))
+        f.map(_.map(p2 => handle(p2.download(), None)))
 
       }
 
