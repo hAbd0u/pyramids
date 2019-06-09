@@ -95,25 +95,21 @@ object Startup extends DragAndDrop with UserFeedback {
 
     val atts = "target='_blank' class='bottom-line'"
 
-    pyramidConfig.ipfsData.uploadOpt.map(s => {
-      $("#pinfolder").html(s"<a href='$infura/$s' $atts >Chamber</a>")
-    })
 
-    pyramidConfig.ipfsData.pubKeysOpt.map(s => {
-      $("#signature").html(s"<a href='$infura/$s' $atts >Signature</a>")
+    $("#pinfolder").html(pyramidConfig.ipfsData.uploadOpt.map(s =>
+      s"<a href='$infura/$s' $atts >Chamber</a>"
+    ).getOrElse("") )
 
-    })
+
+    $("#signature").html(pyramidConfig.ipfsData.pubKeysOpt.map(s =>
+      s"<a href='$infura/$s' $atts >Signature</a>").getOrElse(""))
 
 
     $("#symkey").`val`(s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse("")}")
     $("#cid").`val`(s"${pyramidConfig.ipfsData.uploadOpt.getOrElse("")}")
 
 
-    $("#title").html(
-      if (pyramidConfig.isPharao())
-        " Pharao!"
-      else
-        s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse(" ... sorry, you cannot encrypt anything!")}")
+
 
 
     pyramidConfig.ipfsData.symKeyOpt.map(aHash=>{

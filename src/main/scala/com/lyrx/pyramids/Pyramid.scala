@@ -50,7 +50,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
     .flatMap(bufferToIpfs(_))
     .map(_.
       map(s=>pyramidConfig.
-        withUpload(s).msg(s)
+        withUpload(s).msg(s"You encrypted and uploaded ${f.name}")
         ).getOrElse(pyramidConfig.msg("We have done nothing!")))
 
 
@@ -117,7 +117,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def publishSymKeys()(implicit executionContext:ExecutionContext) =
     uploadSymKeys().map(_.map(s=>pyramidConfig.
       withSymKey(s).
-      msg(s"You have given your keys to the Pharao!")).
+      msg(s"Session credentials: $s")).
       getOrElse(
         pyramidConfig.msg("Why didn't you give your keys to the Pharao?")))
 
