@@ -95,34 +95,39 @@ object Startup extends DragAndDrop with UserFeedback {
 
     val atts = "target='_blank' class='bottom-line'"
 
-    pyramidConfig.ipfsData.uploadOpt.map(s => {
-      $("#pinfolder").html(s"<a href='$infura/$s' $atts >Chamber</a>")
+
+    $("#pinfolder").html(pyramidConfig.ipfsData.uploadOpt.map(s =>
+      s"<a href='$infura/$s' $atts >Chamber</a>"
+    ).getOrElse("") )
+
+
+    $("#signature").html(pyramidConfig.ipfsData.pubKeysOpt.map(s =>
+      s"<a href='$infura/$s' $atts >Signature</a>").getOrElse(""))
+
+
+    $("#symkey").`val`(s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse("")}")
+    $("#cid").`val`(s"${pyramidConfig.ipfsData.uploadOpt.getOrElse("")}")
+
+
+
+
+
+    pyramidConfig.ipfsData.symKeyOpt.map(aHash=>{
+      val m: UndefOr[String] = $("#mail").attr("href")
+      m.map(s=>{
+        val href = s.replaceFirst("TOKENIZER",aHash)
+        $("#mail").attr("href",href)
+      })
     })
 
-    pyramidConfig.ipfsData.pubKeysOpt.map(s => {
-      $("#signature").html(s"<a href='$infura/$s' $atts >Signature</a>")
 
-    })
-
-    pyramidConfig.ipfsData.symKeyOpt.map(s => {
-      $("#symkey").`val`(s"$s")
-    })
-    pyramidConfig.ipfsData.uploadOpt.map(s => {
-      $("#cid").`val`(s"$s")
-    })
-
-    $("#title").html(
-      if (pyramidConfig.isPharao())
-        " Pharao!"
-      else
-        s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse(" ... sorry, you cannot encrypt anything!")}")
 
     if (pyramidConfig.isPharao()) {
 
       $("#stampd").show()
       $("#send").show()
 
-      $("#cid").hide()
+      $("#cid").show()
       $("#symkey").show()
     } else {
 
@@ -149,29 +154,36 @@ object Startup extends DragAndDrop with UserFeedback {
 
     def doDownload() = {
 
-      def downloadAsSlave() = {
-        message("Loading/decrypting ...")
+      def forDownload()={
         val av = ($("#cid").`val`())
-        val ao: Option[String] = av
+        val uploadOpt: Option[String] = av
           .map(r => Some(r.toString()))
           .getOrElse(pyramid.pyramidConfig.ipfsData.uploadOpt)
-        val p: Pyramid = new Pyramid(
-          ao.map(s => pyramid.pyramidConfig.withUpload(s))
+        new Pyramid(
+          uploadOpt.map(s => pyramid.pyramidConfig.withUpload(s))
             .getOrElse(pyramid.pyramidConfig))
-
-        handle(p.download(), None)
       }
-      def downloadAsPharao() = {
-        message("Loading/decrypting ...")
-        val av: TextFieldContents = ($("#symkey").`val`())
 
-        val ao: Option[String] = av
+      def forDownloadPharao(dp:Pyramid) = {
+        val av: TextFieldContents = ($("#symkey").`val`())
+        val symKeyOpt: Option[String] = av
           .map(r => Some(r.toString()))
           .getOrElse(pyramid.pyramidConfig.ipfsData.symKeyOpt)
+        new Pyramid(
+        symKeyOpt.map(s => dp.pyramidConfig.withSymKey(s))
+          .getOrElse(dp.pyramidConfig))
 
-        val p: Pyramid = new Pyramid(
-          ao.map(s => pyramid.pyramidConfig.withSymKey(s))
-            .getOrElse(pyramid.pyramidConfig))
+      }
+
+      def downloadAsSlave() = {
+        message("Loading/decrypting ...")
+        handle(forDownload().download(), None)
+      }
+      def downloadAsPharao() = {
+        message("Loading/decrypting for the Pharao ...")
+
+        val p: Pyramid = forDownloadPharao(forDownload())
+
         val f: Future[Option[Pyramid]] = p.withImportSymKey()
         f.failed.map(thr => error(thr.getMessage))
         f.map(_.map(p2 => handle(p.download(), None)))
