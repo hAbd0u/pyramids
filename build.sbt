@@ -25,7 +25,8 @@ libraryDependencies ++= Seq(
  // "org.scala-js" %%% "scalajs-dom" % "0.9.6" ,
   ScalablyTyped.J.jquery,
   ScalablyTyped.J.jszip,
-  ScalablyTyped.F.`file-saver` //,
+  ScalablyTyped.F.`file-saver` ,
+  ScalablyTyped.W.`web3`
  // ScalablyTyped.R.`readable-stream`
 )
 
