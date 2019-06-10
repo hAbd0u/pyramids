@@ -76,6 +76,13 @@ object Startup extends DragAndDrop with UserFeedback {
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
+    /*
+    pyramidConfig.ipfsOpt.map(ipfs=>ipfs.pubsub.ls((e,a)=>{
+      a.foreach(println)
+    }))
+
+     */
+
     val pyramid = new Pyramid(pyramidConfig)
     implicit val $ = jq
 

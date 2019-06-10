@@ -56,9 +56,17 @@ object IpfsHttpClient extends js.Object {
 
 }
 
+@js.native
+trait PubSub extends js.Object {
+
+  def ls(c:js.Function2[IPFSSError,js.Array[String],Unit]) = js.native
+
+}
 
 @js.native
 trait IpfsClient extends js.Object {
+
+  val pubsub:PubSub = js.native
 
   def add(content:nodeLib.Buffer,
           option:js.Dynamic,
