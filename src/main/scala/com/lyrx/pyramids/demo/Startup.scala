@@ -11,12 +11,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.{JSON, UndefOr, |}
 
-object Startup extends DragAndDrop with UserFeedback with CanStartup{
+object Startup extends DragAndDrop with UserFeedback with CanStartup with UpDownload {
   implicit val ec = ExecutionContext.global
 
-  type JQueryOb = org.scalablytyped.runtime.TopLevel[JQueryStatic]
-  type TextFieldContents =
-    js.UndefOr[java.lang.String | scala.Double | js.Array[java.lang.String]]
 
   override def msgField[T](): JQuery[T] = {
     jq("#message")
@@ -29,9 +26,6 @@ object Startup extends DragAndDrop with UserFeedback with CanStartup{
 
   override def createPyramid():Pyramid =
     Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
-
-
-
 
 
   override def init(pyramidConfig: PyramidConfig)(
@@ -101,58 +95,9 @@ object Startup extends DragAndDrop with UserFeedback with CanStartup{
 
     }
   }
-  def doDownload(pyramid: Pyramid)(implicit $:JQueryOb):Unit = {
-
-    def forDownload()={
-      val av = ($("#cid").`val`())
-      val uploadOpt: Option[String] = av
-        .map(r => Some(r.toString()))
-        .getOrElse(pyramid.pyramidConfig.ipfsData.uploadOpt)
-      new Pyramid(
-        uploadOpt.map(s => pyramid.pyramidConfig.withUpload(s))
-          .getOrElse(pyramid.pyramidConfig))
-    }
-
-    def forDownloadPharao(dp:Pyramid) = {
-      val av: TextFieldContents = ($("#symkey").`val`())
-      val symKeyOpt: Option[String] = av
-        .map(r => Some(r.toString()))
-        .getOrElse(pyramid.pyramidConfig.ipfsData.symKeyOpt)
-      new Pyramid(
-        symKeyOpt.map(s => dp.pyramidConfig.withSymKey(s))
-          .getOrElse(dp.pyramidConfig))
-
-    }
-
-    def downloadAsSlave() = {
-      message("Loading/decrypting ...")
-      handle(forDownload().download(), None)
-    }
-    def downloadAsPharao() = {
-      message("Loading/decrypting for the Pharao ...")
-
-      val p: Pyramid = forDownloadPharao(forDownload())
-
-      val f: Future[Option[Pyramid]] = p.withImportSymKey()
-      f.failed.map(thr => error(thr.getMessage))
-      f.map(_.map(p2 => handle(p2.download(), None)))
-
-    }
-
-    if (pyramid.pyramidConfig.isPharao())
-      downloadAsPharao()
-    else
-      downloadAsSlave()
-
-    ()
-
-  }
 
 
-
-
-
-   def updateActions(pyramid: Pyramid)(implicit $ : JQueryOb) = {
+  def updateActions(pyramid: Pyramid)(implicit $ : JQueryOb) = {
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off())
       .on("drop", (e: JQueryEventObject) => e.preventDefault())
@@ -164,37 +109,7 @@ object Startup extends DragAndDrop with UserFeedback with CanStartup{
       .on("click",
           (e: JQueryEventObject) => handle(pyramid.downloadWallet(), None))
 
-
-
-    def doUpload(f: File) = {
-      handle({
-
-        def uploadAsPharao() = {
-          message("Oh Pharao, you are donating ...")
-          val av = ($("#symkey").`val`())
-
-          val ao: Option[String] = av
-            .map(r => Some(r.toString()))
-            .getOrElse(pyramid.pyramidConfig.ipfsData.symKeyOpt)
-
-          val p: Pyramid = new Pyramid(
-            ao.map(s => pyramid.pyramidConfig.withSymKey(s))
-              .getOrElse(pyramid.pyramidConfig))
-
-          p.uploadZip(f)
-        }
-
-        if (pyramid.pyramidConfig.isPharao())
-          uploadAsPharao()
-        else {
-          message("Humble Tokenizer, you are trying to save ...")
-          pyramid.uploadZip(f)
-        }
-
-      })
-    }
-
-    onDrop($("#drop_zone").off(), (f) => doUpload(f))
+    onDrop($("#drop_zone").off(), (f) => doUpload(f,pyramid))
       .on("click", (e: JQueryEventObject) => doDownload(pyramid))
 
     $("#stampd")
