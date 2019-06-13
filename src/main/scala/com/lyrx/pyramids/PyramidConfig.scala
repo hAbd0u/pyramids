@@ -1,7 +1,8 @@
 package com.lyrx.pyramids
 
-import com.lyrx.pyramids.ipfs.{ IpfsClient}
+import com.lyrx.pyramids.ipfs.IpfsClient
 import com.lyrx.pyramids.pcrypto.{Crypto, CryptoTypes}
+import com.lyrx.pyramids.temporal.TemporalCredentials
 
 import scala.scalajs.js.typedarray.ArrayBuffer
 
@@ -29,7 +30,8 @@ case class PyramidConfig(//distributedDir: DistributedDir,
                          signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                          messages:Messages ,
                          ipfsOpt:Option[ IpfsClient],
-                         ipfsData: IpfsData
+                         ipfsData: IpfsData,
+                         temporalOpt:Option[TemporalCredentials]
                         ) {
 
   def isPharao()=ipfsData.isPharao()

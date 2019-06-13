@@ -4,7 +4,9 @@ import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 import com.lyrx.pyramids.ipfs.IpfsHttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js.Dynamic.{literal => l}
+import scala.scalajs.js
+import js.Dynamic.{literal => l}
+
 
 
 

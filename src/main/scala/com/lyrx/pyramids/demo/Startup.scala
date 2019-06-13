@@ -72,21 +72,6 @@ object Startup extends DragAndDrop with UserFeedback {
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
-    /*
-    Temporal.loginAjax("devraoh",
-      "2EU6w4jeLC5sJEqx").
-      map(r=>println(JSON.stringify(r.response)))
-
-
-
-     */
-
-    Temporal.loginFetch("devraoh",
-      "2EU6w4jeLC5sJEqx").
-      map(_.text().toFuture.map(println))
-
-
-
 
 
     val pyramid = new Pyramid(pyramidConfig)
