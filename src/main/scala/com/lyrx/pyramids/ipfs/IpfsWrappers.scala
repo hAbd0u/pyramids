@@ -59,7 +59,7 @@ object IpfsHttpClient extends js.Object {
 @js.native
 trait PubSub extends js.Object {
 
-  def ls(c:js.Function2[IPFSSError,js.Array[String],Unit]) = js.native
+  //def ls(c:js.Function2[IPFSSError,js.Array[String],Unit]) = js.native
 
 }
 

@@ -2,14 +2,10 @@ package com.lyrx.pyramids.demo
 
 import com.lyrx.pyramids.frontend.UserFeedback
 import com.lyrx.pyramids.keyhandling.DragAndDrop
+import com.lyrx.pyramids.temporal.Temporal
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 import org.scalajs.dom.{Event, File, document}
-import typings.jqueryLib.{
-  JQuery,
-  JQueryEventObject,
-  JQueryStatic,
-  jqueryMod => jq
-}
+import typings.jqueryLib.{JQuery, JQueryEventObject, JQueryStatic, jqueryMod => jq}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -76,12 +72,9 @@ object Startup extends DragAndDrop with UserFeedback {
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
-    /*
-    pyramidConfig.ipfsOpt.map(ipfs=>ipfs.pubsub.ls((e,a)=>{
-      a.foreach(println)
-    }))
-
-     */
+    Temporal.login("pharaoh",
+      "ipBCU6heD4mSJ9Zah").
+      map(r=>println(r))
 
     val pyramid = new Pyramid(pyramidConfig)
     implicit val $ = jq
