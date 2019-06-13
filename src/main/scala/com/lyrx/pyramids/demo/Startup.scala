@@ -5,15 +5,23 @@ import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.temporal.Temporal
 import com.lyrx.pyramids.{CanStartup, Pyramid, PyramidConfig}
 import org.scalajs.dom.{Event, File, document}
-import typings.jqueryLib.{JQuery, JQueryEventObject, JQueryStatic, jqueryMod => jq}
+import typings.jqueryLib.{
+  JQuery,
+  JQueryEventObject,
+  JQueryStatic,
+  jqueryMod => jq
+}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.{JSON, UndefOr, |}
 
-object Startup extends DragAndDrop with UserFeedback with CanStartup with UpDownload {
+object Startup
+    extends DragAndDrop
+    with UserFeedback
+    with CanStartup
+    with UpDownload {
   implicit val ec = ExecutionContext.global
-
 
   override def msgField[T](): JQuery[T] = {
     jq("#message")
@@ -24,9 +32,8 @@ object Startup extends DragAndDrop with UserFeedback with CanStartup with UpDown
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded", (e: Event) => startup())
 
-  override def createPyramid():Pyramid =
+  override def createPyramid(): Pyramid =
     Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
-
 
   override def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
@@ -51,32 +58,26 @@ object Startup extends DragAndDrop with UserFeedback with CanStartup with UpDown
 
     val atts = "target='_blank' class='bottom-line'"
 
+    $("#pinfolder").html(
+      pyramidConfig.ipfsData.uploadOpt
+        .map(s => s"<a href='$infura/$s' $atts >Chamber</a>")
+        .getOrElse(""))
 
-    $("#pinfolder").html(pyramidConfig.ipfsData.uploadOpt.map(s =>
-      s"<a href='$infura/$s' $atts >Chamber</a>"
-    ).getOrElse("") )
-
-
-    $("#signature").html(pyramidConfig.ipfsData.pubKeysOpt.map(s =>
-      s"<a href='$infura/$s' $atts >Signature</a>").getOrElse(""))
-
+    $("#signature").html(
+      pyramidConfig.ipfsData.pubKeysOpt
+        .map(s => s"<a href='$infura/$s' $atts >Signature</a>")
+        .getOrElse(""))
 
     $("#symkey").`val`(s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse("")}")
     $("#cid").`val`(s"${pyramidConfig.ipfsData.uploadOpt.getOrElse("")}")
 
-
-
-
-
-    pyramidConfig.ipfsData.symKeyOpt.map(aHash=>{
+    pyramidConfig.ipfsData.symKeyOpt.map(aHash => {
       val m: UndefOr[String] = $("#mail").attr("href")
-      m.map(s=>{
-        val href = s.replaceFirst("TOKENIZER",aHash)
-        $("#mail").attr("href",href)
+      m.map(s => {
+        val href = s.replaceFirst("TOKENIZER", aHash)
+        $("#mail").attr("href", href)
       })
     })
-
-
 
     if (pyramidConfig.isPharao()) {
 
@@ -96,7 +97,6 @@ object Startup extends DragAndDrop with UserFeedback with CanStartup with UpDown
     }
   }
 
-
   def updateActions(pyramid: Pyramid)(implicit $ : JQueryOb) = {
     // prevent default for drag and droo
     onDragOverNothing($(".front-page").off())
@@ -109,7 +109,7 @@ object Startup extends DragAndDrop with UserFeedback with CanStartup with UpDown
       .on("click",
           (e: JQueryEventObject) => handle(pyramid.downloadWallet(), None))
 
-    onDrop($("#drop_zone").off(), (f) => doUpload(f,pyramid))
+    onDrop($("#drop_zone").off(), (f) => doUpload(f, pyramid))
       .on("click", (e: JQueryEventObject) => doDownload(pyramid))
 
     $("#stampd")
