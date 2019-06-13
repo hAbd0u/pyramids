@@ -3,7 +3,7 @@ package com.lyrx.pyramids.demo
 import com.lyrx.pyramids.frontend.UserFeedback
 import com.lyrx.pyramids.keyhandling.DragAndDrop
 import com.lyrx.pyramids.temporal.Temporal
-import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+import com.lyrx.pyramids.{CanStartup, Pyramid, PyramidConfig}
 import org.scalajs.dom.{Event, File, document}
 import typings.jqueryLib.{JQuery, JQueryEventObject, JQueryStatic, jqueryMod => jq}
 
@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.{JSON, UndefOr, |}
 
-object Startup extends DragAndDrop with UserFeedback{
+object Startup extends DragAndDrop with UserFeedback with CanStartup{
   implicit val ec = ExecutionContext.global
 
   type JQueryOb = org.scalablytyped.runtime.TopLevel[JQueryStatic]
@@ -27,57 +27,14 @@ object Startup extends DragAndDrop with UserFeedback{
   def main(args: Array[String]): Unit =
     document.addEventListener("DOMContentLoaded", (e: Event) => startup())
 
-  def createPyramid() =
+  override def createPyramid():Pyramid =
     Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
 
-  def startup() = {
-
-    message("Generating keys ...")
-    createPyramid()
-      .generateKeys()
-      .map(p => ipfsInit(p.pyramidConfig))
-
-  }
-
-  def ipfsInit(pyramidConfig: PyramidConfig)(
-      implicit executionContext: ExecutionContext) = {
-    message("Connecting IPFS network ...")
-    val f =
-      new Pyramid(
-        pyramidConfig
-      ).initKeys()
-
-    f.failed.map(thr => {
-      error(s"Initialization Error: ${thr.getMessage()}")
-
-    })
-    f.map((p: Pyramid) => init(p.pyramidConfig))
-
-  }
-
-  def handleWithIpfs(f: Future[PyramidConfig],
-                     msgOpt: Option[String] = None) = {
-    msgOpt.map(message(_))
-    f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
-    f.map(config => ipfsInit(config))
-    ()
-  }
-  def handle(f: Future[PyramidConfig], msgOpt: Option[String] = None) = {
-    msgOpt.map(message(_))
-    f.onComplete(t => t.failed.map(thr => error(thr.getMessage)))
-    f.map(config => init(config))
-    ()
-  }
-
-
-  def initTemporal(pyramid: Pyramid)=  pyramid.
-    jwtToken().map(_.map(t=>println(s"Token: ${t.token}")))
 
 
 
 
-
-  def init(pyramidConfig: PyramidConfig)(
+  override def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
     val pyramid = new Pyramid(pyramidConfig)
     implicit val $ = jq
