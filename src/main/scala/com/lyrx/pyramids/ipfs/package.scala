@@ -1,10 +1,10 @@
 package com.lyrx.pyramids
 
 
-import typings.nodeLib//.bufferMod.Buffer
+import typings.nodeLib
 import typings.stdLib.{ArrayBuffer, Uint8Array}
 
-import scala.concurrent.Promise
+import scala.concurrent.{Future, Promise}
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
 import scala.scalajs.js.|
@@ -19,6 +19,8 @@ package object ipfs {
 
   implicit class PimpedIpfsClient(ipfsClient:IpfsClient){
 
+
+    def pinAdd(h:String):Future[PinResult] = ipfsClient.pin.add(h).toFuture
 
     def futureCat(s:String) = ipfsClient.cat(s).toFuture
 

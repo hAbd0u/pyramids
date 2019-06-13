@@ -1,12 +1,13 @@
 package com.lyrx.pyramids.temporal
 
+import com.lyrx.pyramids.ipfs.CanIpfs
 import org.scalajs.dom.experimental.{Fetch, RequestInit, Response}
 import org.scalajs.dom.ext.Ajax
 
 import scalajs.js
 import js.JSON
 import js.Dynamic.{literal => l}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 
 
@@ -34,11 +35,12 @@ trait TemporalCredentials extends js.Object {
   val password:String=js.native
 }
 
-object Temporal{
+
+trait Temporal extends CanIpfs{
   val DEV_LOGIN ="https://dev.api.temporal.cloud/v2/auth/login"
 
   implicit class PimpedTemporalCredentials(temporalCredentials: TemporalCredentials){
-    def loginFetch(): Future[Response] = Fetch.fetch(
+    def loginFetch() = Fetch.fetch(
       DEV_LOGIN,
       l(
         "method" -> "POST",
@@ -66,6 +68,18 @@ object Temporal{
         withCredentials = false
 
       )
+
+    def pinJSW()(implicit executionContext: ExecutionContext) = loginAjax().
+      map(_.responseText)
+
   }
+  def jwtToken()(implicit executionContext: ExecutionContext)=
+    pyramidConfig.temporalOpt.
+      map(t=>
+        t.loginAjax().map(r =>
+          Some(JSON.parse(
+            r.responseText).asInstanceOf[JWTToken]))
+      ).getOrElse(Future{None})
+
 
 }

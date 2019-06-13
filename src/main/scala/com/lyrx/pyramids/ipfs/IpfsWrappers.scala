@@ -62,11 +62,25 @@ trait PubSub extends js.Object {
   //def ls(c:js.Function2[IPFSSError,js.Array[String],Unit]) = js.native
 
 }
+@js.native
+trait Pin extends js.Object {
+
+  def add(s:String):js.Promise[PinResult] = js.native
+
+}
+
+@js.native
+trait PinResult extends js.Object {
+  val hash:String = js.native
+}
+
+
 
 @js.native
 trait IpfsClient extends js.Object {
 
   val pubsub:PubSub = js.native
+  val pin:Pin = js.native
 
   def add(content:nodeLib.Buffer,
           option:js.Dynamic,

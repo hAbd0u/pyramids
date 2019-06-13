@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.{JSON, UndefOr, |}
 
-object Startup extends DragAndDrop with UserFeedback {
+object Startup extends DragAndDrop with UserFeedback{
   implicit val ec = ExecutionContext.global
 
   type JQueryOb = org.scalablytyped.runtime.TopLevel[JQueryStatic]
@@ -70,13 +70,11 @@ object Startup extends DragAndDrop with UserFeedback {
   }
 
 
-  def initTemporal(pyramidConfig: PyramidConfig)={
-    import Temporal._
-    pyramidConfig.
-      temporalOpt.
-      map(t=>
-        t.loginAjax().map(r=>println(r.responseText)))
-  }
+  def initTemporal(pyramid: Pyramid)=  pyramid.
+    jwtToken().map(_.map(t=>println(s"Token: ${t.token}")))
+
+
+
 
 
   def init(pyramidConfig: PyramidConfig)(
@@ -84,7 +82,7 @@ object Startup extends DragAndDrop with UserFeedback {
     val pyramid = new Pyramid(pyramidConfig)
     implicit val $ = jq
 
-    initTemporal(pyramidConfig)
+    initTemporal(pyramid)
 
     showMessages(pyramidConfig)
 
