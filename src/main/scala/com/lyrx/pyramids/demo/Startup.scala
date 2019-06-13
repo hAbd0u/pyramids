@@ -69,13 +69,22 @@ object Startup extends DragAndDrop with UserFeedback {
     ()
   }
 
+
+  def initTemporal(pyramidConfig: PyramidConfig)={
+    import Temporal._
+    pyramidConfig.
+      temporalOpt.
+      map(t=>
+        t.loginAjax().map(r=>println(r.responseText)))
+  }
+
+
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
-
-
-
     val pyramid = new Pyramid(pyramidConfig)
     implicit val $ = jq
+
+    initTemporal(pyramidConfig)
 
     showMessages(pyramidConfig)
 
