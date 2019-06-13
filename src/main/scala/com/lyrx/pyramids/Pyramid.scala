@@ -1,5 +1,6 @@
 package com.lyrx.pyramids
 
+import com.lyrx.pyramids.infura.InfuraProxy
 import com.lyrx.pyramids.ipfs.{CanIpfs, TextDecoder}
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
@@ -37,6 +38,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with UploadWallet
   with Encryption
   with CanIpfs
+  with InfuraProxy
   with AsymetricCrypto
 {
 

@@ -16,20 +16,7 @@ import scala.scalajs.js.Dynamic.{literal => l}
 trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
   val pyramidConfig: PyramidConfig
 
-  def initIpfs()(implicit executionContext: ExecutionContext) = Future {
-    new Pyramid(
-      pyramidConfig
-        .copy(
-          ipfsOpt = Some(
-            IpfsHttpClient(
-              l(
-                "host" -> "ipfs.infura.io",
-                "port" -> 5001,
-                "protocol" -> "https"
-              )))
-        )
-        .msg("Connected to IPFS network!"))
-  }
+  def initIpfs()(implicit executionContext: ExecutionContext):Future[Pyramid]
 
   def initIpfsAndPublishPublicKeys()(
       implicit executionContext: ExecutionContext) =
