@@ -9,7 +9,7 @@ import typings.jqueryLib.{JQuery, JQueryEventObject, JQueryStatic, jqueryMod => 
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.{UndefOr, |}
+import scala.scalajs.js.{JSON, UndefOr, |}
 
 object Startup extends DragAndDrop with UserFeedback {
   implicit val ec = ExecutionContext.global
@@ -72,9 +72,22 @@ object Startup extends DragAndDrop with UserFeedback {
   def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {
 
-    Temporal.login("pharaoh",
-      "ipBCU6heD4mSJ9Zah").
-      map(r=>println(r))
+    /*
+    Temporal.loginAjax("devraoh",
+      "2EU6w4jeLC5sJEqx").
+      map(r=>println(JSON.stringify(r.response)))
+
+
+
+     */
+
+    Temporal.loginFetch("devraoh",
+      "2EU6w4jeLC5sJEqx").
+      map(_.text().toFuture.map(println))
+
+
+
+
 
     val pyramid = new Pyramid(pyramidConfig)
     implicit val $ = jq
