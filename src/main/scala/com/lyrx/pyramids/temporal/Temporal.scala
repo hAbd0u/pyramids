@@ -82,7 +82,7 @@ trait Temporal extends CanIpfs {
   def pinJWTToken()(implicit executionContext: ExecutionContext) = jwtToken().
     flatMap(_.flatMap( jwt => pyramidConfig.
       ipfsOpt.
-      map(_.futurePin(jwt.token))).
+      map(_.futurePin(JSON.stringify(jwt)))).
       getOrElse({Future{None}}))
 
 

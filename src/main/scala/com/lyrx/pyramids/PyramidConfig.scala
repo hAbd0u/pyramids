@@ -18,7 +18,8 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 case class IpfsData(uploadOpt:Option[String],
                          pubKeysOpt:Option[String],
                          pharao:String,
-                        symKeyOpt:Option[String]
+                        symKeyOpt:Option[String],
+                        temporalOpt:Option[String]
                         ){
   def isPharao()= pubKeysOpt.
     map(k=> (k == pharao)).getOrElse(false)
@@ -37,6 +38,7 @@ case class PyramidConfig(//distributedDir: DistributedDir,
   def isPharao()=ipfsData.isPharao()
 
 
+  def withTemporal(s:String) = this.copy(ipfsData = this.ipfsData.copy(temporalOpt=Some(s)))
   def withUpload(s:String) =this.
     copy(ipfsData = ipfsData.
       copy(uploadOpt = Some(s)))

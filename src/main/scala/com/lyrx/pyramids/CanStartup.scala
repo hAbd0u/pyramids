@@ -18,7 +18,7 @@ trait CanStartup extends UserFeedback {
     message("Generating keys ...")
     createPyramid()
       .generateKeys()
-      .map(p => ipfsInit(p.pyramidConfig))
+      .flatMap(p => ipfsInit(p.pyramidConfig))
 
   }
 
@@ -34,7 +34,9 @@ trait CanStartup extends UserFeedback {
       error(s"Initialization Error: ${thr.getMessage()}")
 
     })
-    f.map((p: Pyramid) => init(p.pyramidConfig))
+    f.flatMap(p =>initTemporal(p)).
+      flatMap(p => init(p.pyramidConfig))
+
 
   }
 
@@ -55,6 +57,14 @@ trait CanStartup extends UserFeedback {
 
   def initTemporal(pyramid: Pyramid)(
       implicit executionContext: ExecutionContext) =
-    pyramid.pinJWTToken().map( (l:Option[js.Array[PinResult]]) =>l.headOption.flatMap((p:js.Array[PinResult])=>p.headOption.map(p2=>println(s"Pinned: ${p2.hash}"))))
+    pyramid
+      .pinJWTToken()
+      .map((l: Option[js.Array[PinResult]]) =>
+        l.headOption.flatMap((p: js.Array[PinResult]) =>
+          p.headOption.map(p2 => new Pyramid(
+            pyramid.
+            pyramidConfig.
+            withTemporal(p2.hash))))).
+      map(_.getOrElse(pyramid))
 
 }

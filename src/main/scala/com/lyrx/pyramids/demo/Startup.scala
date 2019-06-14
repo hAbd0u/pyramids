@@ -40,8 +40,6 @@ object Startup
     val pyramid = new Pyramid(pyramidConfig)
     implicit val $ = jq
 
-    initTemporal(pyramid)
-
     showMessages(pyramidConfig)
 
     updateActions(pyramid)

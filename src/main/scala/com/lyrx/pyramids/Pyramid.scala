@@ -28,7 +28,7 @@ object  Pyramid{
     Messages(Some("Welcome to your Pyramid!"),
       None),
     None,
-    IpfsData(None,None,pharao = pharaoKeys,None),
+    IpfsData(None,None,pharao = pharaoKeys,None,None),
     None
   ))
 }
