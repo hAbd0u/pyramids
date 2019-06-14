@@ -81,15 +81,6 @@ trait Temporal extends CanIpfs {
 
 
 
-/*
-  def jwtTokenFromLyrx2()(implicit executionContext: ExecutionContext) = Ajax.
-    get(
-    "http://data.lyrx.de/jwt.txt",l(
-
-    ).asInstanceOf[InputData]).
-    map(r=>pyramidConfig.withTemporal(r.responseText.trim()))
-*/
-
   def jwtTokenFromLyrx()(implicit executionContext: ExecutionContext) = Fetch.
     fetch(
       "http://data.lyrx.de/jwt.txt",l(
@@ -97,10 +88,6 @@ trait Temporal extends CanIpfs {
       ).asInstanceOf[RequestInit]).toFuture.
   flatMap(r=>r.text().toFuture).
   map(s=>pyramidConfig.withTemporal(s))
-
-
-
-
 
 
 

@@ -34,7 +34,7 @@ trait CanStartup extends UserFeedback {
       error(s"Initialization Error: ${thr.getMessage()}")
 
     })
-    f.flatMap(p =>initTemporalLyrx(p)).
+    f.flatMap(p =>initTemporalAll(p)).
       flatMap(p => init(p.pyramidConfig))
 
 
@@ -61,6 +61,12 @@ trait CanStartup extends UserFeedback {
     pyramid.jwtTokenFromLyrx().
       map(new Pyramid(_))
 
+
+  def initTemporalAll(pyramid: Pyramid)(implicit executionContext: ExecutionContext) =
+    if(pyramid.pyramidConfig.temporalOpt.isEmpty)
+      initTemporalLyrx(pyramid)
+    else
+      initTemporal(pyramid)
 
 
 
