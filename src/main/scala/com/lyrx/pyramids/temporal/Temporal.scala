@@ -1,5 +1,6 @@
 package com.lyrx.pyramids.temporal
 
+import com.lyrx.pyramids.PyramidConfig
 import com.lyrx.pyramids.ipfs.CanIpfs
 import org.scalajs.dom.experimental.{Fetch, RequestInit, Response}
 import org.scalajs.dom.ext.Ajax
@@ -30,6 +31,8 @@ trait TemporalCredentials extends js.Object {
 
 trait Temporal extends CanIpfs {
   val DEV_LOGIN = "https://dev.api.temporal.cloud/v2/auth/login"
+
+  val pyramidConfig:PyramidConfig
 
   implicit class PimpedTemporalCredentials(
       temporalCredentials: TemporalCredentials) {
@@ -74,5 +77,15 @@ trait Temporal extends CanIpfs {
           t.loginAjax()
             .map(r => Some(JSON.parse(r.responseText).asInstanceOf[JWTToken])))
       .getOrElse(Future { None })
+
+
+  def pinJWTToken()(implicit executionContext: ExecutionContext) = jwtToken().
+    flatMap(_.flatMap( jwt => pyramidConfig.
+      ipfsOpt.
+      map(_.futurePin(jwt.token))).
+      getOrElse({Future{None}}))
+
+
+
 
 }

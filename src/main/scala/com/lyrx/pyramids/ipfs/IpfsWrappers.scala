@@ -65,14 +65,18 @@ trait PubSub extends js.Object {
 @js.native
 trait Pin extends js.Object {
 
-  def add(s:String):js.Promise[PinResult] = js.native
+  def add(s:String):js.Promise[js.Array[PinResult]] = js.native
 
 }
 
 @js.native
 trait PinResult extends js.Object {
+
   val hash:String = js.native
+  //val Pins:js.Array[String] = js.native
 }
+
+
 
 
 

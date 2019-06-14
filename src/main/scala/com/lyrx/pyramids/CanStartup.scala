@@ -1,8 +1,10 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.frontend.UserFeedback
+import com.lyrx.pyramids.ipfs.PinResult
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 trait CanStartup extends UserFeedback {
 
@@ -53,6 +55,6 @@ trait CanStartup extends UserFeedback {
 
   def initTemporal(pyramid: Pyramid)(
       implicit executionContext: ExecutionContext) =
-    pyramid.jwtToken().map(_.map(t => println(s"Token: ${t.token}")))
+    pyramid.pinJWTToken().map( (l:Option[js.Array[PinResult]]) =>l.headOption.flatMap(p=>p.headOption.map(p2=>println(s"Pinned: ${p2.hash}"))))
 
 }
