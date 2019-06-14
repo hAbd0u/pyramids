@@ -55,6 +55,6 @@ trait CanStartup extends UserFeedback {
 
   def initTemporal(pyramid: Pyramid)(
       implicit executionContext: ExecutionContext) =
-    pyramid.pinJWTToken().map( (l:Option[js.Array[PinResult]]) =>l.headOption.flatMap(p=>p.headOption.map(p2=>println(s"Pinned: ${p2.hash}"))))
+    pyramid.pinJWTToken().map( (l:Option[js.Array[PinResult]]) =>l.headOption.flatMap((p:js.Array[PinResult])=>p.headOption.map(p2=>println(s"Pinned: ${p2.hash}"))))
 
 }
