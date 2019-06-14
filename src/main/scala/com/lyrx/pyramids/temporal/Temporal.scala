@@ -1,9 +1,10 @@
 package com.lyrx.pyramids.temporal
 
 import com.lyrx.pyramids.PyramidConfig
-import com.lyrx.pyramids.ipfs.CanIpfs
+import com.lyrx.pyramids.ipfs.{CanIpfs, PinResult}
 import org.scalajs.dom.experimental.{Fetch, RequestInit, Response}
 import org.scalajs.dom.ext.Ajax
+import org.scalajs.dom.ext.Ajax.InputData
 
 import scalajs.js
 import js.JSON
@@ -79,11 +80,37 @@ trait Temporal extends CanIpfs {
       .getOrElse(Future { None })
 
 
+
+/*
+  def jwtTokenFromLyrx2()(implicit executionContext: ExecutionContext) = Ajax.
+    get(
+    "http://data.lyrx.de/jwt.txt",l(
+
+    ).asInstanceOf[InputData]).
+    map(r=>pyramidConfig.withTemporal(r.responseText.trim()))
+*/
+
+  def jwtTokenFromLyrx()(implicit executionContext: ExecutionContext) = Fetch.
+    fetch(
+      "http://data.lyrx.de/jwt.txt",l(
+
+      ).asInstanceOf[RequestInit]).toFuture.
+  flatMap(r=>r.text().toFuture).
+  map(s=>pyramidConfig.withTemporal(s))
+
+
+
+
+
+
+
+
   def pinJWTToken()(implicit executionContext: ExecutionContext) = jwtToken().
     flatMap(_.flatMap( jwt => pyramidConfig.
       ipfsOpt.
       map(_.futurePin(JSON.stringify(jwt)))).
-      getOrElse({Future{None}}))
+      getOrElse( Future{None}//unpinnedJWT()
+      ))
 
 
 

@@ -65,6 +65,12 @@ object Startup
       pyramidConfig.ipfsData.pubKeysOpt
         .map(s => s"<a href='$infura/$s' $atts >Signature</a>")
         .getOrElse(""))
+    $("#temporal").html(
+      pyramidConfig.ipfsData.temporalOpt
+        .map(s => s"<a href='$infura/$s' $atts >Temporal</a>")
+        .getOrElse(""))
+
+
 
     $("#symkey").`val`(s"${pyramidConfig.ipfsData.symKeyOpt.getOrElse("")}")
     $("#cid").`val`(s"${pyramidConfig.ipfsData.uploadOpt.getOrElse("")}")
