@@ -15,6 +15,9 @@ package object ipfs {
   type CanBuffer = String | ArrayBuffer | Uint8Array
 
 
+  type OrError = js.UndefOr[js.Error]
+  type ErrorPromise = js.Promise[OrError]
+  type ErrorCallback = js.Function1[OrError,Unit]
 
 
 
