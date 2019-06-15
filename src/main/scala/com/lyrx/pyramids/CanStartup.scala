@@ -66,11 +66,11 @@ trait CanStartup extends UserFeedback {
     if(pyramid.pyramidConfig.temporalData.temporalCredentialsOpt.isEmpty)
       initTemporalLyrx(pyramid)
     else
-      initTemporal(pyramid)
+      initTemporalHash(pyramid)
 
 
 
-  def initTemporal(pyramid: Pyramid)(
+  def initTemporalHash(pyramid: Pyramid)(
       implicit executionContext: ExecutionContext) =
     pyramid
       .pinJWTToken()
@@ -81,5 +81,9 @@ trait CanStartup extends UserFeedback {
             pyramidConfig.
             withTemporal(p2.hash))))).
       map(_.getOrElse(pyramid))
+
+  def initTemporal(pyramid: Pyramid)(
+  implicit executionContext: ExecutionContext) =
+    initTemporalHash(pyramid).flatMap(_.initTemporal())
 
 }

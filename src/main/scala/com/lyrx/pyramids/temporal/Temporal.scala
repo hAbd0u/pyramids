@@ -33,11 +33,16 @@ trait TemporalCredentials extends js.Object {
 }
 
 
+class TemporalProxyImpl(override val pyramidConfig: PyramidConfig) extends TemporalProxy{
+
+}
 
 trait Temporal {
   val DEV_LOGIN = "https://dev.api.temporal.cloud/v2/auth/login"
 
   val pyramidConfig: PyramidConfig
+
+  def proxy(pc:PyramidConfig)=new TemporalProxyImpl(pc)
 
   implicit class PimpedTemporalCredentials(
       temporalCredentials: TemporalCredentials) {
@@ -104,10 +109,18 @@ trait Temporal {
                 .map((b: nodeLib.Buffer) =>
                   Some(JSON.parse(b.toString("utf8")).asInstanceOf[JWTToken])))
             .getOrElse(Future { None }))
-      .getOrElse(Future { None })
+      .getOrElse(Future { None }).
+  map(_.map(t=>pyramidConfig.
+    withTemporalJWT(t).
+    msg("We have your JWT Token")).getOrElse(pyramidConfig.msg("No JWT Token, sorry!")))
 
-  def send()(implicit executionContext: ExecutionContext) = jwtTokenFromInfura().
-    map(_.map(t=>pyramidConfig.msg("We have your JWT Token")).getOrElse(pyramidConfig.msg("No JWT Token, sorry!")))
+
+  def initTemporal()(implicit executionContext: ExecutionContext) =
+    jwtTokenFromInfura().flatMap(proxy(_).initIpfs())
+
+  def send()(implicit executionContext: ExecutionContext) =
+    initTemporal().map(_.pyramidConfig)
+
 
   def pinJWTToken()(implicit executionContext: ExecutionContext) =
     jwtToken().flatMap(

@@ -28,7 +28,7 @@ trait TemporalProxy extends IpfsProxy {
             )
           ))
         )
-        .msg("Connected to the Temporal IPFS network!"))}).getOrElse(Future{
+        .msg("Prepared for the Temporal IPFS network!"))}).getOrElse(Future{
     new Pyramid(pyramidConfig )
   })
 
