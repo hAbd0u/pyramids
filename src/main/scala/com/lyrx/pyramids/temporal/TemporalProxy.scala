@@ -13,12 +13,12 @@ trait TemporalProxy extends IpfsProxy {
 
 
   override def initIpfs()(
-      implicit executionContext: ExecutionContext): Future[Pyramid] =  pyramidConfig.
+      implicit executionContext: ExecutionContext): Future[Pyramid] =  pyramidConfig.temporalData.
     temporalJWTOpt.map(jwt=>Future {
     new Pyramid(
       pyramidConfig
-        .copy(
-          temporalClientOpt = Some(IpfsHttpClient(l(
+        .withTemporalClient(
+          IpfsHttpClient(l(
             "host" -> "dev.api.ipfs.temporal.cloud",
             "port" -> 443,
             "protocol" -> "https",
@@ -26,7 +26,7 @@ trait TemporalProxy extends IpfsProxy {
             "headers" -> l(
               "authorization" -> s"Bearer ${jwt.token}"
             )
-          )))
+          ))
         )
         .msg("Connected to the Temporal IPFS network!"))}).getOrElse(Future{
     new Pyramid(pyramidConfig )

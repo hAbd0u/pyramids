@@ -34,7 +34,7 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
 
 
   def importTemporal(walletNative: WalletNative)(implicit  executionContext: ExecutionContext) =  walletNative.
-    temporal.map(t=>Future{new Pyramid(pyramidConfig.copy(temporalCredentialsOpt = Some(t)))}).getOrElse(Future{new Pyramid(pyramidConfig)})
+    temporal.map(t=>Future{new Pyramid(pyramidConfig.withTemporalCredentials(t))}).getOrElse(Future{new Pyramid(pyramidConfig)})
 
 
 

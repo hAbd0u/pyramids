@@ -25,17 +25,29 @@ case class IpfsData(uploadOpt:Option[String], //hash of an uploaded file
     map(k=> (k == pharao)).getOrElse(false)
 }
 
+
+case class TemporalData(temporalCredentialsOpt:Option[TemporalCredentials],  // Credentials of a Temporal account
+                    temporalJWTOpt:Option[ JWTToken],  //current JWTToken for Temporal
+                    temporalClientOpt:Option[IpfsClient] // IPFS HTTP Client foroi Temporal
+                       )
+
 case class PyramidConfig( //distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
                           asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                           signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
                           messages:Messages, //current status messages
-                          infuraClientOpt:Option[ IpfsClient],  // IFS HTTP Client for Infura
+                          infuraClientOpt:Option[ IpfsClient],  // IPFS HTTP Client for Infura
                           ipfsData: IpfsData,  // List of hashes for the current state
-                          temporalCredentialsOpt:Option[TemporalCredentials],  // Credentials of a Temporal account
-                          temporalJWTOpt:Option[ JWTToken],  //current JWTToken for Temporal
-                        temporalClientOpt:Option[IpfsClient]
+                          temporalData: TemporalData
                         ) {
+
+
+  def withTemporalCredentials(cr:TemporalCredentials)=this.copy(temporalData=this.temporalData.copy(temporalCredentialsOpt = Some(cr)))
+
+  def withTemporalJWT(jwt: JWTToken)=this.copy(temporalData=this.temporalData.copy(temporalJWTOpt = Some(jwt)))
+
+  def withTemporalClient(client: IpfsClient)=this.copy(temporalData=this.temporalData.copy(temporalClientOpt = Some(client)))
+
 
   def isPharao()=ipfsData.isPharao()
 

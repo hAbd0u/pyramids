@@ -86,7 +86,7 @@ trait Temporal {
       .map(s => pyramidConfig.withTemporal(s))
 
   def jwtToken()(implicit executionContext: ExecutionContext) =
-    pyramidConfig.temporalCredentialsOpt
+    pyramidConfig.temporalData.temporalCredentialsOpt
       .map(
         t =>
           t.loginAjax()
