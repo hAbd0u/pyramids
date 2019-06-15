@@ -132,7 +132,7 @@ If no callback is passed, a promise is returned.
 
  */
 
-  def ls(cb:js.Function2[OrError,js.Array[String],Unit]):js.Promise[js.Array[String]]
+  def ls(cb:js.Function2[OrError,js.Array[String],Unit]=null):js.Promise[js.Array[String]]
 
   /*
   pubsub.peers
@@ -144,7 +144,7 @@ callback: (Error, Array<String>) => {} - (Optional) Calls back with an error or 
 If no callback is passed, a promise is returned.
    */
 
-  def peers(topic:String,callback:js.Function2[OrError,js.Array[String],Unit]):js.Promise[js.Array[String]]
+  def peers(topic:String,callback:js.Function2[OrError,js.Array[String],Unit]=null):js.Promise[js.Array[String]]
 
 }
 @js.native
