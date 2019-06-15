@@ -32,6 +32,9 @@ package object ipfs {
 
     def pubsubUnsubscribe(topic:String,h:PubSubHandler) = ipfsClient.pubsub.unsubscribe(topic,h).toFuture
 
+    def pubsubLs()  = ipfsClient.pubsub.ls().toFuture
+
+    def pubsubPeers(topic:String)=ipfsClient.pubsub.peers(topic).toFuture
   }
 
 
