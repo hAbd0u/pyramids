@@ -19,8 +19,7 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
 
 
   def initIpfsAndPublishPublicKeys()(
-      implicit executionContext: ExecutionContext) =
-    initIpfs().flatMap(p=>new InfuraIpfsImpl(p.pyramidConfig).publicKeysToIpfs())
+      implicit executionContext: ExecutionContext) :Future[Pyramid]
 
   def exportAllPublicKeys()(
       implicit ctx: ExecutionContext): Future[pcrypto.CryptoTypes.JsonWebKeyOptPair] =

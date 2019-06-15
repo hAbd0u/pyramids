@@ -39,6 +39,10 @@ trait InfuraIpfs extends CanIpfs with InfuraProxy{
 
 class InfuraIpfsImpl(override val pyramidConfig:PyramidConfig)  extends InfuraIpfs{
 
+  override def initIpfsAndPublishPublicKeys()(
+    implicit executionContext: ExecutionContext):Future[Pyramid]  =
+    initIpfs().flatMap(p=>new InfuraIpfsImpl(p.pyramidConfig).publicKeysToIpfs())
+
 }
 
 
@@ -46,6 +50,9 @@ trait TemporalIpfs extends CanIpfs with TemporalProxy{
 
 }
 class TemmporalIpfsImpl(override val pyramidConfig:PyramidConfig)  extends TemporalIpfs{
+
+  override def initIpfsAndPublishPublicKeys()(
+    implicit executionContext: ExecutionContext):Future[Pyramid] = ???
 
 }
 
