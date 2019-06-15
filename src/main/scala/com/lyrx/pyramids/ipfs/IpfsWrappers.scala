@@ -74,7 +74,7 @@ If no callback is passed, a [promise][] is returned.
    */
 
   def subscribe(topic:String,
-                handler:js.Function1[PubSubMessage,Unit],
+                handler:PubSubHandler,
                 option:PubSubOptions = null,
                 discover:Boolean=true,
                 callback:ErrorCallback = null
@@ -99,7 +99,7 @@ If you need to know when unsubscribe has completed you must use await or .then o
  */
 
   def unsubscribe(topic:String,
-                  handler:js.Function1[PubSubMessage,Unit],
+                  handler:PubSubHandler,
                   callback:ErrorCallback = null):ErrorPromise= js.native
 
 
