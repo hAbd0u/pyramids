@@ -5,7 +5,7 @@ import com.lyrx.pyramids.ipfs.{CanIpfs, TextDecoder}
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, DecryptedData, EncryptedData}
-import com.lyrx.pyramids.temporal.Temporal
+import com.lyrx.pyramids.temporal.{Temporal, TemporalProxy}
 import org.scalajs.dom.crypto.{CryptoKey, JsonWebKey}
 import org.scalajs.dom.raw
 import org.scalajs.dom.raw.File
@@ -33,6 +33,24 @@ object  Pyramid{
   ))
 }
 
+trait InfuraIpfs extends CanIpfs with InfuraProxy{
+
+}
+
+class InfuraIpfsImpl(override val pyramidConfig:PyramidConfig)  extends InfuraIpfs{
+
+}
+
+
+trait TemporalIpfs extends CanIpfs with TemporalProxy{
+
+}
+class TemmporalIpfsImpl(override val pyramidConfig:PyramidConfig)  extends TemporalIpfs{
+
+}
+
+
+
 class Pyramid(override val pyramidConfig: PyramidConfig)
   extends KeyCreation
     with KeyExport
@@ -40,8 +58,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with DownloadWallet
   with UploadWallet
   with Encryption
-  with CanIpfs
-  with InfuraProxy
+  with InfuraIpfs
   with AsymetricCrypto
   with Temporal
 {
