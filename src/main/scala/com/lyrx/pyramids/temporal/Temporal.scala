@@ -32,17 +32,15 @@ trait TemporalCredentials extends js.Object {
   val password: String = js.native
 }
 
-
-class TemporalProxyImpl(override val pyramidConfig: PyramidConfig) extends TemporalProxy{
-
-}
+class TemporalProxyImpl(override val pyramidConfig: PyramidConfig)
+    extends TemporalProxy {}
 
 trait Temporal {
   val DEV_LOGIN = "https://dev.api.temporal.cloud/v2/auth/login"
 
   val pyramidConfig: PyramidConfig
 
-  def proxy(pc:PyramidConfig)=new TemporalProxyImpl(pc)
+  def proxy(pc: PyramidConfig) = new TemporalProxyImpl(pc)
 
   implicit class PimpedTemporalCredentials(
       temporalCredentials: TemporalCredentials) {
@@ -101,32 +99,29 @@ trait Temporal {
   def jwtTokenFromInfura()(implicit executionContext: ExecutionContext) =
     pyramidConfig.ipfsData.temporalOpt
       .map(
-        hash =>
-          pyramidConfig.infuraClientOpt
-            .map(ipfs =>
-              ipfs
-                .futureCat(hash)
-                .map((b: nodeLib.Buffer) =>
-                  Some(JSON.parse(b.toString("utf8")).asInstanceOf[JWTToken])))
+        hash => pyramidConfig.infuraClientOpt
+            .map( (ipfs:IpfsClient) =>ipfs
+                .futureCatString(hash)
+                .map((s: String) => Some(JSON.parse(s).asInstanceOf[JWTToken])))
             .getOrElse(Future { None }))
-      .getOrElse(Future { None }).
-  map(_.map(t=>pyramidConfig.
-    withTemporalJWT(t).
-    msg("We have your JWT Token")).getOrElse(pyramidConfig.msg("No JWT Token, sorry!")))
+      .getOrElse(Future { None })
+      .map(_.map(t =>
+        pyramidConfig.withTemporalJWT(t).msg("We have your JWT Token"))
+        .getOrElse(pyramidConfig.msg("No JWT Token, sorry!")))
 
-
-  def initTemporal()(implicit executionContext: ExecutionContext) =
+  def initTemporal()(implicit executionContext: ExecutionContext) = //Future{new Pyramid(pyramidConfig)}
     jwtTokenFromInfura().flatMap(proxy(_).initIpfs())
 
   def send()(implicit executionContext: ExecutionContext) =
-    initTemporal().map(_.pyramidConfig)
-
+    pyramidConfig.temporalData.temporalClientOpt
+      .map(c => c.pubsubPublish("pharaoh","Test").map(r => pyramidConfig))
+      .getOrElse(Future { pyramidConfig })
 
   def pinJWTToken()(implicit executionContext: ExecutionContext) =
     jwtToken().flatMap(
       _.flatMap(jwt =>
         pyramidConfig.infuraClientOpt.map(_.futurePin(JSON.stringify(jwt))))
-        .getOrElse(Future { None } //unpinnedJWT()
+        .getOrElse(Future { None }
         ))
 
 }

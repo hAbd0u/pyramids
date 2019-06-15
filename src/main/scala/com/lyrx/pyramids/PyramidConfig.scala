@@ -52,7 +52,7 @@ case class PyramidConfig( //distributedDir: DistributedDir,
   def isPharao()=ipfsData.isPharao()
 
 
-  def withTemporal(s:String) = this.copy(ipfsData = this.ipfsData.copy(temporalOpt=Some(s)))
+  def withTemporal(s:String) = this.copy(ipfsData = this.ipfsData.copy(temporalOpt=Some(s.trim())))
   def withUpload(s:String) =this.
     copy(ipfsData = ipfsData.
       copy(uploadOpt = Some(s)))
