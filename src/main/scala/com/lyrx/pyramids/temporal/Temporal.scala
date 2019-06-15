@@ -1,15 +1,17 @@
 package com.lyrx.pyramids.temporal
 
-import com.lyrx.pyramids.PyramidConfig
-import com.lyrx.pyramids.ipfs.{CanIpfs, PinResult}
+import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+import com.lyrx.pyramids.ipfs.{CanIpfs, IpfsClient, PinResult}
 import org.scalajs.dom.experimental.{Fetch, RequestInit, Response}
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.ext.Ajax.InputData
+import typings.nodeLib
 
 import scalajs.js
 import js.JSON
 import js.Dynamic.{literal => l}
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js.typedarray.Uint8Array
 
 /*
 
@@ -30,10 +32,12 @@ trait TemporalCredentials extends js.Object {
   val password: String = js.native
 }
 
-trait Temporal  {
+trait TemporalIpfs extends Temporal {}
+
+trait Temporal {
   val DEV_LOGIN = "https://dev.api.temporal.cloud/v2/auth/login"
 
-  val pyramidConfig:PyramidConfig
+  val pyramidConfig: PyramidConfig
 
   implicit class PimpedTemporalCredentials(
       temporalCredentials: TemporalCredentials) {
@@ -71,6 +75,16 @@ trait Temporal  {
       loginAjax().map(_.responseText)
 
   }
+
+  def configFromLyrx()(implicit executionContext: ExecutionContext) =
+    Fetch
+      .fetch("http://data.lyrx.de/jwt.txt",
+             l(
+               ).asInstanceOf[RequestInit])
+      .toFuture
+      .flatMap(r => r.text().toFuture)
+      .map(s => pyramidConfig.withTemporal(s))
+
   def jwtToken()(implicit executionContext: ExecutionContext) =
     pyramidConfig.temporalOpt
       .map(
@@ -79,27 +93,24 @@ trait Temporal  {
             .map(r => Some(JSON.parse(r.responseText).asInstanceOf[JWTToken])))
       .getOrElse(Future { None })
 
+  def jwtTokenFromInfura()(implicit executionContext: ExecutionContext) =
+    pyramidConfig.ipfsData.temporalOpt
+      .map(
+        hash =>
+          pyramidConfig.ipfsOpt
+            .map(ipfs =>
+              ipfs
+                .futureCat(hash)
+                .map((b: nodeLib.Buffer) =>
+                  Some(JSON.parse(b.toString("utf8")).asInstanceOf[JWTToken])))
+            .getOrElse(Future { None }))
+      .getOrElse(Future { None })
 
-
-  def jwtTokenFromLyrx()(implicit executionContext: ExecutionContext) = Fetch.
-    fetch(
-      "http://data.lyrx.de/jwt.txt",l(
-
-      ).asInstanceOf[RequestInit]).toFuture.
-  flatMap(r=>r.text().toFuture).
-  map(s=>pyramidConfig.withTemporal(s))
-
-
-
-
-  def pinJWTToken()(implicit executionContext: ExecutionContext) = jwtToken().
-    flatMap(_.flatMap( jwt => pyramidConfig.
-      ipfsOpt.
-      map(_.futurePin(JSON.stringify(jwt)))).
-      getOrElse( Future{None}//unpinnedJWT()
-      ))
-
-
-
+  def pinJWTToken()(implicit executionContext: ExecutionContext) =
+    jwtToken().flatMap(
+      _.flatMap(jwt =>
+        pyramidConfig.ipfsOpt.map(_.futurePin(JSON.stringify(jwt))))
+        .getOrElse(Future { None } //unpinnedJWT()
+        ))
 
 }

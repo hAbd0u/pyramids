@@ -58,7 +58,7 @@ trait CanStartup extends UserFeedback {
 
   def initTemporalLyrx(pyramid: Pyramid)(
   implicit executionContext: ExecutionContext) =
-    pyramid.jwtTokenFromLyrx().
+    pyramid.configFromLyrx().
       map(new Pyramid(_))
 
 
