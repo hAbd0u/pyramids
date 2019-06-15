@@ -2,14 +2,12 @@ package com.lyrx.pyramids.ipfs
 
 
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, WalletNative}
-import com.lyrx.pyramids.{Pyramid, PyramidConfig, PyramidJSON, pcrypto}
+import com.lyrx.pyramids.{InfuraIpfsImpl, Pyramid, PyramidConfig, PyramidJSON, pcrypto}
 import org.scalajs.dom.crypto.CryptoKey
 import typings.nodeLib
 import typings.nodeLib.bufferMod
 
 import scala.scalajs.js.JSON
-
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
 
@@ -18,9 +16,11 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
 
   def initIpfs()(implicit executionContext: ExecutionContext):Future[Pyramid]
 
+
+
   def initIpfsAndPublishPublicKeys()(
       implicit executionContext: ExecutionContext) =
-    initIpfs().flatMap(_.publicKeysToIpfs())
+    initIpfs().flatMap(p=>new InfuraIpfsImpl(p.pyramidConfig).publicKeysToIpfs())
 
   def exportAllPublicKeys()(
       implicit ctx: ExecutionContext): Future[pcrypto.CryptoTypes.JsonWebKeyOptPair] =

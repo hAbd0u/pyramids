@@ -58,7 +58,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with DownloadWallet
   with UploadWallet
   with Encryption
-  with InfuraIpfs
+  //with InfuraIpfs
   with AsymetricCrypto
   with Temporal
 {
@@ -66,11 +66,15 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
 def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
+  def infura(pyramidConfig:PyramidConfig) = new InfuraIpfsImpl(pyramidConfig)
+
+
+
 
   def uploadZip(f:raw.File)(implicit executionContext:ExecutionContext)=
     zipEncrypt(f)
     .flatMap(_.dump())
-    .flatMap(bufferToIpfs(_))
+    .flatMap(infura(pyramidConfig)bufferToIpfs(_))
     .map(_.
       map(s=>pyramidConfig.
         withUpload(s).msg(s"You encrypted and uploaded ${f.name}")
@@ -79,7 +83,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
   def downloadZip(aHash:String)
               (implicit executionContext:ExecutionContext) =
-    readIpfs(aHash).flatMap(aFuture=>aFuture.
+    infura(pyramidConfig).readIpfs(aHash).flatMap(aFuture=>aFuture.
       map(aFile=>zipInstance().
         loadAsync(aFile.asInstanceOf[stdLib.Blob]).
       toFuture.map(Some(_))
@@ -126,11 +130,11 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
-  def encryptSymKeys()(implicit executionContext:ExecutionContext) = readPharaoKeys().
+  def encryptSymKeys()(implicit executionContext:ExecutionContext) = infura(pyramidConfig).readPharaoKeys().
     flatMap(_.map(exportSymKeyEncrypted(_)).getOrElse(Future{None}))
 
   def uploadSymKeys()(implicit executionContext:ExecutionContext) =encryptSymKeys().
-    flatMap(_.map((b:ArrayBuffer)=>bufferToIpfs(
+    flatMap(_.map((b:ArrayBuffer)=>infura(pyramidConfig).bufferToIpfs(
       nodeLib.bufferMod.Buffer.from(
         b.asInstanceOf[stdLib.ArrayBuffer]
       ))).getOrElse(Future{None}))
@@ -146,12 +150,12 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
-  def initKeys()(implicit executionContext:ExecutionContext) = initIpfsAndPublishPublicKeys()
+  def initKeys()(implicit executionContext:ExecutionContext) = new InfuraIpfsImpl(pyramidConfig).initIpfsAndPublishPublicKeys()
     .flatMap(_.publishSymKeys()).map(new Pyramid(_))
 
   def readIpfsSymKey(aHash:String,cryptoKey: CryptoKey)
                     (implicit executionContext: ExecutionContext) =
-    readIpfs(aHash).map(_.map(f=>f))
+    infura(pyramidConfig).readIpfs(aHash).map(_.map(f=>f))
 
 
 
@@ -170,7 +174,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
       flatMap(aHash=>
         pyramidConfig.
           asymKeyOpt.
-          map(asymKey=>readIpfs(aHash))).
+          map(asymKey=>new InfuraIpfsImpl(pyramidConfig).readIpfs(aHash))).
       getOrElse(Future{None})
 
   def decryptSymKey()(implicit ctx:ExecutionContext) =
