@@ -49,7 +49,7 @@ class InfuraIpfsImpl(override val pyramidConfig:PyramidConfig)  extends InfuraIp
 trait TemporalIpfs extends CanIpfs with TemporalProxy{
 
 }
-class TemmporalIpfsImpl(override val pyramidConfig:PyramidConfig)  extends TemporalIpfs{
+class TemporalIpfsImpl(override val pyramidConfig:PyramidConfig)  extends TemporalIpfs{
 
   override def initIpfsAndPublishPublicKeys()(
     implicit executionContext: ExecutionContext):Future[Pyramid] = ???
@@ -65,7 +65,6 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with DownloadWallet
   with UploadWallet
   with Encryption
-  //with InfuraIpfs
   with AsymetricCrypto
   with Temporal
 {
@@ -74,6 +73,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
   def infura(pyramidConfig:PyramidConfig) = new InfuraIpfsImpl(pyramidConfig)
+  def temporal(pyramidConfig:PyramidConfig) = new TemporalIpfsImpl(pyramidConfig)
 
 
 
@@ -81,7 +81,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
   def uploadZip(f:raw.File)(implicit executionContext:ExecutionContext)=
     zipEncrypt(f)
     .flatMap(_.dump())
-    .flatMap(infura(pyramidConfig)bufferToIpfs(_))
+    .flatMap(infura(pyramidConfig).bufferToIpfs(_))
     .map(_.
       map(s=>pyramidConfig.
         withUpload(s).msg(s"You encrypted and uploaded ${f.name}")
