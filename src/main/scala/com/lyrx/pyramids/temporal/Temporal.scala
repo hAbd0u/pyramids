@@ -30,7 +30,7 @@ trait TemporalCredentials extends js.Object {
   val password: String = js.native
 }
 
-trait Temporal extends CanIpfs {
+trait Temporal  {
   val DEV_LOGIN = "https://dev.api.temporal.cloud/v2/auth/login"
 
   val pyramidConfig:PyramidConfig

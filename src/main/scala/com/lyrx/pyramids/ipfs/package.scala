@@ -26,15 +26,15 @@ package object ipfs {
   trait PubSubSupport{
     val ipfsClient:IpfsClient
 
-    def pubsubPublish(topic:String,message:String) = ipfsClient.pubsub.publish(topic,bufferMod.Buffer.from(message)).toFuture
+    def pubsubPublish(topic:String,message:String): Future[OrError] = ipfsClient.pubsub.publish(topic,bufferMod.Buffer.from(message)).toFuture
 
-    def pubsubSubscribe(topic:String,h:PubSubHandler) = ipfsClient.pubsub.subscribe(topic,h).toFuture
+    def pubsubSubscribe(topic:String,h:PubSubHandler): Future[OrError] = ipfsClient.pubsub.subscribe(topic,h).toFuture
 
-    def pubsubUnsubscribe(topic:String,h:PubSubHandler) = ipfsClient.pubsub.unsubscribe(topic,h).toFuture
+    def pubsubUnsubscribe(topic:String,h:PubSubHandler): Future[OrError] = ipfsClient.pubsub.unsubscribe(topic,h).toFuture
 
-    def pubsubLs()  = ipfsClient.pubsub.ls().toFuture
+    def pubsubLs(): Future[js.Array[String]] = ipfsClient.pubsub.ls().toFuture
 
-    def pubsubPeers(topic:String)=ipfsClient.pubsub.peers(topic).toFuture
+    def pubsubPeers(topic:String): Future[js.Array[String]] =ipfsClient.pubsub.peers(topic).toFuture
   }
 
 
