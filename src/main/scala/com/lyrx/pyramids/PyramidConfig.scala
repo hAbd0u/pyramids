@@ -33,7 +33,8 @@ case class PyramidConfig( //distributedDir: DistributedDir,
                           infuraClientOpt:Option[ IpfsClient],  // IFS HTTP Client for Infura
                           ipfsData: IpfsData,  // List of hashes for the current state
                           temporalCredentialsOpt:Option[TemporalCredentials],  // Credentials of a Temporal account
-                          temporalJWTOpt:Option[ JWTToken]  //current JWTkToken for Temporal
+                          temporalJWTOpt:Option[ JWTToken],  //current JWTToken for Temporal
+                        temporalClientOpt:Option[IpfsClient]
                         ) {
 
   def isPharao()=ipfsData.isPharao()
