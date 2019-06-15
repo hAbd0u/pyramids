@@ -63,7 +63,7 @@ trait CanStartup extends UserFeedback {
 
 
   def initTemporalAll(pyramid: Pyramid)(implicit executionContext: ExecutionContext) =
-    if(pyramid.pyramidConfig.temporalOpt.isEmpty)
+    if(pyramid.pyramidConfig.temporalCredentialsOpt.isEmpty)
       initTemporalLyrx(pyramid)
     else
       initTemporal(pyramid)

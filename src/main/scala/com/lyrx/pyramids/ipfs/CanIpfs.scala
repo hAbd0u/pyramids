@@ -44,7 +44,7 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
     publicKeysToBuffer()
       .flatMap(
         n =>
-          pyramidConfig.ipfsOpt
+          pyramidConfig.infuraClientOpt
             .map(ipfs => ipfs.futureAdd(n).map(Some(_)))
             .getOrElse(Future { None }))
       .map(_.flatMap(_.headOption.map(_.hash)))
@@ -55,14 +55,14 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
         .getOrElse(new Pyramid(pyramidConfig)))
 
   def bufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
-    pyramidConfig.ipfsOpt
+    pyramidConfig.infuraClientOpt
       .map(_.futureAdd(buffer).map(l => Some(l.head.hash)))
       .getOrElse(Future { None })
 
   def readIpfs(aHash:String)
               (implicit executionContext: ExecutionContext)
   = pyramidConfig.
-    ipfsOpt.map(ipfsClient => ipfsClient.
+    infuraClientOpt.map(ipfsClient => ipfsClient.
     futureCat(aHash).map(Some(_))).
     getOrElse(Future{None})
 
@@ -73,7 +73,7 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
   def readIpfsString(aHash:String)
               (implicit executionContext: ExecutionContext)
   =   pyramidConfig.
-    ipfsOpt.map(ipfsClient => ipfsClient.
+    infuraClientOpt.map(ipfsClient => ipfsClient.
     futureCatString(aHash).map(Some(_))).
     getOrElse(Future{None})
 

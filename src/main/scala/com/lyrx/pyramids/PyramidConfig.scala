@@ -2,7 +2,7 @@ package com.lyrx.pyramids
 
 import com.lyrx.pyramids.ipfs.IpfsClient
 import com.lyrx.pyramids.pcrypto.{Crypto, CryptoTypes}
-import com.lyrx.pyramids.temporal.TemporalCredentials
+import com.lyrx.pyramids.temporal.{JWTToken, TemporalCredentials}
 
 import scala.scalajs.js.typedarray.ArrayBuffer
 
@@ -15,24 +15,25 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 }
 
 
-case class IpfsData(uploadOpt:Option[String],
-                         pubKeysOpt:Option[String],
-                         pharao:String,
-                        symKeyOpt:Option[String],
-                        temporalOpt:Option[String]
+case class IpfsData(uploadOpt:Option[String], //hash of an uploaded file
+                         pubKeysOpt:Option[String],  //hash of the public keys (signature and encryption of the user)
+                         pharao:String,  // Hash of the public key of the pharaoh
+                        symKeyOpt:Option[String],  //Hash of the symmetric encryption key encrypted with the public key of the pharaoh
+                        temporalOpt:Option[String]  // hash of the JWT Token for Temporal
                         ){
   def isPharao()= pubKeysOpt.
     map(k=> (k == pharao)).getOrElse(false)
 }
 
-case class PyramidConfig(//distributedDir: DistributedDir,
+case class PyramidConfig( //distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
-                         asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
-                         signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
-                         messages:Messages ,
-                         ipfsOpt:Option[ IpfsClient],
-                         ipfsData: IpfsData,
-                         temporalOpt:Option[TemporalCredentials]
+                          asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
+                          signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
+                          messages:Messages, //current status messages
+                          infuraClientOpt:Option[ IpfsClient],  // IFS HTTP Client for Infura
+                          ipfsData: IpfsData,  // List of hashes for the current state
+                          temporalCredentialsOpt:Option[TemporalCredentials],  // Credentials of a Temporal account
+                          temporalJWTOpt:Option[ JWTToken]  //current JWTkToken for Temporal
                         ) {
 
   def isPharao()=ipfsData.isPharao()

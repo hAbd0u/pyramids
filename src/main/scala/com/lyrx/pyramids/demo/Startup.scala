@@ -120,7 +120,7 @@ object Startup
       .off()
       .on("click",
           (e: JQueryEventObject) => // handle(pyramid.testAsym())
-            handle(pyramid.uploadZip2()))
+            handle(pyramid.send()))
 
   }
 

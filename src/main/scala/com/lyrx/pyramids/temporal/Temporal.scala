@@ -32,7 +32,7 @@ trait TemporalCredentials extends js.Object {
   val password: String = js.native
 }
 
-trait TemporalIpfs extends Temporal {}
+
 
 trait Temporal {
   val DEV_LOGIN = "https://dev.api.temporal.cloud/v2/auth/login"
@@ -86,7 +86,7 @@ trait Temporal {
       .map(s => pyramidConfig.withTemporal(s))
 
   def jwtToken()(implicit executionContext: ExecutionContext) =
-    pyramidConfig.temporalOpt
+    pyramidConfig.temporalCredentialsOpt
       .map(
         t =>
           t.loginAjax()
@@ -97,7 +97,7 @@ trait Temporal {
     pyramidConfig.ipfsData.temporalOpt
       .map(
         hash =>
-          pyramidConfig.ipfsOpt
+          pyramidConfig.infuraClientOpt
             .map(ipfs =>
               ipfs
                 .futureCat(hash)
@@ -106,10 +106,13 @@ trait Temporal {
             .getOrElse(Future { None }))
       .getOrElse(Future { None })
 
+  def send()(implicit executionContext: ExecutionContext) = jwtTokenFromInfura().
+    map(_.map(t=>pyramidConfig.msg("We have your JWT Token")).getOrElse(pyramidConfig.msg("No JWT Token, sorry!")))
+
   def pinJWTToken()(implicit executionContext: ExecutionContext) =
     jwtToken().flatMap(
       _.flatMap(jwt =>
-        pyramidConfig.ipfsOpt.map(_.futurePin(JSON.stringify(jwt))))
+        pyramidConfig.infuraClientOpt.map(_.futurePin(JSON.stringify(jwt))))
         .getOrElse(Future { None } //unpinnedJWT()
         ))
 
