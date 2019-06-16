@@ -34,8 +34,7 @@ trait CanStartup extends UserFeedback {
       error(s"Initialization Error: ${thr.getMessage()}")
 
     })
-    f.flatMap(p =>initTemporalAll(p)).
-      flatMap(p => init(p.pyramidConfig))
+    f.flatMap(p => init(p.pyramidConfig))
 
 
   }
