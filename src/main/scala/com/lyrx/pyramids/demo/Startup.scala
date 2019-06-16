@@ -9,7 +9,9 @@ object Startup extends ListDemo {
     concat()
     append()
     foldLeft()
-    tupels()
+    tupels1()
+    tupels2()
+    tupels3()
 
   }
 
