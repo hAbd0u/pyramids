@@ -26,7 +26,8 @@ libraryDependencies ++= Seq(
   ScalablyTyped.J.jquery,
   ScalablyTyped.J.jszip,
   ScalablyTyped.F.`file-saver` ,
-  ScalablyTyped.W.`web3`
+  ScalablyTyped.W.`web3`,
+  ScalablyTyped.S.`stellar-sdk`
  // ScalablyTyped.R.`readable-stream`
 )
 
@@ -40,7 +41,8 @@ npmDependencies in Compile ++= Seq(
   "ipfs-http-client" -> "32.0.1",
   "buffer" -> "3.5.5"  ,
    "jszip"  -> "3.2.1",
-  "file-saver" -> "2.0" //,
+  "file-saver" -> "2.0" ,
+  "stellar-sdk" -> "0.11"
  // "readable-stream" -> "2.3"
 )
 

@@ -5,6 +5,7 @@ import com.lyrx.pyramids.ipfs.{CanIpfs, TextDecoder}
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, DecryptedData, EncryptedData}
+import com.lyrx.pyramids.stellar.Stellar
 import com.lyrx.pyramids.temporal.{Temporal, TemporalProxy}
 import org.scalajs.dom.crypto.{CryptoKey, JsonWebKey}
 import org.scalajs.dom.raw
@@ -67,6 +68,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with Encryption
   with AsymetricCrypto
   with Temporal
+  with Stellar
 {
 
 def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
