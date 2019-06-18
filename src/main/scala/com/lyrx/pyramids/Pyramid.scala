@@ -30,7 +30,8 @@ object  Pyramid{
       None),
     None,
     IpfsData(None,None,pharao = pharaoKeys,None,None),
-    TemporalData(None,None,None)
+    TemporalData(None,None,None),
+    None
   ))
 }
 

@@ -3,6 +3,7 @@ package com.lyrx.pyramids
 import com.lyrx.pyramids.ipfs.IpfsClient
 import com.lyrx.pyramids.pcrypto.{Crypto, CryptoTypes}
 import com.lyrx.pyramids.temporal.{JWTToken, TemporalCredentials}
+import typings.stellarDashSdkLib.stellarDashSdkMod
 
 import scala.scalajs.js.typedarray.ArrayBuffer
 
@@ -38,9 +39,11 @@ case class PyramidConfig( //distributedDir: DistributedDir,
                           messages:Messages, //current status messages
                           infuraClientOpt:Option[ IpfsClient],  // IPFS HTTP Client for Infura
                           ipfsData: IpfsData,  // List of hashes for the current state
-                          temporalData: TemporalData
+                          temporalData: TemporalData,
+                        stellarOpt:Option[stellarDashSdkMod.Server]
                         ) {
 
+  def withStellar(server:stellarDashSdkMod.Server) = this.copy(stellarOpt=Some(server))
 
   def withTemporalCredentials(cr:TemporalCredentials)=this.copy(temporalData=this.temporalData.copy(temporalCredentialsOpt = Some(cr)))
 

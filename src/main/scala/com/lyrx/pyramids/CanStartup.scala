@@ -25,19 +25,14 @@ trait CanStartup extends UserFeedback {
   def ipfsInit(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext) = {
     message("Connecting IPFS network ...")
-    val f =
-      new Pyramid(
+    new Pyramid(
         pyramidConfig
-      ).initKeys()
-
-    f.failed.map(thr => {
+      ).initKeys().
+        flatMap(_.initStellar()).
+        flatMap(pc=>init(pc)).
+        failed.map(thr => {
       error(s"Initialization Error: ${thr.getMessage()}")
-
     })
-    f.flatMap(p => init(p.pyramidConfig)).
-      map(new Pyramid(_).initStellar())
-
-
   }
 
   def handleWithIpfs(f: Future[PyramidConfig], msgOpt: Option[String] = None)(
