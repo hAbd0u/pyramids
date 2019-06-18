@@ -46,7 +46,7 @@ trait UpDownload extends UserFeedback {
       handle(forDownload().download(), None)
     }
     def downloadAsPharao()(implicit executionContext: ExecutionContext) = {
-      message("Loading/decrypting for the Pharao ...")
+      message(s"Loading/decrypting for you, oh ${pyramid.pyramidConfig.name()} ...")
 
       val p: Pyramid = forDownloadPharao(forDownload())
 

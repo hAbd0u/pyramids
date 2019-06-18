@@ -39,9 +39,9 @@ trait UploadWallet extends KeyImport {
       new FileReader().futureReadArrayBuffer(f).
         map(arrayBuffer =>js.JSON.parse(arrayBuffer.toNormalString()).asInstanceOf[WalletNative]).
         flatMap(walletNative => importAllKeys(walletNative).
-          map(_.pyramidConfig.msg("Oh Pharao, we have imported your keys!")))
+          map(_.pyramidConfig.msg(s"Oh ${pyramidConfig.name()}, we have imported your keys!")))
     else
-      Future{pyramidConfig.error("Oh Pharao, sorry, we cannot import this data format!")}
+      Future{pyramidConfig.error(s"Oh ${pyramidConfig.name()}, sorry, we cannot import this data format!")}
 
 
 

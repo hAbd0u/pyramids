@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.stellar
 
-import com.lyrx.pyramids.PyramidConfig
+import com.lyrx.pyramids.{Pyramid, PyramidConfig}
 import typings.stellarDashSdkLib.stellarDashSdkMod.{Keypair, Network, Server, ^}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -25,8 +25,11 @@ trait Stellar {
     // sure to also change the horizon hostname.
     // StellarSdk.Network.usePublicNetwork();
     Network.useTestNetwork()
-
-    Future{pyramidConfig.withStellar(new Server(Stellar.TESTNET)).msg("Stellar is initialized!")}
+    Future{
+      new Pyramid(
+      pyramidConfig.
+        withStellar(new Server(Stellar.TESTNET)).msg(s"Oh ${pyramidConfig.name()}, the Stellar network is initialized!"))
+    }.flatMap(p=>p.initStellarKeys())
   }
 
 
@@ -41,8 +44,8 @@ trait Stellar {
       map(_.
         loadAccount(sourcePublicKey).
         toFuture.
-        map(r=>pyramidConfig)
-      ).getOrElse(Future{pyramidConfig.msg("The stellar server is not configured, oh Pharao!")})
+        map(r=>pyramidConfig.msg(s"Oh ${pyramidConfig.name()}, welcome to this pyramid!"))
+      ).getOrElse(Future{pyramidConfig.msg(s"The stellar server is not configured, oh ${pyramidConfig.name()}!")})
 
   }
 
@@ -56,7 +59,7 @@ trait Stellar {
     map(
       sendSymKey(_)).
     getOrElse(Future{pyramidConfig.
-      msg("I have no encryption keys to sendm by the stellar network, oh Pharao!")})
+      msg(s"I have no encryption keys to send by the stellar network, oh ${pyramidConfig.name()}!")})
 
 
 

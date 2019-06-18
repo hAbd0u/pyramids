@@ -50,7 +50,7 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
       .map(_.map(s =>
         new Pyramid(pyramidConfig.
           withPubKeys(s).
-          msg(s"Oh Pharao, we have published your divine signature!")))
+          msg(s"Oh ${pyramidConfig.name()}, we have published your divine signature!")))
         .getOrElse(new Pyramid(pyramidConfig)))
 
   def bufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
@@ -101,9 +101,8 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
                     (implicit executionContext: ExecutionContext)
   = readPharaoKeys().map( (keyOpt:Option[CryptoKey])=>
     keyOpt.map(key=>pyramidConfig.msg(
-      s"Oh Pharao, here are your devine public keys!")).
-    getOrElse(pyramidConfig.msg("Oh Pharao, please excuse! We did not find your keys!"))
-    )
+      s"Oh ${pyramidConfig.name()}, here are your public keys!")))
+
 
 
 

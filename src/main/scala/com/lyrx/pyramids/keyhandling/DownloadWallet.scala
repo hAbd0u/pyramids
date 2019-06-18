@@ -52,7 +52,7 @@ trait DownloadWallet extends PyramidJSON{
             asInstanceOf[stdLib.Blob],
         "pyramid-keys.json")).
       map(v=>pyramidConfig.
-          msg("Oh Pharao, you have saved your keys!"))
+          msg(s"Oh ${pyramidConfig.name()}, you have saved your keys!"))
 
 
 
