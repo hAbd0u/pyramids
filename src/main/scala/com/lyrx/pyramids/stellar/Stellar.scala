@@ -1,7 +1,11 @@
 package com.lyrx.pyramids.stellar
 
 import com.lyrx.pyramids.{Pyramid, PyramidConfig}
-import typings.stellarDashSdkLib.stellarDashSdkMod.{Keypair, Network, Server, ^}
+import typings.stellarDashSdkLib
+
+import stellarDashSdkLib.stellarDashSdkMod
+import stellarDashSdkMod.{Keypair, Network, Server,Transaction}
+
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,7 +49,15 @@ trait Stellar {
   }
 
   def sendKeys(symKeyHash:String)(implicit executionContext: ExecutionContext) = loadAccount().
-    map(r=>pyramidConfig.msg(s"Oh ${pyramidConfig.name()}, welcome to this Pyramid!"))
+    map(r=>{
+
+
+
+
+     new Transaction[TMemo, TOps]("")
+
+      pyramidConfig.msg(s"Oh ${pyramidConfig.name()}, welcome to your Pyramid!")
+    })
 
 
 

@@ -60,7 +60,7 @@ case class PyramidConfig( //distributedDir: DistributedDir,
 
   def isPharao()=ipfsData.isPharao()
 
-  def name()=if(isPharao()) "Pharaoh" else "humble tokenizer"
+  def name()=if(isPharao()) "Pharaoh" else "Humble Tokenizer"
 
 
   def withTemporal(s:String) = this.copy(ipfsData = this.ipfsData.copy(temporalOpt=Some(s.trim())))
