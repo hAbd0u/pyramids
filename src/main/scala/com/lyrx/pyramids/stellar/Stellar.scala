@@ -33,21 +33,21 @@ trait Stellar {
   }
 
 
-  def sendSymKey(symKeyHash:String) (implicit executionContext: ExecutionContext) = {
+  def loadAccount()(implicit executionContext: ExecutionContext) = {
     val sourceKeypair = Keypair.fromSecret(pyramidConfig.stellarData.stellarIntern);
     val sourcePublicKey = sourceKeypair.publicKey();
-
     val receiverPublicKey = pyramidConfig.stellarData.stellarPublic;
-
     pyramidConfig.
       stellarData.stellarServerOpt.
-      map(_.
-        loadAccount(sourcePublicKey).
+      map(_.loadAccount(sourcePublicKey).
         toFuture.
-        map(r=>pyramidConfig.msg(s"Oh ${pyramidConfig.name()}, welcome to this pyramid!"))
-      ).getOrElse(Future{pyramidConfig.msg(s"The stellar server is not configured, oh ${pyramidConfig.name()}!")})
-
+        map(Some(_))).getOrElse(Future{None})
   }
+
+  def sendKeys(symKeyHash:String)(implicit executionContext: ExecutionContext) = loadAccount().
+    map(r=>pyramidConfig.msg(s"Oh ${pyramidConfig.name()}, welcome to this Pyramid!"))
+
+
 
 
 
@@ -57,7 +57,7 @@ trait Stellar {
     ipfsData.
     symKeyOpt.
     map(
-      sendSymKey(_)).
+      sendKeys(_)).
     getOrElse(Future{pyramidConfig.
       msg(s"I have no encryption keys to send by the stellar network, oh ${pyramidConfig.name()}!")})
 
