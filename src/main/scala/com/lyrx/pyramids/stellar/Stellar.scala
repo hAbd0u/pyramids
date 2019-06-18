@@ -1,8 +1,7 @@
 package com.lyrx.pyramids.stellar
 
 import com.lyrx.pyramids.PyramidConfig
-import typings.stellarDashSdkLib.stellarDashSdkMod
-import typings.stellarDashSdkLib.stellarDashSdkMod.Server
+import typings.stellarDashSdkLib.stellarDashSdkMod.{Keypair, Network, Server, ^}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,13 +28,28 @@ trait Stellar {
               (implicit executionContext: ExecutionContext)
   ={
 
-    println("Secret: " +pw)
+    val sourceKeypair = Keypair.fromSecret(pw);
+    val sourcePublicKey = sourceKeypair.publicKey();
+
+    val receiverPublicKey = pyramidConfig.ipfsData.pharaoData.stellarPublic;
+
+    // Uncomment the following line to build transactions for the live network. Be
+    // sure to also change the horizon hostname.
+    // StellarSdk.Network.usePublicNetwork();
+    Network.useTestNetwork();
+
+
+
+
+    //
 
     pyramidConfig.
       stellarOpt.
-      map(stellar=>{
-        stellar.operations()
-      })
+      map(_.
+        loadAccount(sourcePublicKey).
+        toFuture.
+        map(r=>r.)
+      )
     Future{pyramidConfig}
   }
 

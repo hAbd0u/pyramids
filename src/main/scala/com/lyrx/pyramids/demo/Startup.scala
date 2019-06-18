@@ -33,7 +33,9 @@ object Startup
     document.addEventListener("DOMContentLoaded", (e: Event) => startup())
 
   override def createPyramid(): Pyramid =
-    Pyramid("QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn")
+    Pyramid(
+      "QmUK2hhKzDfEtnetu41AZUjc7CU8EtLn135EVKyHprVVyn",
+      "GDY7YWJF6F7W7EIQP5UDWYXNBC62JUSGJOLM2VWRQGY7RZ5SDYRZOZNT")
 
   override def init(pyramidConfig: PyramidConfig)(
       implicit executionContext: ExecutionContext): Future[PyramidConfig] = {

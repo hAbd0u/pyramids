@@ -1,19 +1,12 @@
 package com.lyrx.koblach
 
 
-import utest._
 
 
 
+object WordpressTest {
 
-object WordpressTest extends TestSuite{
 
-
-  def tests = Tests {
-    'HelloKraken - {
-
-    }
-  }
 
 
 

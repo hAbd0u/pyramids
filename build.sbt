@@ -21,7 +21,7 @@ scalaVersion := "2.12.8"
 scalaJSUseMainModuleInitializer := true
 
 libraryDependencies ++= Seq(
-  "com.lihaoyi" % "utest_sjs1.0.0-M7_2.12" % "0.6.7" % "test",
+  //"com.lihaoyi" % "utest_sjs1.0.0-M7_2.12" % "0.6.7" % "test",
   "org.scala-js" %%% "scalajs-dom" % "0.9.7" ,
   ScalablyTyped.J.jquery,
   ScalablyTyped.J.jszip,

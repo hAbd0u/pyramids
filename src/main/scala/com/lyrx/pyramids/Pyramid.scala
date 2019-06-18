@@ -22,14 +22,19 @@ import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 
 object  Pyramid{
-  def apply(pharaoKeys:String)=new Pyramid(PyramidConfig(
+  def apply(pharaoKeys:String,aStellarPublic:String)=new Pyramid(PyramidConfig(
     None,
     None,
     None,
     Messages(Some("Welcome to your Pyramid!"),
       None),
     None,
-    IpfsData(None,None,pharao = pharaoKeys,None,None),
+    IpfsData(
+      None,
+      None,
+      pharaoData = PharaoData(
+        pharaoKeys,
+        aStellarPublic ),None,None),
     TemporalData(None,None,None),
     None
   ))

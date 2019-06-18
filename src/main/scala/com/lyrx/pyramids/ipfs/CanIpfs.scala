@@ -80,7 +80,7 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
 
   def readIpfsNativeWallet()
                     (implicit executionContext: ExecutionContext)
-  = readIpfsString(pyramidConfig.ipfsData.pharao).
+  = readIpfsString(pyramidConfig.ipfsData.pharaoData.pubkey).
     map(_.map(s=>JSON.parse(s).asInstanceOf[WalletNative]))
 
 

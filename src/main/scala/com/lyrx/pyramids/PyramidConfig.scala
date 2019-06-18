@@ -15,15 +15,16 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 
 }
 
+case class PharaoData(pubkey:String,stellarPublic:String)
 
 case class IpfsData(uploadOpt:Option[String], //hash of an uploaded file
                          pubKeysOpt:Option[String],  //hash of the public keys (signature and encryption of the user)
-                         pharao:String,  // Hash of the public key of the pharaoh
+                         pharaoData:PharaoData,  // Hash of the public key of the pharaoh
                         symKeyOpt:Option[String],  //Hash of the symmetric encryption key encrypted with the public key of the pharaoh
                         temporalOpt:Option[String]  // hash of the JWT Token for Temporal
                         ){
   def isPharao()= pubKeysOpt.
-    map(k=> (k == pharao)).getOrElse(false)
+    map(k=> (k == pharaoData.pubkey)).getOrElse(false)
 }
 
 
