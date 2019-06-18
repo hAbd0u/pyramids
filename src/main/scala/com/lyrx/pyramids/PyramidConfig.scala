@@ -34,7 +34,9 @@ case class TemporalData(temporalCredentialsOpt:Option[TemporalCredentials],  // 
                        )
 
 case class StellarData(stellarPublic:String,
-                       stellarServerOpt:Option[stellarDashSdkMod.Server])
+                       stellarServerOpt:Option[stellarDashSdkMod.Server],
+                       stellarIntern:String
+                      )
 
 case class PyramidConfig( //distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],

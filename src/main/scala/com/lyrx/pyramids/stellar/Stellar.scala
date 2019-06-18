@@ -21,37 +21,47 @@ trait Stellar {
   val pyramidConfig:PyramidConfig
 
   def initStellar()(implicit executionContext: ExecutionContext) ={
-    Future{pyramidConfig.withStellar(new Server(Stellar.TESTNET)).msg("Stellar is initialized!")}
-  }
-
-  def initStellarKeys()
-              (implicit executionContext: ExecutionContext)
-  ={
-
-    val sourceKeypair = Keypair.fromSecret(???);
-    val sourcePublicKey = sourceKeypair.publicKey();
-
-    val receiverPublicKey = pyramidConfig.stellarData.stellarPublic;
-
     // Uncomment the following line to build transactions for the live network. Be
     // sure to also change the horizon hostname.
     // StellarSdk.Network.usePublicNetwork();
-    Network.useTestNetwork();
+    Network.useTestNetwork()
+
+    Future{pyramidConfig.withStellar(new Server(Stellar.TESTNET)).msg("Stellar is initialized!")}
+  }
 
 
+  def sendSymKey(symKeyHash:String) (implicit executionContext: ExecutionContext) = {
+    val sourceKeypair = Keypair.fromSecret(pyramidConfig.stellarData.stellarIntern);
+    val sourcePublicKey = sourceKeypair.publicKey();
 
-
-    //
+    val receiverPublicKey = pyramidConfig.stellarData.stellarPublic;
 
     pyramidConfig.
       stellarData.stellarServerOpt.
       map(_.
         loadAccount(sourcePublicKey).
         toFuture.
-        map(r=>r)
-      )
-    Future{pyramidConfig}
+        map(r=>pyramidConfig)
+      ).getOrElse(Future{pyramidConfig.msg("The stellar server is not configured, oh Pharao!")})
+
   }
+
+
+
+  def initStellarKeys()
+              (implicit executionContext: ExecutionContext)
+  =pyramidConfig.
+    ipfsData.
+    symKeyOpt.
+    map(
+      sendSymKey(_)).
+    getOrElse(Future{pyramidConfig.
+      msg("I have no encryption keys to sendm by the stellar network, oh Pharao!")})
+
+
+
+
+
 
 
 

@@ -35,7 +35,10 @@ object  Pyramid{
       pharaoData = PharaoData(
         pharaoKeys ),None,None),
     TemporalData(None,None,None),
-    StellarData(stellarPublic = "GDY7YWJF6F7W7EIQP5UDWYXNBC62JUSGJOLM2VWRQGY7RZ5SDYRZOZNT",stellarServerOpt = None)
+    StellarData(stellarPublic = "GDY7YWJF6F7W7EIQP5UDWYXNBC62JUSGJOLM2VWRQGY7RZ5SDYRZOZNT",
+      stellarServerOpt = None,
+      stellarIntern = "SBRAPAMOFS3LABJX75K4ST6PMKZKFOEDSQSJR6FLV4M2L2ISJJHPUQUF"
+    )
   ))
 }
 
