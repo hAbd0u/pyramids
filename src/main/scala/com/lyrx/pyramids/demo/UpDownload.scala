@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.demo
 
-import com.lyrx.pyramids.{Pyramid, PyramidConfig}
+import com.lyrx.pyramids.{Pyramid, PyramidConfig, TextFieldContents}
 import com.lyrx.pyramids.frontend.UserFeedback
 import org.scalajs.dom.raw.File
 

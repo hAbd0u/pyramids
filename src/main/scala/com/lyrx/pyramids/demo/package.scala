@@ -11,7 +11,4 @@ package object demo {
 
 
 
-  type TextFieldContents =
-    js.UndefOr[java.lang.String | scala.Double | js.Array[java.lang.String]]
-
 }

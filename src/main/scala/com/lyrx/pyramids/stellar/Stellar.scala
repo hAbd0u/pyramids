@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.stellar
 
-import com.lyrx.pyramids.PyramidConfig
+import com.lyrx.pyramids.{PyramidConfig, TextFieldContents}
 import typings.stellarDashSdkLib.stellarDashSdkMod
 import stellarDashSdkMod.{Server, ^ => StellarBase}
 
@@ -25,11 +25,16 @@ trait Stellar {
     Future{pyramidConfig.withStellar(new Server(Stellar.TESTNET)).msg("Stellar is initialized!")}
   }
 
-  def initKeys()(implicit executionContext: ExecutionContext)=pyramidConfig.
-    stellarOpt.
-    map(stellar=>{
-      stellar.operations()
-    })
+  def initStellarKeys(pw:TextFieldContents)
+              (implicit executionContext: ExecutionContext)
+  ={
+    pyramidConfig.
+      stellarOpt.
+      map(stellar=>{
+        stellar.operations()
+      })
+    Future{pyramidConfig}
+  }
 
 
 
