@@ -1,8 +1,8 @@
 package com.lyrx.pyramids.stellar
 
-import com.lyrx.pyramids.{PyramidConfig, TextFieldContents}
+import com.lyrx.pyramids.PyramidConfig
 import typings.stellarDashSdkLib.stellarDashSdkMod
-import stellarDashSdkMod.{Server, ^ => StellarBase}
+import typings.stellarDashSdkLib.stellarDashSdkMod.Server
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -25,9 +25,12 @@ trait Stellar {
     Future{pyramidConfig.withStellar(new Server(Stellar.TESTNET)).msg("Stellar is initialized!")}
   }
 
-  def initStellarKeys(pw:TextFieldContents)
+  def initStellarKeys(pw:String)
               (implicit executionContext: ExecutionContext)
   ={
+
+    println("Secret: " +pw)
+
     pyramidConfig.
       stellarOpt.
       map(stellar=>{
