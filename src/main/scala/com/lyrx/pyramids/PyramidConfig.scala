@@ -15,7 +15,7 @@ case class Messages(messageOpt:Option[String], errorOpt:Option[String]  ) {
 
 }
 
-case class PharaoData(pubkey:String,stellarPublic:String)
+case class PharaoData(pubkey:String)
 
 case class IpfsData(uploadOpt:Option[String], //hash of an uploaded file
                          pubKeysOpt:Option[String],  //hash of the public keys (signature and encryption of the user)
@@ -33,6 +33,9 @@ case class TemporalData(temporalCredentialsOpt:Option[TemporalCredentials],  // 
                     temporalClientOpt:Option[IpfsClient] // IPFS HTTP Client foroi Temporal
                        )
 
+case class StellarData(stellarPublic:String,
+                       stellarServerOpt:Option[stellarDashSdkMod.Server])
+
 case class PyramidConfig( //distributedDir: DistributedDir,
                           symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
                           asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
@@ -41,10 +44,10 @@ case class PyramidConfig( //distributedDir: DistributedDir,
                           infuraClientOpt:Option[ IpfsClient],  // IPFS HTTP Client for Infura
                           ipfsData: IpfsData,  // List of hashes for the current state
                           temporalData: TemporalData,
-                        stellarOpt:Option[stellarDashSdkMod.Server]
+                          stellarData:StellarData
                         ) {
 
-  def withStellar(server:stellarDashSdkMod.Server) = this.copy(stellarOpt=Some(server))
+  def withStellar(server:stellarDashSdkMod.Server) = this.copy(stellarData=this.stellarData.copy(stellarServerOpt=Some(server)))
 
   def withTemporalCredentials(cr:TemporalCredentials)=this.copy(temporalData=this.temporalData.copy(temporalCredentialsOpt = Some(cr)))
 

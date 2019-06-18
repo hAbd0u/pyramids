@@ -24,14 +24,14 @@ trait Stellar {
     Future{pyramidConfig.withStellar(new Server(Stellar.TESTNET)).msg("Stellar is initialized!")}
   }
 
-  def initStellarKeys(pw:String)
+  def initStellarKeys()
               (implicit executionContext: ExecutionContext)
   ={
 
-    val sourceKeypair = Keypair.fromSecret(pw);
+    val sourceKeypair = Keypair.fromSecret(???);
     val sourcePublicKey = sourceKeypair.publicKey();
 
-    val receiverPublicKey = pyramidConfig.ipfsData.pharaoData.stellarPublic;
+    val receiverPublicKey = pyramidConfig.stellarData.stellarPublic;
 
     // Uncomment the following line to build transactions for the live network. Be
     // sure to also change the horizon hostname.
@@ -44,11 +44,11 @@ trait Stellar {
     //
 
     pyramidConfig.
-      stellarOpt.
+      stellarData.stellarServerOpt.
       map(_.
         loadAccount(sourcePublicKey).
         toFuture.
-        map(r=>r.)
+        map(r=>r)
       )
     Future{pyramidConfig}
   }

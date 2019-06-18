@@ -121,7 +121,7 @@ object Startup
     $("#stampd")
       .off()
       .on("click",
-          (e: JQueryEventObject) => handle(pyramid.initStellarKeys($("#cid").`val`().toString())))
+          (e: JQueryEventObject) => handle(pyramid.initStellarKeys()))
 
 
   }
