@@ -35,9 +35,10 @@ object  Pyramid{
       pharaoData = PharaoData(
         pharaoKeys ),None,None),
     TemporalData(None,None,None),
-    StellarData(stellarPublic = "GDY7YWJF6F7W7EIQP5UDWYXNBC62JUSGJOLM2VWRQGY7RZ5SDYRZOZNT",
+    StellarData(
+      stellarPublic = "GDY7YWJF6F7W7EIQP5UDWYXNBC62JUSGJOLM2VWRQGY7RZ5SDYRZOZNT",
       stellarServerOpt = None,
-      stellarIntern = "SBRAPAMOFS3LABJX75K4ST6PMKZKFOEDSQSJR6FLV4M2L2ISJJHPUQUF"
+      stellarInternHash = None
     )
   ))
 }
@@ -77,6 +78,7 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with AsymetricCrypto
   with Temporal
   with Stellar
+  //with CanIpfs
 {
 
 def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
@@ -243,7 +245,23 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
-  def initWallet(stellar:TextFieldContents)(implicit ctx:ExecutionContext) = downloadWallet()
+  def initWallet(stellar:TextFieldContents)(implicit ctx:ExecutionContext) = {
+    stellar.flatMap(input=>infura(pyramidConfig).
+      savePubKeyEncryptedStringToIpfs(input.toString()).
+      map(_.
+        flatMap(_.
+          headOption.
+          map(ipfsFile=>pyramidConfig
+            //ipfsFile.hash
+          )). // empty result in upload
+        getOrElse(pyramidConfig))
+    ).getOrElse(downloadWallet())
+
+
+
+
+
+  }
 
 
   def testAsym()(implicit ctx:ExecutionContext) =

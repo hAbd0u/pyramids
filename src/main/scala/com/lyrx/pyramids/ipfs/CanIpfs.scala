@@ -4,12 +4,13 @@ package com.lyrx.pyramids.ipfs
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, WalletNative}
 import com.lyrx.pyramids.{InfuraIpfsImpl, Pyramid, PyramidConfig, PyramidJSON, pcrypto}
 import org.scalajs.dom.crypto.CryptoKey
-import typings.nodeLib
+import typings.{nodeLib, stdLib}
 import typings.nodeLib.bufferMod
 
 import scala.scalajs.js.JSON
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
+import scala.scalajs.js.typedarray.ArrayBuffer
 
 trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
   val pyramidConfig: PyramidConfig
@@ -52,6 +53,27 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
           withPubKeys(s).
           msg(s"Oh ${pyramidConfig.name()}, we have published your divine signature!")))
         .getOrElse(new Pyramid(pyramidConfig)))
+
+  def saveBufferToIpfs(f:Future[nodeLib.Buffer])(implicit ctx: ExecutionContext) =
+    f.flatMap(b=>pyramidConfig.infuraClientOpt
+      .map(ipfs => ipfs.futureAdd(b).map(Some(_))).getOrElse(Future{None}))
+
+  def saveArrayBufferToIpfs(f:Future[ArrayBuffer])(implicit ctx: ExecutionContext) =
+    saveBufferToIpfs(f.map(b=>bufferMod.Buffer.from(b)))
+
+
+
+
+  def saveStringToIpfs(s:String)(implicit ctx: ExecutionContext) =saveBufferToIpfs(
+    Future{bufferMod.Buffer.from(s)}
+  )
+
+  def savePubKeyEncryptedStringToIpfs(s:String) (implicit ctx: ExecutionContext)= pyramidConfig.
+    asymKeyOpt.map(k=>saveArrayBufferToIpfs(asymEncryptString(k.publicKey,s))).getOrElse(Future{None})
+
+
+
+
 
   def bufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
     pyramidConfig.infuraClientOpt

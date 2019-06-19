@@ -1,7 +1,7 @@
 package com.lyrx.pyramids
 
 
-import typings.nodeLib
+import typings.{nodeLib, stdLib}
 import typings.stdLib.{ArrayBuffer, Uint8Array}
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -9,6 +9,8 @@ import scala.scalajs.js
 import js.Dynamic.{literal => l}
 import scala.scalajs.js.|
 import typings.nodeLib.bufferMod
+
+import scala.language.implicitConversions
 package object ipfs {
 
 
@@ -22,6 +24,8 @@ package object ipfs {
   type PubSubHandler = js.Function1[PubSubMessage,Unit]
 
 
+  implicit def typedArrayArrayBufferToStdlib(b:js.typedarray.ArrayBuffer):stdLib.ArrayBuffer = b.asInstanceOf[stdLib.ArrayBuffer]
+  implicit def jstdLibArrayBufferToTypedArrayArrayBuffer(b:js.typedarray.ArrayBuffer):js.typedarray.ArrayBuffer = b.asInstanceOf[js.typedarray.ArrayBuffer]
 
   trait PubSubSupport{
     val ipfsClient:IpfsClient

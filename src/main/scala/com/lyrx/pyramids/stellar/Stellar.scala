@@ -47,7 +47,7 @@ trait Stellar {
 
 
   def loadAccount()(implicit executionContext: ExecutionContext) = {
-    val sourceKeypair = Keypair.fromSecret(pyramidConfig.stellarData.stellarIntern);
+    val sourceKeypair = Keypair.fromSecret(pyramidConfig.stellarData.stellarInternHash.get);
     val sourcePublicKey = sourceKeypair.publicKey();
     val receiverPublicKey = pyramidConfig.stellarData.stellarPublic;
     pyramidConfig.
