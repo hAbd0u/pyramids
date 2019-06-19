@@ -54,7 +54,7 @@ trait Stellar {
 
 
 
-     new Transaction[TMemo, TOps]("")
+    // new Transaction[TMemo, TOps]("")
 
       pyramidConfig.msg(s"Oh ${pyramidConfig.name()}, welcome to your Pyramid!")
     })

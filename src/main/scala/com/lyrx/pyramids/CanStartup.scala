@@ -28,8 +28,8 @@ trait CanStartup extends UserFeedback {
     new Pyramid(
         pyramidConfig
       ).initKeys().
-        flatMap(_.initStellar()).
-        flatMap(pc=>init(pc)).
+        //flatMap(_.initStellar()).
+        flatMap(p=>init(p.pyramidConfig)).
         failed.map(thr => {
       error(s"Initialization Error: ${thr.getMessage()}")
     })
