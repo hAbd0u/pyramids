@@ -68,8 +68,11 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
     Future{bufferMod.Buffer.from(s)}
   )
 
-  def savePubKeyEncryptedStringToIpfs(s:String) (implicit ctx: ExecutionContext)= pyramidConfig.
-    asymKeyOpt.map(k=>saveArrayBufferToIpfs(asymEncryptString(k.publicKey,s))).getOrElse(Future{None})
+  def savePubKeyEncryptedStringToIpfs(s:String) (implicit ctx: ExecutionContext)= {
+    //println(s"Saving '${s}'")
+    pyramidConfig.
+      asymKeyOpt.map(k=>saveArrayBufferToIpfs(asymEncryptString(k.publicKey,s))).getOrElse(Future{None})
+  }
 
 
 
