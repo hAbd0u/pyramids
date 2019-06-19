@@ -14,7 +14,7 @@ package object pyramids {
     js.UndefOr[java.lang.String | scala.Double | js.Array[java.lang.String]]
 
 
-  class FutureOption[T](val m:Future[Option[T]]){
+  implicit class FutureOption[T](val m:Future[Option[T]]){
 
     def fmap[U](tf:T=>U)(implicit executionContext: ExecutionContext):FutureOption[U] = new FutureOption[U](m.map(_.map(tf(_))))
 
