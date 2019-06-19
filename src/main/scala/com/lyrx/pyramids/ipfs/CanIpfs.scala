@@ -109,8 +109,7 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
       map(k=>
         asymDecryptBuffer(
           k.privateKey,b).
-          map(_.myToString()).
-          map(Some(_))).
+          map(b=>Some(b.myToString()))).
       getOrElse(Future{None})
   }))).getOrElse(Future{None})
 
