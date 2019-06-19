@@ -243,6 +243,8 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
+  def initWallet(stellar:TextFieldContents)(implicit ctx:ExecutionContext) = downloadWallet()
+
 
   def testAsym()(implicit ctx:ExecutionContext) =
     testAsymDecr()

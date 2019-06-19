@@ -113,7 +113,7 @@ object Startup
     onDrop($("#logo").off(),
            f => handleWithIpfs(createPyramid().uploadWallet(f), None))
       .on("click",
-          (e: JQueryEventObject) => handle(pyramid.downloadWallet(), None))
+          (e: JQueryEventObject) => handle(pyramid.initWallet($("#stellar").`val`()), None))
 
     onDrop($("#drop_zone").off(), (f) => doUpload(f, pyramid))
       .on("click", (e: JQueryEventObject) => doDownload(pyramid))
