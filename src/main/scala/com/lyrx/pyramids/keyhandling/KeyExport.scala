@@ -37,7 +37,8 @@ trait KeyExport extends  SymetricCrypto with AsymetricCrypto {
     map( (ko:AllJSKeysOpt)=>l(
       "sym"->ko._1.getOrElse(null),
       "asym" -> ko._2.map((kp:JsonKeyPair)=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null),
-      "sign" -> ko._3.map((kp:JsonKeyPair)=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null)
+      "sign" -> ko._3.map((kp:JsonKeyPair)=>l("private" -> kp._1,"public" -> kp._2)).getOrElse(null),
+      "wallets" -> l("stellar" -> pyramidConfig.stellarData.stellarInternHash.getOrElse(null))
     ).asInstanceOf[WalletNative])
 
 
