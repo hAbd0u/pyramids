@@ -101,6 +101,20 @@ trait CanIpfs extends pcrypto.Crypto with PyramidJSON with AsymetricCrypto {
     futureCatString(aHash).map(Some(_))).
     getOrElse(Future{None})
 
+  def readAndDecrypt(aHash:String)(implicit executionContext: ExecutionContext)=  pyramidConfig.
+    infuraClientOpt.map(ipfsClient => ipfsClient.
+    futureCat(aHash).flatMap(((b:nodeLib.Buffer)=>{
+    pyramidConfig.
+      asymKeyOpt.
+      map(k=>
+        asymDecryptBuffer(
+          k.privateKey,b).
+          map(_.myToString()).
+          map(Some(_))).
+      getOrElse(Future{None})
+  }))).getOrElse(Future{None})
+
+
 
 
   def readIpfsNativeWallet()

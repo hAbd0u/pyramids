@@ -7,10 +7,14 @@ import typings.stdLib.{ArrayBuffer, Uint8Array}
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import js.Dynamic.{literal => l}
-import scala.scalajs.js.|
+
+import js.|
 import typings.nodeLib.bufferMod
 
 import scala.language.implicitConversions
+
+
+
 package object ipfs {
 
 
@@ -49,10 +53,15 @@ package object ipfs {
   }
 
 
+  implicit class PimpedString(b:js.typedarray.ArrayBuffer){
+
+    def myToString()= new TextDecoder().decode(new js.typedarray.Uint8Array(b))
+  }
+
   implicit class PimpedIpfsClient(val ipfsClient:IpfsClient) extends  PubSubSupport  with PinSupport {
 
 
-    def futureCat(s:String) = ipfsClient.cat(s).toFuture
+    def futureCat(s:String):Future[nodeLib.Buffer] = ipfsClient.cat(s).toFuture
 
     def futureCatString(s:String) = ipfsClient.catString(s).toFuture
 
