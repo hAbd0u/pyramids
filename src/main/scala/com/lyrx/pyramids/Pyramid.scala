@@ -252,8 +252,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
   def initWallet(stellar:TextFieldContents)(implicit ctx:ExecutionContext) = {
-    stellar.flatMap(input=>infura(pyramidConfig).
-      savePubKeyEncryptedStringToIpfs(input.toString()).
+    stellar.flatMap(input=>uploadStringFromTextField(input).
       flatMap(_.
         flatMap(_.
           headOption.
@@ -261,7 +260,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
             new Pyramid(pyramidConfig.
           withStellarInternHash(ipfsFile.hash)).downloadWallet()
           )). // empty result in upload
-               getOrElse(Future{pyramidConfig}))
+               getOrElse(downloadWallet()))
     ).getOrElse(downloadWallet())
 
 
