@@ -245,7 +245,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
   def uploadStringFromTextField(input:TextFieldContents)(implicit ctx:ExecutionContext) =
-    if(input != "")
+    if(input.toString != "")
     infura(pyramidConfig).
     savePubKeyEncryptedStringToIpfs(input.toString())
     else Future{None}

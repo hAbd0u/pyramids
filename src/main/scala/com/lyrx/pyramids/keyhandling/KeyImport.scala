@@ -36,7 +36,14 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
   def importTemporal(walletNative: WalletNative)(implicit  executionContext: ExecutionContext) =  walletNative.
     temporal.map(t=>Future{new Pyramid(pyramidConfig.withTemporalCredentials(t))}).getOrElse(Future{new Pyramid(pyramidConfig)})
 
-
+  def importStellar(walletNative: WalletNative)(implicit  executionContext: ExecutionContext) = walletNative
+    .wallets.
+    flatMap(
+      _.stellar.map(s=>Future{
+        pyramidConfig.
+          withStellarInternHash(s).
+          pyramid()})).
+    getOrElse(Future{pyramidConfig.pyramid()})
 
   /*
   class KeyImport: function importAsymKey, do the same for the signature keys: "importSignKey"
@@ -58,6 +65,7 @@ trait KeyImport extends  SymetricCrypto with AsymetricCrypto {
     importSymKey(walletNative).
       flatMap(_.importAsymKey(walletNative)).
       flatMap(_.importSignKey(walletNative)).
-      flatMap(_.importTemporal(walletNative))
+      flatMap(_.importTemporal(walletNative)).
+      flatMap(_.importStellar(walletNative))
 
 }

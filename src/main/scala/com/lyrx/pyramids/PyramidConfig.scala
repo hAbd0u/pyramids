@@ -49,6 +49,8 @@ case class PyramidConfig( //distributedDir: DistributedDir,
                           stellarData:StellarData
                         ) {
 
+  def pyramid() = new Pyramid(this)
+
   def withStellarInternHash(s:String) =this.copy(stellarData=this.stellarData.copy(stellarInternHash=Some(s)))
   def withStellar(server:stellarDashSdkMod.Server) = this.copy(stellarData=this.stellarData.copy(stellarServerOpt=Some(server)))
 
