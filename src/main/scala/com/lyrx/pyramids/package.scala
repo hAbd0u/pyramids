@@ -16,7 +16,7 @@ package object pyramids {
 
   class FutureOption[T](val m:Future[Option[T]]){
 
-    def fmap[U](tf:T=>U)(implicit executionContext: ExecutionContext) = m.map(_.map(tf(_)))
+    def fmap[U](tf:T=>U)(implicit executionContext: ExecutionContext):FutureOption[U] = new FutureOption[U](m.map(_.map(tf(_))))
 
 
     def fflatMap[U](tf:T=>FutureOption[U])
