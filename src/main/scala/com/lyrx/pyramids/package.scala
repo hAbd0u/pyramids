@@ -14,11 +14,11 @@ package object pyramids {
     def fmap[U](tf: T => U)(
         implicit executionContext: ExecutionContext): Future[Option[U]] = m.map(_.map(tf(_)))
 
-    def fflatMap[U](tf: T => FutureOption[U])(
-        implicit executionContext: ExecutionContext): Future[Option[U]] = this.m
-          .map(_.map(tf(_)).getOrElse(new FutureOption[U](Future { None })))
-          .map(_.m)
-          .flatten
+    def fflatMap[U](tf: T => Future[Option[U]])(
+        implicit executionContext: ExecutionContext): Future[Option[U]]= this.m
+          .flatMap(_.map(tf(_)).getOrElse(Future { None }))
+
+
   }
 
 }
