@@ -58,26 +58,28 @@ trait ListDemo {
 
 
 
-  /*
-    collector match {
-    case Some( aHead) => l match {
-      case Nil => Nil
-      case ( h :: atail) =>  compressTailRec(aHead :: atail.dropWhile(_ == aHead))
+  final def compressTailRec2[T](
+                                l:List[T],
+                                collector:List[T]=Nil):List[T] = {
+    @tailrec
+    def collect (ll:List[T],
+                 ccollector:List[T]=Nil):List[T] =
+    ll match {
+      case Nil => ccollector
+      case ( h :: atail) =>  collect(atail.dropWhile(_ == h), h+: ccollector)
     }
-    case None => compressTailRec(l.tail,l.headOption)
+
+    collect(l,collector).reverse
   }
 
-    l match {
-    case Nil => Nil
-    case ( h :: atail) =>  compressTailRec(atail.dropWhile(_ == h),Some(h))
-  }
-*/
+
 
 
   def compressTest() = {
     val result = List("a","b","c")
     assert(compress(list3) == result )
     assert(compressTailRec(list3) == result)
+    assert(compressTailRec2(list3) == result)
 
   }
 
