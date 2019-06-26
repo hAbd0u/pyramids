@@ -1,8 +1,12 @@
 package com.lyrx.pyramids.demo
 
+import scala.annotation.tailrec
+
 trait ListDemo {
   val list1 = List(1, 2, 3)
   val list2 = List(4, 5, 6)
+
+  val list3 =List("a","a","b","b","b","c","c")
 
   def concat() =
     assert(List(1, 2, 3, 4, 5, 6) == (list1 ++ list2))
@@ -36,6 +40,46 @@ trait ListDemo {
   def tupels3() =
     assert(
       ((t:(List[Int],List[Int]))  =>{ t._1.sum + t._2.sum}) ((list1,list2)) == 21)
+
+
+
+  final def compress[T](l:List[T]):List[T] =  l match {
+    case Nil => Nil
+    case ( h :: atail) => h +: compress(atail.dropWhile(_ == h))
+  }
+
+  @tailrec
+  final def compressTailRec[T](
+                                l:List[T],
+                                collector:List[T]=Nil):List[T] = l match {
+      case Nil => collector
+      case ( h :: atail) =>  compressTailRec(atail.dropWhile(_ == h),collector :+ h)
+    }
+
+
+
+  /*
+    collector match {
+    case Some( aHead) => l match {
+      case Nil => Nil
+      case ( h :: atail) =>  compressTailRec(aHead :: atail.dropWhile(_ == aHead))
+    }
+    case None => compressTailRec(l.tail,l.headOption)
+  }
+
+    l match {
+    case Nil => Nil
+    case ( h :: atail) =>  compressTailRec(atail.dropWhile(_ == h),Some(h))
+  }
+*/
+
+
+  def compressTest() = {
+    val result = List("a","b","c")
+    assert(compress(list3) == result )
+    assert(compressTailRec(list3) == result)
+
+  }
 
 
 }

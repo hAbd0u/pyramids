@@ -12,6 +12,7 @@ object Startup extends ListDemo {
     tupels1()
     tupels2()
     tupels3()
+    compressTest()
 
   }
 
