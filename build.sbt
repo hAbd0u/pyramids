@@ -27,7 +27,8 @@ libraryDependencies ++= Seq(
   ScalablyTyped.J.jszip,
   ScalablyTyped.F.`file-saver` ,
   ScalablyTyped.W.`web3`,
-  ScalablyTyped.S.`stellar-sdk`
+  "org.scalablytyped" %%% "stellar-sdk" % "0.0.1-alex"
+  //ScalablyTyped.S.`stellar-sdk`
  // ScalablyTyped.R.`readable-stream`
 )
 

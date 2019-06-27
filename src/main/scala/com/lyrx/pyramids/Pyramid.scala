@@ -4,6 +4,7 @@ import com.lyrx.pyramids.infura.InfuraProxy
 import com.lyrx.pyramids.ipfs.{CanIpfs, TextDecoder}
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
+import com.lyrx.pyramids.macmini.MacminiProxy
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, DecryptedData, EncryptedData}
 import com.lyrx.pyramids.stellar.Stellar
 import com.lyrx.pyramids.temporal.{Temporal, TemporalProxy}
@@ -47,6 +48,16 @@ trait InfuraIpfs extends CanIpfs with InfuraProxy{
 
 }
 
+trait TemporalIpfs extends CanIpfs with TemporalProxy{
+
+}
+
+trait  MacminiIpfs extends CanIpfs with MacminiProxy{
+
+}
+
+
+
 class InfuraIpfsImpl(override val pyramidConfig:PyramidConfig)  extends InfuraIpfs{
 
   override def initIpfsAndPublishPublicKeys()(
@@ -56,13 +67,19 @@ class InfuraIpfsImpl(override val pyramidConfig:PyramidConfig)  extends InfuraIp
 }
 
 
-trait TemporalIpfs extends CanIpfs with TemporalProxy{
 
-}
 class TemporalIpfsImpl(override val pyramidConfig:PyramidConfig)  extends TemporalIpfs{
 
   override def initIpfsAndPublishPublicKeys()(
     implicit executionContext: ExecutionContext):Future[Pyramid] = ???
+
+}
+
+class MacminiIpfsImpl(override val pyramidConfig:PyramidConfig)  extends MacminiIpfs {
+
+  override def initIpfsAndPublishPublicKeys()(
+    implicit executionContext: ExecutionContext):Future[Pyramid] =
+    initIpfs().flatMap(p=>new MacminiIpfsImpl(p.pyramidConfig).publicKeysToIpfs())
 
 }
 
@@ -77,16 +94,14 @@ class Pyramid(override val pyramidConfig: PyramidConfig)
   with Encryption
   with AsymetricCrypto
   with Temporal
-  with Stellar
-  //with CanIpfs
-{
+  with Stellar {
 
 def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
-  def infura(pyramidConfig:PyramidConfig) = new InfuraIpfsImpl(pyramidConfig)
+  def infura(pyramidConfig:PyramidConfig) =   new MacminiIpfsImpl(pyramidConfig) // new InfuraIpfsImpl(pyramidConfig)
   def temporal(pyramidConfig:PyramidConfig) = new TemporalIpfsImpl(pyramidConfig)
-
+  def macmini(pyramidConfig:PyramidConfig) =   new MacminiIpfsImpl(pyramidConfig) // new InfuraIpfsImpl(pyramidConfig)
 
 
 
@@ -169,7 +184,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
 
 
 
-  def initKeys()(implicit executionContext:ExecutionContext) = new InfuraIpfsImpl(pyramidConfig).initIpfsAndPublishPublicKeys()
+  def initKeys()(implicit executionContext:ExecutionContext) = infura(pyramidConfig).initIpfsAndPublishPublicKeys()
     .flatMap(_.publishSymKeys()).map(new Pyramid(_))
 
   def readIpfsSymKey(aHash:String,cryptoKey: CryptoKey)
@@ -193,7 +208,7 @@ def msg(s:String) = new Pyramid(this.pyramidConfig.msg(s))
       flatMap(aHash=>
         pyramidConfig.
           asymKeyOpt.
-          map(asymKey=>new InfuraIpfsImpl(pyramidConfig).readIpfs(aHash))).
+          map(asymKey=>infura(pyramidConfig).readIpfs(aHash))).
       getOrElse(Future{None})
 
   def decryptSymKey()(implicit ctx:ExecutionContext) =
