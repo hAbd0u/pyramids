@@ -80,7 +80,6 @@ trait ListDemo {
     assert(compress(list3) == result )
     assert(compressTailRec(list3) == result)
     assert(compressTailRec2(list3) == result)
-
   }
 
 
