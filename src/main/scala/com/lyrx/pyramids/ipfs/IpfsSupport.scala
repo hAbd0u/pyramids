@@ -9,35 +9,35 @@ import scala.scalajs.js.typedarray.ArrayBuffer
 trait IpfsSupport {
 
 
-  def ipfsClient():IpfsClient
+  def ipfsClientOpt():Option[IpfsClient]
 
 
-  def saveBufferToIpfs(f: Future[nodeLib.Buffer])(
+  def iSaveBufferToIpfs(f: Future[nodeLib.Buffer])(
     implicit ctx: ExecutionContext) =
     f.flatMap(
-      b => ipfsClient().futureAdd(b))
+      b => ipfsClientOpt().map(_.futureAdd(b).map(Some(_))).getOrElse(Future{None}))
 
 
-  def saveArrayBufferToIpfs(f: Future[ArrayBuffer])(
+  def iSaveArrayBufferToIpfs(f: Future[ArrayBuffer])(
     implicit ctx: ExecutionContext) =
-    saveBufferToIpfs(f.map(b => bufferMod.Buffer.from(b)))
+    iSaveBufferToIpfs(f.map(b => bufferMod.Buffer.from(b)))
 
-  def saveStringToIpfs(s: String)(implicit ctx: ExecutionContext) =
-    saveBufferToIpfs(
+  def iSaveStringToIpfs(s: String)(implicit ctx: ExecutionContext) =
+    iSaveBufferToIpfs(
       Future { bufferMod.Buffer.from(s) }
     )
 
 
 
-  def bufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
-    ipfsClient().futureAdd(buffer)
+  def iBufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
+    ipfsClientOpt().map(_.futureAdd(buffer).map(Some(_))).getOrElse(Future{None})
 
-  def readIpfs(aHash: String)(implicit executionContext: ExecutionContext) =
-   ipfsClient().futureCat(aHash)
+  def iReadIpfs(aHash: String)(implicit executionContext: ExecutionContext) =
+   ipfsClientOpt().map(_.futureCat(aHash).map(Some(_))).getOrElse(Future{None})
 
-  def readIpfsString(aHash: String)(
+  def iReadIpfsString(aHash: String)(
     implicit executionContext: ExecutionContext) =
-    ipfsClient().futureCatString(aHash)
+    ipfsClientOpt().map(_.futureCatString(aHash).map(Some(_))).getOrElse(Future{None})
 
 
 }
