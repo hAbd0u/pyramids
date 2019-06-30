@@ -42,9 +42,9 @@ object Variance {
 
 
 
-  class C4[-T](p:T)  // Contravariance:  A supertype of T ==> C4[A]  supertype of C4[T]
+  class C4[-T](p:T)  // Contravariance:  T supertype of A ==> C4[T]  supertype of C4[A]
   type C4A =C4[A]
-  type C4B =C4[B]   // C4B is NOT subtype of C4A
+  type C4B =C4[B]   // C4A is supertype of C4B
 
   class C42[T <: C4A](p:T)
   new C42(new C4(a))
