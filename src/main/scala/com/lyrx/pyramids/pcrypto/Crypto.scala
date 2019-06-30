@@ -1,40 +1,9 @@
 package com.lyrx.pyramids.pcrypto
 
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, JsonWebKey, KeyFormat, crypto}
-import org.scalajs.dom.raw.File
-import com.lyrx.pyramids.ipfs.{IPFSMetaData, TextDecoder}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js
-import js.typedarray.{ArrayBuffer, Uint8Array}
 
-object EncryptedData{
-  def apply():EncryptedData=EncryptedData(
-    None,None,None,None,None,None,None
-  )
-}
-
-
-case class DecryptedData(unencrypted: Option[ArrayBuffer],
-                         metaData:Option[IPFSMetaData]
-                        ){
-  def isEmpty() =(
-    unencrypted.isEmpty  &&
-    metaData.isEmpty)
-
-  def descr()=if(isEmpty()) "no decrypted data" else "decrypted data"
-
-}
-
-case class EncryptedData(unencrypted: Option[ArrayBuffer],
-                         encrypted:Option[ArrayBuffer],
-                         random:Option[ArrayBuffer],
-                         signature:Option[ArrayBuffer],
-                         metaData:Option[ArrayBuffer],
-                         metaRandom:Option[ArrayBuffer],
-                         signer:Option[ArrayBuffer]
-                        )
-  extends Encrypted
 
 
 
