@@ -8,11 +8,7 @@ object ListDemo {
   val list2 = List(4, 5, 6)
   val list3 = List("a", "a", "b", "b", "b", "c", "c")
 
-
-
-
-
-  implicit class PimpedList[T](l:List[T]){
+  implicit class PimpedList[T](l: List[T]) {
 
     def compress() = compressTailRec2(l)
 
@@ -46,15 +42,10 @@ object ListDemo {
     assert(((t: (List[Int], List[Int])) => { t._1.sum + t._2.sum })(
       (list1, list2)) == 21)
 
-
-
   final def compress[T](l: List[T]): List[T] = l match {
     case Nil          => Nil
     case (h :: atail) => h +: compress(atail.dropWhile(_ == h))
   }
-
-
-
   @tailrec
   final def compressTailRec[T](l: List[T], collector: List[T] = Nil): List[T] =
     l match {
@@ -85,7 +76,7 @@ object ListDemo {
     assert(list3.compress() == result) //implicit!!!
   }
 
-  def main(args: Array[String]): Unit ={
+  def main(args: Array[String]): Unit = {
 
     concat()
     append()
@@ -96,6 +87,5 @@ object ListDemo {
     compressTest()
 
   }
-
 
 }
