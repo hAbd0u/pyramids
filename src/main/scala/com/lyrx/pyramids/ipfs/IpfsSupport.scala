@@ -12,30 +12,30 @@ trait IpfsSupport {
   def ipfsClientOpt():Option[IpfsClient]
 
 
-  def iSaveBufferToIpfs(f: Future[nodeLib.Buffer])(
+  def saveBufferToIpfs(f: Future[nodeLib.Buffer])(
     implicit ctx: ExecutionContext) =
     f.flatMap(
       b => ipfsClientOpt().map(_.futureAdd(b).map(Some(_))).getOrElse(Future{None}))
 
 
-  def iSaveArrayBufferToIpfs(f: Future[ArrayBuffer])(
+  def saveArrayBufferToIpfs(f: Future[ArrayBuffer])(
     implicit ctx: ExecutionContext) =
-    iSaveBufferToIpfs(f.map(b => bufferMod.Buffer.from(b)))
+    saveBufferToIpfs(f.map(b => bufferMod.Buffer.from(b)))
 
-  def iSaveStringToIpfs(s: String)(implicit ctx: ExecutionContext) =
-    iSaveBufferToIpfs(
+  def saveStringToIpfs(s: String)(implicit ctx: ExecutionContext) =
+    saveBufferToIpfs(
       Future { bufferMod.Buffer.from(s) }
     )
 
 
 
-  def iBufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
-    ipfsClientOpt().map(_.futureAdd(buffer).map(Some(_))).getOrElse(Future{None})
+  def bufferToIpfs(buffer: nodeLib.Buffer)(implicit ctx: ExecutionContext) =
+    ipfsClientOpt().map(_.futureAdd(buffer).map(l => Some(l.head.hash))).getOrElse(Future{None})
 
-  def iReadIpfs(aHash: String)(implicit executionContext: ExecutionContext) =
+  def readIpfs(aHash: String)(implicit executionContext: ExecutionContext) =
    ipfsClientOpt().map(_.futureCat(aHash).map(Some(_))).getOrElse(Future{None})
 
-  def iReadIpfsString(aHash: String)(
+  def readIpfsString(aHash: String)(
     implicit executionContext: ExecutionContext) =
     ipfsClientOpt().map(_.futureCatString(aHash).map(Some(_))).getOrElse(Future{None})
 
