@@ -1,7 +1,6 @@
 package com.lyrx.pyramids.keyhandling
 
-import com.lyrx.pyramids.PyramidConfig
-import com.lyrx.pyramids.pcrypto.WalletNative
+import com.lyrx.pyramids.pcrypto._
 import org.scalajs.dom.File
 import org.scalajs.dom.raw.{Blob, EventTarget, FileReader}
 import typings.jqueryLib.JQueryEventObject
@@ -9,8 +8,6 @@ import typings.jqueryLib.JQueryEventObject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
-
-import com.lyrx.pyramids.pcrypto.PCryptoImplicits._
 
 @js.native
 trait DataTransferTarget extends EventTarget {
