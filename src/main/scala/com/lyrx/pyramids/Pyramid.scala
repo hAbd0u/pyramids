@@ -1,7 +1,7 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.infura.InfuraProxy
-import com.lyrx.pyramids.ipfs.{CanIpfs, TextDecoder}
+import com.lyrx.pyramids.ipfs.{CanIpfs, EncryptedIpfs, TextDecoder}
 import com.lyrx.pyramids.jszip._
 import com.lyrx.pyramids.keyhandling._
 import com.lyrx.pyramids.macmini.MacminiProxy
@@ -44,15 +44,15 @@ object  Pyramid{
   ))
 }
 
-trait InfuraIpfs extends CanIpfs with InfuraProxy{
+trait InfuraIpfs extends EncryptedIpfs with InfuraProxy{
 
 }
 
-trait TemporalIpfs extends CanIpfs with TemporalProxy{
+trait TemporalIpfs extends EncryptedIpfs with TemporalProxy{
 
 }
 
-trait  MacminiIpfs extends CanIpfs with MacminiProxy{
+trait  MacminiIpfs extends EncryptedIpfs with MacminiProxy{
 
 }
 
