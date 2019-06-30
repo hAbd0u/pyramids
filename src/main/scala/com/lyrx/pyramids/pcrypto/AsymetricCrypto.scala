@@ -2,17 +2,15 @@ package com.lyrx.pyramids.pcrypto
 
 import com.lyrx.pyramids.PyramidJSON
 import com.lyrx.pyramids.ipfs.TextEncoder
-import com.lyrx.pyramids.pcrypto.PCryptoImplicits._
 import org.scalajs.dom.crypto.{CryptoKey, CryptoKeyPair, HashAlgorithm, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, RsaHashedKeyAlgorithm, crypto}
 import org.scalajs.dom.raw.{File, FileReader}
-
+import typings.nodeLib
+import typings.nodeLib.bufferMod
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import js.Dynamic.{literal => l}
-import js.typedarray
-import typings.nodeLib
-import nodeLib.bufferMod
+import scala.scalajs.js.Dynamic.{literal => l}
+import scala.scalajs.js.typedarray
 
 trait AsymetricCrypto extends Crypto with PyramidJSON{
 

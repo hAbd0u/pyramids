@@ -1,7 +1,6 @@
 package com.lyrx.pyramids.pcrypto
 
 import com.lyrx.pyramids.PyramidJSON
-import com.lyrx.pyramids.pcrypto.PCryptoImplicits._
 import org.scalajs.dom.crypto.{AlgorithmIdentifier, CryptoKey, JsonWebKey, KeyAlgorithmIdentifier, KeyFormat, KeyUsage, crypto}
 import org.scalajs.dom.raw.{File, FileReader}
 import typings.nodeLib.bufferMod.Buffer
