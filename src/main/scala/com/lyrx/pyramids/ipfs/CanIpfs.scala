@@ -9,7 +9,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.JSON
 import scala.scalajs.js.typedarray.ArrayBuffer
 
-trait CanIpfs extends  PyramidJSON {
+trait CanIpfs {
   val pyramidConfig: PyramidConfig
 
   def initIpfs()(implicit executionContext: ExecutionContext): Future[Pyramid]
@@ -55,11 +55,6 @@ trait CanIpfs extends  PyramidJSON {
       .map(ipfsClient => ipfsClient.futureCatString(aHash).map(Some(_)))
       .getOrElse(Future { None })
 
-
-
-  def readIpfsNativeWallet()(implicit executionContext: ExecutionContext) =
-    readIpfsString(pyramidConfig.ipfsData.pharaoData.pubkey).map(_.map(s =>
-      JSON.parse(s).asInstanceOf[WalletNative]))
 
 
 }

@@ -1,6 +1,6 @@
 package com.lyrx.pyramids.ipfs
 
-import com.lyrx.pyramids.pcrypto.AsymetricCrypto
+import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, WalletNative}
 import com.lyrx.pyramids.{Pyramid, PyramidConfig, pcrypto}
 import org.scalajs.dom.crypto.CryptoKey
 import typings.nodeLib
@@ -8,6 +8,7 @@ import typings.nodeLib.bufferMod
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.Dynamic.{literal => l}
+import scala.scalajs.js.JSON
 
 
 
@@ -94,5 +95,13 @@ trait EncryptedIpfs  extends AsymetricCrypto with CanIpfs {
                 .getOrElse(Future { None })
             })))
       .getOrElse(Future { None })
+
+
+
+  def readIpfsNativeWallet()(implicit executionContext: ExecutionContext) =
+    readIpfsString(pyramidConfig.ipfsData.pharaoData.pubkey).map(_.map(s =>
+      JSON.parse(s).asInstanceOf[WalletNative]))
+
+
 
 }
