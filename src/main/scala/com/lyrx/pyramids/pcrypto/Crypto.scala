@@ -8,63 +8,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import js.typedarray.{ArrayBuffer, Uint8Array}
 
-trait Encrypted extends SymetricCrypto {
-  val unencrypted: Option[ArrayBuffer]
-  val encrypted: Option[ArrayBuffer]
-  val random: Option[ArrayBuffer]
-  val signature: Option[ArrayBuffer]
-  val metaData:Option[ArrayBuffer]
-  val metaRandom:Option[ArrayBuffer]
-  val signer:Option[ArrayBuffer]
-
-
-  def decryptData(symKey:CryptoKey)(implicit executionContext: ExecutionContext) =
-    encrypted.
-    map(data=>decryptArrayBuffer(
-      symKey,
-      data,
-      random.get
-    ).map(b=>DecryptedData(Some(b),None))).
-      getOrElse(
-        Future{DecryptedData(None,None)
-        })
-
-
-  def decrypt(symKey:CryptoKey)(implicit executionContext: ExecutionContext) =
-    decryptData(symKey).flatMap(d=>
-      metaData.
-        map(data=>decryptArrayBuffer(
-          symKey,
-          data,
-          metaRandom.get
-        ).map(b=>DecryptedData(
-            d.unencrypted,
-            Some(js.JSON.parse(
-              new TextDecoder().
-              decode(
-                new Uint8Array(b))).asInstanceOf[IPFSMetaData])
-        ))).
-        getOrElse(
-          Future{DecryptedData(d.unencrypted,None)
-          }))
-
-
-
-
-
-  def isEmpty() =(
-    unencrypted.isEmpty &&
-    encrypted.isEmpty &&
-    random.isEmpty &&
-    signature.isEmpty &&
-    metaData.isEmpty &&
-    metaRandom.isEmpty &&
-    signer.isEmpty
-  )
-
-  def descr()=if(isEmpty()) "no encrypted data" else "encrypted data"
-}
-
 object EncryptedData{
   def apply():EncryptedData=EncryptedData(
     None,None,None,None,None,None,None
@@ -94,18 +37,7 @@ case class EncryptedData(unencrypted: Option[ArrayBuffer],
   extends Encrypted
 
 
-object CryptoTypes {
-  type PyramidCryptoKey = CryptoKey
-  type PyramidCryptoKeyPair = CryptoKeyPair
-  type JsonKeyPair = (JsonWebKey, JsonWebKey)
-  type JSKeyPairOpt = Option[JsonKeyPair]
-  type JSKeyOpt = Option[JsonWebKey]
-  type AllJSKeysOpt = (JSKeyOpt, JSKeyPairOpt, JSKeyPairOpt)
-  type JsonWebKeyOptPair = (Option[JsonWebKey], Option[JsonWebKey])
 
-  type EncryptionResult = Encrypted
-
-}
 
 trait Crypto {
 

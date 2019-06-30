@@ -2,7 +2,7 @@ package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.PyramidConfig
 import com.lyrx.pyramids.jszip.ZippableEncrypt
-import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, CryptoTypes, SymetricCrypto}
+import com.lyrx.pyramids.pcrypto._
 import org.scalajs.dom.raw.File
 import typings.stdLib.CryptoKey
 
@@ -25,7 +25,7 @@ trait Encryption extends  SymetricCrypto with AsymetricCrypto  {
   def encryptAndSignFileDefault(f:File) (implicit ctx:ExecutionContext) =
     encryptAndSignFile(f,pyramidConfig.symKeyOpt)
 
-  def encryptAndSignFile(f:File,symKeyOpt:Option[CryptoTypes.PyramidCryptoKey])
+  def encryptAndSignFile(f:File,symKeyOpt:Option[PyramidCryptoKey])
                                (implicit ctx:ExecutionContext) = {
     symKeyOpt.
       map(k=>symEncryptFile(k,f).flatMap( //encryption keys present:

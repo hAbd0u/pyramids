@@ -1,13 +1,24 @@
 package com.lyrx.pyramids
 
 import org.scalajs.dom.crypto
-import org.scalajs.dom.crypto.BufferSource
+import org.scalajs.dom.crypto.{BufferSource, CryptoKey, CryptoKeyPair, JsonWebKey}
 import org.scalajs.dom.raw.{Blob, FileReader, ProgressEvent}
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 package object pcrypto {
+
+
+  type PyramidCryptoKey = CryptoKey
+  type PyramidCryptoKeyPair = CryptoKeyPair
+  type JsonKeyPair = (JsonWebKey, JsonWebKey)
+  type JSKeyPairOpt = Option[JsonKeyPair]
+  type JSKeyOpt = Option[JsonWebKey]
+  type AllJSKeysOpt = (JSKeyOpt, JSKeyPairOpt, JSKeyPairOpt)
+  type JsonWebKeyOptPair = (Option[JsonWebKey], Option[JsonWebKey])
+  type EncryptionResult = Encrypted
+
 
   implicit class PimpedFileReader(f:FileReader){
 

@@ -1,7 +1,7 @@
 package com.lyrx.pyramids.keyhandling
 
 import com.lyrx.pyramids.PyramidConfig
-import com.lyrx.pyramids.pcrypto.CryptoTypes.{AllJSKeysOpt, JsonKeyPair}
+import com.lyrx.pyramids.pcrypto._
 import com.lyrx.pyramids.pcrypto.{AsymetricCrypto, Crypto, SymetricCrypto, WalletNative}
 import org.scalajs.dom.crypto.CryptoKey
 

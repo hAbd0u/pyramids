@@ -19,7 +19,7 @@ trait EncryptedIpfs  extends AsymetricCrypto with CanIpfs {
   val pyramidConfig: PyramidConfig
 
   def exportAllPublicKeys()(implicit ctx: ExecutionContext)
-  : Future[pcrypto.CryptoTypes.JsonWebKeyOptPair] =
+  : Future[pcrypto.JsonWebKeyOptPair] =
     exportPublicKey(pyramidConfig.asymKeyOpt).flatMap(pubKeyOpt =>
       exportPublicKey(pyramidConfig.signKeyOpt).map(signKeyOpt =>
         (pubKeyOpt, signKeyOpt)))

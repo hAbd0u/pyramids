@@ -1,7 +1,7 @@
 package com.lyrx.pyramids
 
 import com.lyrx.pyramids.ipfs.IpfsClient
-import com.lyrx.pyramids.pcrypto.{Crypto, CryptoTypes}
+import com.lyrx.pyramids.pcrypto._
 import com.lyrx.pyramids.temporal.{JWTToken, TemporalCredentials}
 import typings.stellarDashSdkLib.stellarDashSdkMod
 
@@ -39,9 +39,9 @@ case class StellarData(stellarPublic:String,
                       )
 
 case class PyramidConfig( //distributedDir: DistributedDir,
-                          symKeyOpt:Option[CryptoTypes.PyramidCryptoKey],
-                          asymKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
-                          signKeyOpt:Option[CryptoTypes.PyramidCryptoKeyPair],
+                          symKeyOpt:Option[PyramidCryptoKey],
+                          asymKeyOpt:Option[PyramidCryptoKeyPair],
+                          signKeyOpt:Option[PyramidCryptoKeyPair],
                           messages:Messages, //current status messages
                           infuraClientOpt:Option[ IpfsClient],  // IPFS HTTP Client for Infura
                           ipfsData: IpfsData,  // List of hashes for the current state
