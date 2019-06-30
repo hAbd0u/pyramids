@@ -1,12 +1,14 @@
 package com.lyrx.pyramids.demo
 
-trait NinetyNineProblems {
+object Packing {
 
   val list1 = List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)
 
+  type ListList[T]  = List[List[T]]
 
 
-   class PimpedListList[T](ll:ListList[T]) {
+
+  class PimpedListList[T](ll:ListList[T]) {
 
      def matchList(b:T, aHead:List[T] , aTail:ListList[T])
                   (implicit comp:Equiv[T]) = aHead  match {
@@ -38,15 +40,10 @@ trait NinetyNineProblems {
     println(compress(list1))
   }
 
-
-
-}
-
-
-object NinetyNineProblemsMain extends NinetyNineProblems {
-
   def main(args: Array[String]): Unit = {
     testPack()
 
   }
+
 }
+

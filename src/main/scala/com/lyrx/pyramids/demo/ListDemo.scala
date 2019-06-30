@@ -2,11 +2,21 @@ package com.lyrx.pyramids.demo
 
 import scala.annotation.tailrec
 
-trait ListDemo {
+object ListDemo {
+
   val list1 = List(1, 2, 3)
   val list2 = List(4, 5, 6)
-
   val list3 = List("a", "a", "b", "b", "b", "c", "c")
+
+
+
+
+
+  implicit class PimpedList[T](l:List[T]){
+
+    def compress() = compressTailRec2(l)
+
+  }
 
   def concat() =
     assert(List(1, 2, 3, 4, 5, 6) == (list1 ++ list2))
@@ -74,5 +84,18 @@ trait ListDemo {
     assert(compressTailRec2(list3) == result)
     assert(list3.compress() == result) //implicit!!!
   }
+
+  def main(args: Array[String]): Unit ={
+
+    concat()
+    append()
+    foldLeft()
+    tupels1()
+    tupels2()
+    tupels3()
+    compressTest()
+
+  }
+
 
 }
