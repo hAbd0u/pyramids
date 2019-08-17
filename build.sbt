@@ -1,39 +1,58 @@
+import org.scalajs.core.tools.linker.ModuleInitializer
+
 enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin, ScalablyTypedPlugin)
 
-name := "pyramids"
-version := "0.1"
+name := "eternitas"
+version := "0.0.1"
 scalaVersion := "2.12.8"
 
 resolvers += Resolver.bintrayRepo("oyvindberg", "ScalablyTyped")
-resolvers += Resolver.bintrayRepo("lyrxgmbh", "lyrxmvn")
 
 // This is an application with a main method
+
+/*
+scalaJSModuleInitializers += ModuleInitializer
+  .mainMethod(
+    "com.lyrx.pyramids.frontend.Main"
+    ,"init")
+ */
+
 scalaJSUseMainModuleInitializer := true
 
+scalacOptions += "-P:scalajs:sjsDefinedByDefault"
+
 libraryDependencies ++= Seq(
-  //"com.lihaoyi" % "utest_sjs1.0.0-M7_2.12" % "0.6.7" % "test",
   "org.scala-js" %%% "scalajs-dom" % "0.9.7",
+  "me.shadaj" %%% "slinky-core" % "0.6.2",
+  "me.shadaj" %%% "slinky-web" % "0.6.2",
+  "me.shadaj" %%% "slinky-native" % "0.6.2",
+  "me.shadaj" %%% "slinky-hot" % "0.6.2",
+  "me.shadaj" %%% "slinky-scalajsreact-interop" % "0.6.2",
   ScalablyTyped.J.jquery,
   ScalablyTyped.J.jszip,
   ScalablyTyped.F.`file-saver`,
   ScalablyTyped.W.`web3`,
-  "com.lyrx" %%% "stellar-sdk" % "0.0.5-alex"
-  //ScalablyTyped.S.`stellar-sdk`
-  // ScalablyTyped.R.`readable-stream`
+  ScalablyTyped.B.`bs58`
 )
 
+
 npmDependencies in Compile ++= Seq(
-  "jquery" -> "3.4.1",
+  "react" -> "16.8", "react-dom" -> "16.8",
   "web3" -> "1.0.0-beta.55",
-  //"ipfs" -> "0.36.2",
-  //"ipfs-api" -> "26.1.2",
   "ipfs-http-client" -> "32.0.1",
   "buffer" -> "3.5.5",
   "jszip" -> "3.2.1",
   "file-saver" -> "2.0",
-  "stellar-sdk" -> "0.11"
-  // "readable-stream" -> "2.3"
+  "bs58" -> "4.0.1",
+  "stellar-sdk" -> "2.0.1"
 )
+
+
+
+
+// optional, but recommended; enables the @react macro annotation API
+addCompilerPlugin(
+  "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
 
 testFrameworks += new TestFramework("utest.runner.Framework")
 
@@ -42,16 +61,12 @@ copyjs := {
   val outDir = new File("src/main/webapp/js")
   val inDir = new File(s"target/scala-2.12/scalajs-bundler/main")
   val files = Seq(
-    "pyramids-opt-bundle.js",
-    "pyramids-opt-bundle.js.map"
+    s"${name.value}-opt-bundle.js",
+    s"${name.value}-opt-bundle.js.map"
   ) map { p =>
     (inDir / p, outDir / p)
   }
   IO.copy(files, true)
 }
+
 addCommandAlias("mywebpack", ";fullOptJS::webpack;copyjs")
-/*
-val genDirPath = new java.io.File("src/main/webapp/js")
-crossTarget in(Compile, fastOptJS) := genDirPath
-crossTarget in(Compile, fullOptJS) := genDirPath
- */
